@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'pageEdt.dart';
+import 'pageMails.dart';
+import 'pageSalles.dart';
+import 'pageControles.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -29,24 +34,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // Page actuelle
   int _selectedIndex = 0;
 
+  // Liste pages
+  // Dans l'ordre, de gauche à droite
   static List<Widget> _widgetOptions = <Widget>[
     PageEDT(),
     PageMails(),
+    PageSalles(),
+    PageControles(),
   ];
 
-  int _counter = 0;
-
+  // Changement de page
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-    });
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
     });
   }
 
@@ -64,86 +67,68 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            // Un peu sale mais apparemment il faut un title
-            // Ce qui est assez bizarre parce que title est sensé être déprécié
-            // pour utiliser label
-            title: Text(
-              '',
-              style: TextStyle(
-                fontSize: 0,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.6),
+              spreadRadius: 2,
+              blurRadius: 11,
+            ),
+          ],
+        ),
+        child: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              // Un peu sale mais apparemment il faut un title
+              // Ce qui est assez bizarre parce que title est sensé être déprécié
+              // pour utiliser label
+              title: Text(
+                '',
+                style: TextStyle(
+                  fontSize: 0,
+                ),
               ),
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.mail_outline),
-            title: Text(
-              '',
-              style: TextStyle(
-                fontSize: 0,
+            BottomNavigationBarItem(
+              icon: Icon(Icons.mail_outline),
+              title: Text(
+                '',
+                style: TextStyle(
+                  fontSize: 0,
+                ),
               ),
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            title: Text(
-              '',
-              style: TextStyle(
-                fontSize: 0,
+            BottomNavigationBarItem(
+              icon: Icon(Icons.desktop_windows),
+              title: Text(
+                '',
+                style: TextStyle(
+                  fontSize: 0,
+                ),
               ),
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.alternate_email),
-            title: Text(
-              '',
-              style: TextStyle(
-                fontSize: 0,
+            BottomNavigationBarItem(
+              icon: Icon(Icons.assignment),
+              title: Text(
+                '',
+                style: TextStyle(
+                  fontSize: 0,
+                ),
               ),
             ),
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).accentColor,
-        onTap: _onItemTapped,
-        // backgroundColor: Colors.lightBlue[500],
-        type: BottomNavigationBarType.fixed,
-        backgroundColor:
-            Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Theme.of(context).accentColor,
+          onTap: _onItemTapped,
+          // backgroundColor: Colors.lightBlue[500],
+          type: BottomNavigationBarType.fixed,
+          backgroundColor:
+              Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+          iconSize: 28,
+        ),
       ),
-    );
-  }
-}
-
-class PageEDT extends StatefulWidget {
-  @override
-  _PageEDTState createState() => _PageEDTState();
-}
-
-class _PageEDTState extends State<PageEDT> {
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      'EDT',
-      style: TextStyle(fontSize: 30),
-    );
-  }
-}
-
-class PageMails extends StatefulWidget {
-  @override
-  _PageMailsState createState() => _PageMailsState();
-}
-
-class _PageMailsState extends State<PageMails> {
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      'Zimbra !',
-      style: TextStyle(fontSize: 30),
     );
   }
 }
