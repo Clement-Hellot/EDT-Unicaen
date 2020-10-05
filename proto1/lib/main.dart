@@ -1,3 +1,4 @@
+import 'package:edt_mobile/pageOptions.dart';
 import 'package:flutter/material.dart';
 
 import 'pageEdt.dart';
@@ -44,6 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
     PageMails(),
     PageSalles(),
     PageControles(),
+    PageOptions(),
   ];
 
   // Changement de page
@@ -113,6 +115,15 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.more_horiz),
+              title: Text(
+                '',
+                style: TextStyle(
+                  fontSize: 0,
+                ),
+              ),
+            ),
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
@@ -120,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
           type: BottomNavigationBarType.fixed,
           backgroundColor:
               Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-          iconSize: 28,
+          iconSize: 30,
           selectedItemColor: Theme.of(context).accentColor,
         ),
       ),
