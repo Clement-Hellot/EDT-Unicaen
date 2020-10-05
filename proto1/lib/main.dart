@@ -56,16 +56,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
+      // appBar: AppBar(
+      //   title: Text(widget.title),
+      // ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            _widgetOptions.elementAt(_selectedIndex),
-          ],
-        ),
+        child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -82,8 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
             BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today),
               // Un peu sale mais apparemment il faut un title
-              // Ce qui est assez bizarre parce que title est sensé être déprécié
-              // pour utiliser label
+              // Ce qui est assez bizarre parce que title est sensé
+              // être déprécié pour utiliser label à la place
               title: Text(
                 '',
                 style: TextStyle(
@@ -120,13 +115,13 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Theme.of(context).accentColor,
           onTap: _onItemTapped,
           // backgroundColor: Colors.lightBlue[500],
           type: BottomNavigationBarType.fixed,
           backgroundColor:
               Theme.of(context).bottomNavigationBarTheme.backgroundColor,
           iconSize: 28,
+          selectedItemColor: Theme.of(context).accentColor,
         ),
       ),
     );
