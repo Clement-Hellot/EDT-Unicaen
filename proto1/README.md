@@ -1,8 +1,8 @@
 # edt_mobile
 
-A new Flutter project.
+Projet emploi du temps mobile
 
-## Getting Started
+## Flutter Help
 
 This project is a starting point for a Flutter application.
 
