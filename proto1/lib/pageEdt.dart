@@ -47,23 +47,20 @@ class _PageEDTState extends State<PageEDT> {
                   fin: Horaire(13, 0),
                   salle: '2235',
                 ),
-                Cours(
-                  matiere: Matieres.PAUSE,
-                  prof: '',
-                  debut: Horaire(13, 0),
-                  fin: Horaire(14, 0),
-                  salle: '',
+                Pause(
+                  Horaire(13, 0),
+                  Horaire(14, 0),
                 ),
                 Cours(
                   matiere: Matieres.TD_PHP,
-                  prof: 'Eric Porcq',
+                  prof: 'Eric PORCQ',
                   debut: Horaire(14, 0),
                   fin: Horaire(16, 0),
                   salle: '2236',
                 ),
                 Cours(
                   matiere: Matieres.TD_PHP,
-                  prof: 'Eric Porcq',
+                  prof: 'Eric PORCQ',
                   debut: Horaire(16, 0),
                   fin: Horaire(19, 0),
                   salle: '2236',
@@ -186,11 +183,89 @@ class _CoursState extends State<Cours> {
   }
 }
 
-class Horaire {
-  final int heures;
-  final int minutes;
+class Pause extends StatefulWidget {
+  @override
+  _PauseState createState() => _PauseState();
 
-  Horaire(this.heures, this.minutes);
+  final Horaire debut;
+  final Horaire fin;
+
+  Pause(this.debut, this.fin);
+
+  double get duree => fin.totalHeures - debut.totalHeures;
+
+  final TextStyle styleHeure = TextStyle(
+    color: Color(0xff606060),
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+  );
+}
+
+class _PauseState extends State<Pause> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(widget.debut.heureStr, style: widget.styleHeure),
+        Container(
+          margin: EdgeInsets.all(10),
+          height: (0.5 + widget.duree) * PageEDT.tailleHeure * 0.5,
+          child: PauseLigne(
+            width: 3,
+            dashLength: 9.0,
+            color: widget.styleHeure.color,
+          ),
+        ),
+        Text(widget.fin.heureStr, style: widget.styleHeure),
+      ],
+    );
+  }
+}
+
+class PauseLigne extends StatelessWidget {
+  final double width;
+  final double dashLength;
+  final Color color;
+
+  const PauseLigne(
+      {this.width = 1, this.dashLength = 10.0, this.color = Colors.black});
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final boxHeight = constraints.constrainHeight();
+        final dashHeight = dashLength;
+        final dashWidth = width;
+        final dashCount = (boxHeight / (1.75 * dashHeight)).floor();
+        return Flex(
+          children: List.generate(dashCount, (_) {
+            return SizedBox(
+              width: dashWidth,
+              height: dashHeight,
+              child: DecoratedBox(
+                decoration: BoxDecoration(color: color),
+              ),
+            );
+          }),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          direction: Axis.vertical,
+        );
+      },
+    );
+  }
+}
+
+class Horaire {
+  int heures;
+  int minutes;
+
+  Horaire(this.heures, this.minutes) {
+    if (minutes < 0 || minutes >= 60) {
+      heures = heures + (minutes / 60).floor();
+      minutes = minutes % 60;
+    }
+  }
 
   int get totalMinutes => heures * 60 + minutes;
   double get totalHeures => heures + (minutes / 60.0);
@@ -209,7 +284,6 @@ class Horaire {
 
 // enum temporaire, après ça sera géré automatiquement
 enum Matieres {
-  PAUSE, // Super temporaire
   TD_PHP,
   CM_SYSTEM,
   TD_PROBA,
@@ -218,7 +292,6 @@ enum Matieres {
 
 extension Matiere on Matieres {
   static const noms = {
-    Matieres.PAUSE: '-----------',
     Matieres.TD_PHP: 'TD PHP',
     Matieres.CM_SYSTEM: 'CM Système',
     Matieres.TD_PROBA: 'TD Proba/Stats',
@@ -226,7 +299,6 @@ extension Matiere on Matieres {
   };
 
   static final couleurs = {
-    Matieres.PAUSE: Colors.grey[400],
     Matieres.TD_PHP: Colors.purple[300],
     Matieres.CM_SYSTEM: Colors.green[300],
     Matieres.TD_PROBA: Colors.blue[300],
@@ -238,7 +310,6 @@ extension Matiere on Matieres {
 }
 
 // --TODO--
-// - Pauses
 // - Génération edt
 
 // Couleur matière
