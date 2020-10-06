@@ -8,12 +8,15 @@ class PageMails extends StatefulWidget {
 class _PageMailsState extends State<PageMails> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      child: Text(
-        'Zimbra !',
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 30),
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        width: double.infinity,
+        child: Text(
+          'Zimbra !',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 30),
+        ),
       ),
     );
   }

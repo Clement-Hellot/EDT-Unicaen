@@ -8,9 +8,16 @@ class PageOptions extends StatefulWidget {
 class _PageOptionsState extends State<PageOptions> {
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'Options',
-      style: TextStyle(fontSize: 30),
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        width: double.infinity,
+        child: Text(
+          'Options',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 30),
+        ),
+      ),
     );
   }
 }

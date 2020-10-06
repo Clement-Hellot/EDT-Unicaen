@@ -38,7 +38,9 @@ class _MyHomePageState extends State<MyHomePage> {
   // Page actuelle
   int _selectedIndex = 0;
 
-  Widget _pageActuelle;
+  final controller = PageController(
+    initialPage: 0,
+  );
 
   // Liste pages
   // Dans l'ordre, de gauche à droite
@@ -50,36 +52,30 @@ class _MyHomePageState extends State<MyHomePage> {
     PageOptions(),
   ];
 
-  _MyHomePageState() {
-    _pageActuelle = _widgetOptions.elementAt(_selectedIndex);
+  void _changePageIndex(int index) {
+    _selectedIndex = index;
   }
 
   // Changement de page
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
-      _pageActuelle = _widgetOptions.elementAt(_selectedIndex);
+      _changePageIndex(index);
+      controller.jumpToPage(index);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(widget.title),
-      // ),
       body: Center(
-        child: AnimatedSwitcher(
-          duration: Duration(milliseconds: 300),
-          transitionBuilder: (Widget child, Animation<double> animation) =>
-              SlideTransition(
-            position: Tween(
-              begin: Offset(1.0, 0.0),
-              end: Offset(0.0, 0.0),
-            ).animate(animation),
-            child: child,
-          ),
-          child: _pageActuelle,
+        child: PageView(
+          controller: controller,
+          children: _widgetOptions,
+          onPageChanged: (page) {
+            setState(() {
+              _changePageIndex(page);
+            });
+          },
         ),
       ),
       bottomNavigationBar: Container(

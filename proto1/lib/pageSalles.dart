@@ -8,9 +8,16 @@ class PageSalles extends StatefulWidget {
 class _PageSallesState extends State<PageSalles> {
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'Salles',
-      style: TextStyle(fontSize: 30),
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        width: double.infinity,
+        child: Text(
+          'Salles',
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 30),
+        ),
+      ),
     );
   }
 }
