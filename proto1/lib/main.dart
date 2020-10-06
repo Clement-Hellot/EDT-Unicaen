@@ -60,7 +60,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void _onItemTapped(int index) {
     setState(() {
       _changePageIndex(index);
-      controller.jumpToPage(index);
+      controller.animateToPage(
+        index,
+        curve: Curves.ease,
+        duration: Duration(milliseconds: 300),
+      );
     });
   }
 
