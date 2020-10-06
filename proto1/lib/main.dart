@@ -38,6 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
   // Page actuelle
   int _selectedIndex = 0;
 
+  Widget _pageActuelle;
+
   // Liste pages
   // Dans l'ordre, de gauche à droite
   static List<Widget> _widgetOptions = <Widget>[
@@ -48,10 +50,15 @@ class _MyHomePageState extends State<MyHomePage> {
     PageOptions(),
   ];
 
+  _MyHomePageState() {
+    _pageActuelle = _widgetOptions.elementAt(_selectedIndex);
+  }
+
   // Changement de page
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      _pageActuelle = _widgetOptions.elementAt(_selectedIndex);
     });
   }
 
@@ -62,7 +69,18 @@ class _MyHomePageState extends State<MyHomePage> {
       //   title: Text(widget.title),
       // ),
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: AnimatedSwitcher(
+          duration: Duration(milliseconds: 300),
+          transitionBuilder: (Widget child, Animation<double> animation) =>
+              SlideTransition(
+            position: Tween(
+              begin: Offset(1.0, 0.0),
+              end: Offset(0.0, 0.0),
+            ).animate(animation),
+            child: child,
+          ),
+          child: _pageActuelle,
+        ),
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
