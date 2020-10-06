@@ -15,26 +15,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'EDT Info',
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'EDT'),
+      home: PagePrincipale(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
+class PagePrincipale extends StatefulWidget {
+  PagePrincipale({Key key}) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _PagePrincipaleState createState() => _PagePrincipaleState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _PagePrincipaleState extends State<PagePrincipale> {
   // Page actuelle
   int _selectedIndex = 0;
 
