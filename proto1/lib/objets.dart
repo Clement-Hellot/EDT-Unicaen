@@ -70,15 +70,8 @@ class Cc {
   String lieu;
   String duree;
 
-  Cc(String date, String matiere, String enseignant, String epreuve,
-      String lieu, String duree) {
-    this.date = date;
-    this.matiere = matiere;
-    this.enseignant = enseignant;
-    this.epreuve = epreuve;
-    this.lieu = lieu;
-    this.duree = duree;
-  }
+  Cc(this.date, this.matiere, this.enseignant, this.epreuve, this.lieu,
+      this.duree);
 
   @override
   String toString() {
