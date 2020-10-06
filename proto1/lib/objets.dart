@@ -62,3 +62,31 @@ extension Matiere on Matieres {
   String get nom => noms[this];
   Color get couleur => couleurs[this];
 }
+
+class Cc {
+  String date;
+  String matiere;
+  String enseignant;
+  String epreuve;
+  String lieu;
+  String duree;
+
+  Cc(String date, String matiere, String enseignant, String epreuve,
+      String lieu, String duree) {
+    this.date = date;
+    this.matiere = matiere;
+    this.enseignant = enseignant;
+    this.epreuve = epreuve;
+    this.lieu = lieu;
+    this.duree = duree;
+  }
+
+  @override
+  String toString() {
+    return 'Cc(date: $date, matiere: $matiere, enseignant: $enseignant, epreuve: $epreuve, lieu: $lieu, duree: $duree)';
+  }
+
+  void display() {
+    print(this.toString());
+  }
+}
