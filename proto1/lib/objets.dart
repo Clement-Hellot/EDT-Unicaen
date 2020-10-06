@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class Horaire {
@@ -36,29 +39,25 @@ class Journee {
   // Liste cours ici ? ou alors classe enfant
 }
 
-// enum temporaire, après ça sera géré automatiquement, dans une classe Matiere
-enum Matieres {
-  TD_PHP,
-  CM_SYSTEM,
-  TD_PROBA,
-  TDP_CONCEPTION_OBJET,
-}
+class Matiere {
+  static int randomMult = 2;
 
-extension Matiere on Matieres {
-  static const noms = {
-    Matieres.TD_PHP: 'TD PHP',
-    Matieres.CM_SYSTEM: 'CM Système',
-    Matieres.TD_PROBA: 'TD Proba/Stats',
-    Matieres.TDP_CONCEPTION_OBJET: 'TDP Conception Objet',
-  };
+  final String nom;
 
-  static final couleurs = {
-    Matieres.TD_PHP: Colors.purple[300],
-    Matieres.CM_SYSTEM: Colors.green[300],
-    Matieres.TD_PROBA: Colors.blue[300],
-    Matieres.TDP_CONCEPTION_OBJET: Colors.red[300],
-  };
+  Matiere(this.nom);
 
-  String get nom => noms[this];
-  Color get couleur => couleurs[this];
+  /// Retourne une couleur propre à cette matière, générée à partir
+  /// de son nom
+  Color couleur() {
+    String nomOnlyAscii = nom.replaceAll(RegExp(r"[^\s\w]"), '');
+    int nomInt = 0;
+
+    for (int n in AsciiCodec().encode(nomOnlyAscii)) {
+      nomInt += n;
+    }
+
+    double randHue = Random(nomInt * randomMult).nextDouble() * 360;
+
+    return HSVColor.fromAHSV(1, randHue, 0.65, 1.0).toColor();
+  }
 }

@@ -7,6 +7,7 @@ class PageEDT extends StatefulWidget {
   _PageEDTState createState() => _PageEDTState();
 
   static const tailleHeure = 70;
+  static const opaciteCours = 0.45;
 }
 
 class _PageEDTState extends State<PageEDT> {
@@ -29,21 +30,21 @@ class _PageEDTState extends State<PageEDT> {
             Column(
               children: [
                 Cours(
-                  matiere: Matieres.CM_SYSTEM,
+                  matiere: Matiere('CM Système'),
                   prof: 'François BOURDON',
                   debut: Horaire(8, 0),
                   fin: Horaire(9, 0),
                   salle: 'Amphi',
                 ),
                 Cours(
-                  matiere: Matieres.TD_PROBA,
+                  matiere: Matiere('TD Proba/Stats'),
                   prof: 'Stéphane SECOUARD',
                   debut: Horaire(9, 0),
                   fin: Horaire(11, 0),
                   salle: '2124',
                 ),
                 Cours(
-                  matiere: Matieres.TDP_CONCEPTION_OBJET,
+                  matiere: Matiere('TDP Conception Objet'),
                   prof: 'Paul DORBEC',
                   debut: Horaire(11, 0),
                   fin: Horaire(13, 0),
@@ -54,18 +55,18 @@ class _PageEDTState extends State<PageEDT> {
                   Horaire(14, 0),
                 ),
                 Cours(
-                  matiere: Matieres.TD_PHP,
+                  matiere: Matiere('TD PHP'),
                   prof: 'Eric PORCQ',
                   debut: Horaire(14, 0),
                   fin: Horaire(16, 0),
                   salle: '2236',
                 ),
                 Cours(
-                  matiere: Matieres.TD_PHP,
-                  prof: 'Eric PORCQ',
+                  matiere: Matiere('TP Anglais'),
+                  prof: 'Sylvian DELHOUMI',
                   debut: Horaire(16, 0),
-                  fin: Horaire(19, 0),
-                  salle: '2236',
+                  fin: Horaire(17, 0),
+                  salle: 'Labo langue',
                 ),
               ],
               mainAxisAlignment: MainAxisAlignment.start,
@@ -83,7 +84,7 @@ class Cours extends StatefulWidget {
   Cours({Key key, this.matiere, this.prof, this.salle, this.debut, this.fin})
       : super(key: key);
 
-  final Matieres matiere;
+  final Matiere matiere;
   final String prof;
   final String salle;
   final Horaire debut;
@@ -109,7 +110,7 @@ class _CoursState extends State<Cours> {
       padding: EdgeInsets.only(left: 14, top: 10, right: 14, bottom: 10),
       height: widget.duree * PageEDT.tailleHeure,
       decoration: BoxDecoration(
-        color: widget.matiere.couleur.withOpacity(0.5),
+        color: widget.matiere.couleur().withOpacity(PageEDT.opaciteCours),
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
       child: Row(
@@ -124,7 +125,7 @@ class _CoursState extends State<Cours> {
                     widget.matiere.nom,
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 19,
                       color: Colors.black,
                       fontWeight: FontWeight.w500,
                     ),
@@ -138,7 +139,7 @@ class _CoursState extends State<Cours> {
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 15,
-                      color: const Color(0xff707070),
+                      color: const Color(0xff606060),
                     ),
                   ),
                 ),
@@ -158,7 +159,7 @@ class _CoursState extends State<Cours> {
                     textAlign: TextAlign.right,
                     style: TextStyle(
                       color: Color(0xff707070),
-                      fontSize: 15,
+                      fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -170,8 +171,8 @@ class _CoursState extends State<Cours> {
                     widget.horaireString,
                     textAlign: TextAlign.right,
                     style: TextStyle(
-                      color: Color(0xff404040),
-                      fontSize: 17,
+                      color: Color(0xff505050),
+                      fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -260,19 +261,3 @@ class PauseLigne extends StatelessWidget {
 
 // --TODO--
 // - Génération edt
-
-// Couleur matière
-//
-// Il faudrait une couleur aléatoire assignée à chaque matière
-//
-// Problème :
-// Il faudrait à chaque fois la même couleur pour la même matière
-// - Pas réinitialisée à chaque lancement
-//   -> on pourrait la stocker
-//     -- place pour pas grand chose
-//     -- personne aurait les mêmes, sauf si stockage sur serveur (lol non)
-// - Ca serait bien que tout le monde ait la même chose
-//
-// Idée : Générer directement la couleur à partir du nom de la matière
-// Utiliser une conversion du nom en nombre, soit directement comme couleur,
-// soit comme seed pour générer une couleur
