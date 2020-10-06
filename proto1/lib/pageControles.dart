@@ -4,6 +4,12 @@ import 'package:http/http.dart' as http;
 
 import 'objets.dart';
 
+// TODO
+// - affichage
+// - stocker la liste au démarrage de l'appli
+//  -> déplacer le traitement ?
+//  -> ou variable static ?
+
 class PageControles extends StatefulWidget {
   @override
   _PageControlesState createState() => _PageControlesState();
@@ -11,53 +17,100 @@ class PageControles extends StatefulWidget {
 
 class _PageControlesState extends State<PageControles> {
   List<Cc> _listeCc = [];
-  String _strListeCc = 'Chargement...';
+
+  Column _widgetCc;
+  Widget _loadingText = Text('Chargement...');
+  Widget _ccWrapper;
 
   _PageControlesState() {
+    _ccWrapper = _loadingText;
     fetchCc(_listeCc, _dispListeCc);
   }
 
   _dispListeCc() {
     setState(() {
-      _strListeCc = toString(_listeCc);
+      List<Widget> ccs = [];
+      for (Cc cc in _listeCc) {
+        ccs.add(CcUI(cc));
+      }
+
+      _widgetCc = Column(
+        children: ccs,
+      );
+
+      _ccWrapper = _widgetCc;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
+    return SingleChildScrollView(
+      child: Align(
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            Container(
+              margin: EdgeInsets.only(top: 50, bottom: 30),
+              width: double.infinity,
+              child: Text(
+                'Contrôles',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                left: 20,
+                top: 20,
+                right: 20,
+                bottom: 20,
+              ),
+              width: double.infinity,
+              child: _ccWrapper,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CcUI extends StatefulWidget {
+  final Cc cc;
+
+  CcUI(this.cc);
+
+  @override
+  _CcUIState createState() => _CcUIState();
+}
+
+class _CcUIState extends State<CcUI> {
+  TextStyle _style = TextStyle(
+    color: Colors.white,
+    fontSize: 15,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 5),
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+        color: Colors.grey[600],
+      ),
       child: Column(
         children: [
-          Container(
-            margin: EdgeInsets.only(top: 50, bottom: 40),
-            width: double.infinity,
-            child: Text(
-              'Contrôles',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(
-              left: 20,
-              top: 20,
-              right: 20,
-              bottom: 20,
-            ),
-            width: double.infinity,
-            child: Text(
-              _strListeCc,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
+          Text(cleanUp(widget.cc.date), style: _style),
+          Text(cleanUp(widget.cc.matiere), style: _style),
+          Text(cleanUp(widget.cc.enseignant), style: _style),
+          Text(cleanUp(widget.cc.epreuve), style: _style),
+          Text(cleanUp(widget.cc.lieu), style: _style),
+          Text(cleanUp(widget.cc.duree), style: _style),
         ],
       ),
     );
@@ -124,4 +177,8 @@ String toString(List<Cc> list) {
   }
 
   return str;
+}
+
+String cleanUp(String str) {
+  return str.replaceAll('<br>', '').trim();
 }
