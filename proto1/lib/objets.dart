@@ -4,10 +4,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class Horaire {
+  DateTime date;
   int heures;
   int minutes;
 
-  Horaire(this.heures, this.minutes) {
+  Horaire(this.heures, this.minutes, {this.date}) {
     if (minutes < 0 || minutes >= 60) {
       heures = heures + (minutes / 60).floor();
       minutes = minutes % 60;
@@ -27,6 +28,19 @@ class Horaire {
     else
       return n.toString();
   }
+
+  @override
+  String toString() {
+    return heureStr;
+  }
+
+  static Horaire fromCalendar(String debut) {
+    return Horaire.fromDate(DateTime.parse(debut).toLocal());
+  }
+
+  static Horaire fromDate(DateTime date) {
+    return Horaire(date.hour, date.minute, date: date);
+  }
 }
 
 class Journee {
@@ -36,9 +50,38 @@ class Journee {
   // - getter format Mercredi 7 Octobre
   // - getter format 07/10/2020 ou 2020-10-07
 
+  DateTime date;
+
   List<HeureCours> cours;
 
-  Journee({this.cours});
+  Journee({List<HeureCours> cours, this.date}) {
+    if (cours != null) {
+      ajouterCours(cours);
+    }
+  }
+
+  ajouterCours(List<HeureCours> cours) {
+    this.cours = new List<HeureCours>();
+
+    Cours last;
+
+    for (HeureCours c in cours) {
+      if (c is Cours) {
+        if (last != null) {
+          if (c.debut.date.day == last.fin.date.day &&
+              c.debut.date.difference(last.fin.date).inMinutes > 15) {
+            this.cours.add(Pause(last.fin, c.debut));
+          }
+        }
+
+        last = c;
+      } else {
+        last = null;
+      }
+
+      this.cours.add(c);
+    }
+  }
 }
 
 class Matiere {
@@ -62,6 +105,11 @@ class Matiere {
 
     return HSVColor.fromAHSV(1, randHue, 0.65, 1.0).toColor();
   }
+
+  @override
+  String toString() {
+    return nom;
+  }
 }
 
 abstract class HeureCours {
@@ -84,6 +132,11 @@ class Cours extends HeureCours {
 
   Cours({this.matiere, this.prof, this.salle, Horaire debut, Horaire fin})
       : super(debut, fin);
+
+  @override
+  String toString() {
+    return "Cours de $matiere avec $prof en $salle de $debut à $fin";
+  }
 }
 
 class Pause extends HeureCours {
