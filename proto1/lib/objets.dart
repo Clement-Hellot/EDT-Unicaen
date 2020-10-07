@@ -36,7 +36,9 @@ class Journee {
   // - getter format Mercredi 7 Octobre
   // - getter format 07/10/2020 ou 2020-10-07
 
-  // Liste cours ici ? ou alors classe enfant
+  List<HeureCours> cours;
+
+  Journee({this.cours});
 }
 
 class Matiere {
@@ -60,6 +62,32 @@ class Matiere {
 
     return HSVColor.fromAHSV(1, randHue, 0.65, 1.0).toColor();
   }
+}
+
+abstract class HeureCours {
+  final Horaire debut;
+  final Horaire fin;
+
+  HeureCours(this.debut, this.fin);
+
+  double get duree => fin.totalHeures - debut.totalHeures;
+
+  String get horaireString {
+    return debut.heureStr + ' - ' + fin.heureStr;
+  }
+}
+
+class Cours extends HeureCours {
+  final Matiere matiere;
+  final String prof;
+  final String salle;
+
+  Cours({this.matiere, this.prof, this.salle, Horaire debut, Horaire fin})
+      : super(debut, fin);
+}
+
+class Pause extends HeureCours {
+  Pause(Horaire debut, Horaire fin) : super(debut, fin);
 }
 
 class Cc {

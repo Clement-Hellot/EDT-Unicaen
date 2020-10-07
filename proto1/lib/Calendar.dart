@@ -2,29 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 
+import 'objets.dart';
+
 class Calendar {
-  int ressource = 1205;
-  int projectId = 4;
-  int nbWeeks = 1;
+  final int ressource;
+  final int projectId;
+  final int nbWeeks;
 
   String url;
+  String rawCal;
+  List<Cours> cours;
 
-  Calendar() {
+  Calendar({this.ressource = 1205, this.projectId = 4, this.nbWeeks = 1}) {
     this.url =
         "http://ade.unicaen.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=$ressource&projectId=$projectId&calType=ical&nbWeeks=$nbWeeks";
-    this.display();
+    cours = new List<Cours>();
   }
 
-  void display() {
-    getHtmlCC().then((value) => traitement(value.body));
+  aff() {
+    //this.rawCal = await getHtmlCal();
   }
 
-  void traitement(String content) {
-    content.split("DTSTART");
-    print(content[0]);
+  traitement() {
+    List<String> coursStr = this.rawCal.split("BEGIN:VEVENT");
+
+    for (String cr in coursStr) {
+      for (String prop in cr.split("\n")) {}
+    }
   }
 
-  Future<http.Response> getHtmlCC() async {
-    return http.get(url);
+  Future<String> getHtmlCal() async {
+    this.rawCal = await http.read(url);
+    traitement();
   }
 }
