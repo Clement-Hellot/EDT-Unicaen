@@ -55,6 +55,8 @@ class JourneeUI extends StatefulWidget {
 class _JourneeUIState extends State<JourneeUI> {
   List<Widget> _coursUi;
 
+  String _nomJour;
+
   _JourneeUIState() {
     _coursUi = List<Widget>();
   }
@@ -72,6 +74,12 @@ class _JourneeUIState extends State<JourneeUI> {
         _coursUi.add(PauseUI(cours));
       }
     }
+
+    String jour = Calendar.jourSemaine(widget.journee.date);
+    int numJour = widget.journee.date.day;
+    String mois = Calendar.mois(widget.journee.date);
+
+    _nomJour = jour + " " + numJour.toString() + " " + mois;
   }
 
   @override
@@ -80,7 +88,7 @@ class _JourneeUIState extends State<JourneeUI> {
       Container(
         margin: EdgeInsets.only(bottom: 20),
         child: Text(
-          'Mercredi 7 octobre', // TODO date
+          _nomJour, // TODO date
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w600,
@@ -278,6 +286,3 @@ class LoadingEdt extends StatelessWidget {
     );
   }
 }
-
-// --TODO--
-// - Génération edt

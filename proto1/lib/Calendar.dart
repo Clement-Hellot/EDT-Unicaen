@@ -20,7 +20,7 @@ class Calendar {
   Calendar({
     this.ressource = 1205,
     this.projectId = 4,
-    this.nbWeeks = 1,
+    this.nbWeeks = 2,
     this.readyFunc,
   }) {
     this.url =
@@ -137,5 +137,38 @@ class Calendar {
     for (Cours c in cours) {
       print(c);
     }
+  }
+
+  static jourSemaine(DateTime date) {
+    var jours = {
+      1: "Lundi",
+      2: "Mardi",
+      3: "Mercredi",
+      4: "Jeudi",
+      5: "Vendredi",
+      6: "Samedi",
+      7: "Dimanche",
+    };
+
+    return jours[date.weekday];
+  }
+
+  static mois(DateTime date) {
+    var jours = {
+      1: "Janvier",
+      2: "Février",
+      3: "Mars",
+      4: "Avril",
+      5: "Mai",
+      6: "Juin",
+      7: "Juillet",
+      8: "Août",
+      9: "Septembre",
+      10: "Octobre",
+      11: "Novembre",
+      12: "Décembre",
+    };
+
+    return jours[date.month];
   }
 }

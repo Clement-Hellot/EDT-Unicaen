@@ -57,6 +57,10 @@ class Journee {
   Journee({List<HeureCours> cours, this.date}) {
     if (cours != null) {
       ajouterCours(cours);
+
+      if (date == null) {
+        date = cours[0].debut.date;
+      }
     }
   }
 
@@ -68,9 +72,14 @@ class Journee {
     for (HeureCours c in cours) {
       if (c is Cours) {
         if (last != null) {
-          if (c.debut.date.day == last.fin.date.day &&
-              c.debut.date.difference(last.fin.date).inMinutes > 15) {
-            this.cours.add(Pause(last.fin, c.debut));
+          Duration dif = c.debut.date.difference(last.fin.date);
+          if (dif.inMinutes > 15) {
+            if (c.debut.date.day == last.fin.date.day) {
+              this.cours.add(Pause(last.fin, c.debut));
+            } else {
+              this.cours.add(Pause(
+                  last.fin, Horaire(c.debut.heures + 24, c.debut.minutes)));
+            }
           }
         }
 
