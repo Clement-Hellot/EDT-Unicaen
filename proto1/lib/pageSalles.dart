@@ -93,37 +93,27 @@ class _PlageHoraireState extends State<PlageHoraire> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-        left: 125,
+        left: 100,
         top: 40,
-        right: 125,
+        right: 100,
         bottom: 20,
       ),
-      padding: EdgeInsets.only(left: 14, top: 10, right: 14, bottom: 10),
+      padding: EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 10,
+      ),
       height: 50,
       decoration: BoxDecoration(
         color: Colors.grey[350],
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
-      child: Row(
-        children: [
-          Flexible(
-            fit: FlexFit.tight,
-            child: Column(
-              children: [
-                Container(
-                  child: Text(
-                    widget.horaireString,
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+      child: Text(
+        widget.horaireString,
+        style: TextStyle(
+          fontSize: 25,
+          color: Colors.black,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
@@ -151,50 +141,38 @@ class _SalleState extends State<Salle> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(
-        left: 15,
-        top: 5,
-        right: 15,
-        bottom: 5,
+      margin: EdgeInsets.symmetric(
+        horizontal: 15,
+        vertical: 5,
       ),
-      padding: EdgeInsets.only(left: 20, top: 5, right: 20, bottom: 5),
+      padding: EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 5,
+      ),
       height: 50,
       decoration: BoxDecoration(
         color: widget.salle.couleur.withOpacity(0.5),
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Flexible(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: double.infinity,
-                  child: Text(
-                    widget.salle.nom,
-                    style: TextStyle(
-                      fontSize: 23,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
+          Container(
+            //width: double.infinity,
+            child: Text(
+              widget.salle.nom,
+              style: TextStyle(
+                fontSize: 23,
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
-          Flexible(
-            //fit: FlexFit.tight,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                    child: Icon(
-                  widget.salleOrdi,
-                  color: Colors.grey[800],
-                  size: 30,
-                )),
-              ],
+          Container(
+            child: Icon(
+              widget.salleOrdi,
+              color: Colors.grey[800],
+              size: 30,
             ),
           ),
         ],
