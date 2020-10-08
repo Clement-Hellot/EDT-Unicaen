@@ -160,24 +160,3 @@ class Cours extends HeureCours {
 class Pause extends HeureCours {
   Pause(Horaire debut, Horaire fin) : super(debut, fin);
 }
-
-class Cc {
-  String date;
-  String matiere;
-  String enseignant;
-  String epreuve;
-  String lieu;
-  String duree;
-
-  Cc(this.date, this.matiere, this.enseignant, this.epreuve, this.lieu,
-      this.duree);
-
-  @override
-  String toString() {
-    return 'Cc(date: $date, matiere: $matiere, enseignant: $enseignant, epreuve: $epreuve, lieu: $lieu, duree: $duree)';
-  }
-
-  void display() {
-    print(this.toString());
-  }
-}
