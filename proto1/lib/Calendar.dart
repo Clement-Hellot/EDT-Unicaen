@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 
 import 'objets.dart';
@@ -16,6 +14,7 @@ class Calendar {
   String url;
   String rawCal;
   List<Cours> cours;
+  List<Journee> jours;
 
   Calendar({
     this.ressource = 1205,
@@ -26,6 +25,7 @@ class Calendar {
     this.url =
         "http://ade.unicaen.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=$ressource&projectId=$projectId&calType=ical&nbWeeks=$nbWeeks";
     cours = new List<Cours>();
+    jours = new List<Journee>();
 
     getHtmlCal();
   }
@@ -44,6 +44,7 @@ class Calendar {
     }
 
     rangerCours();
+    creerJours();
 
     readyFunc();
   }
@@ -69,23 +70,14 @@ class Calendar {
       } else if (prop.contains("DESCRIPTION")) {
         prof = prop.split("\\n")[4];
         takeNext = true;
-      } else if (takeNext && !prop.contains("UID")) {
+      } else if (takeNext && prop[0] == ' ' && !prop.contains("UID")) {
         takeNext = false;
         prof += prop.split("\\n")[0].substring(1);
       }
     }
 
     matiere = trimMatiere(matiere);
-    prof = trimProf(prof);
-    // debut = convertDate(debut);
-    // fin = convertDate(fin);
-
-    // print(" -----------------");
-    // print("Matière : $matiere");
-    // print("Prof : $prof");
-    // print("Salle : $salle");
-    // print("Début : $debut");
-    // print("Fin : $debut");
+    prof = verifProf(trimProf(prof));
 
     cours.add(Cours(
       matiere: Matiere(matiere),
@@ -94,6 +86,25 @@ class Calendar {
       debut: Horaire.fromCalendar(debut),
       fin: Horaire.fromCalendar(fin),
     ));
+  }
+
+  creerJours() {
+    DateTime current;
+    List<Cours> coursJours;
+
+    for (Cours c in cours) {
+      if (current == null || dateJour(c.debut.date).isAfter(current)) {
+        if (current != null) {
+          jours.add(Journee(cours: coursJours, date: current));
+        }
+
+        coursJours = List<Cours>();
+        coursJours.add(c);
+        current = dateJour(c.debut.date);
+      } else {
+        coursJours.add(c);
+      }
+    }
   }
 
   String convertDate(String date) {
@@ -114,7 +125,10 @@ class Calendar {
   }
 
   String trimMatiere(String mat) {
-    return mat.substring(0, mat.length - 4);
+    if (mat.contains(RegExp(r'[_ ]s[0-9][0-9]$')))
+      return mat.substring(0, mat.length - 4);
+    else
+      return mat;
   }
 
   String trimProf(String prof) {
@@ -122,6 +136,13 @@ class Calendar {
       return prof.split("(")[0];
     else
       return prof;
+  }
+
+  String verifProf(String prof) {
+    if (prof.contains(RegExp(r'^.+ .+$')))
+      return prof;
+    else
+      return '';
   }
 
   getHtmlCal() async {
@@ -170,5 +191,9 @@ class Calendar {
     };
 
     return jours[date.month];
+  }
+
+  static DateTime dateJour(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
   }
 }

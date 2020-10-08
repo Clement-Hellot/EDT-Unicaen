@@ -21,23 +21,34 @@ class _PageEDTState extends State<PageEDT> {
     super.initState();
 
     _pageWidget = LoadingEdt();
-    widget.cal = Calendar(readyFunc: setJournee);
+    widget.cal = Calendar(
+      readyFunc: setJournee,
+      nbWeeks: 6,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        margin: EdgeInsets.only(top: 50, bottom: 15),
-        child: _pageWidget,
-      ),
-    );
+    return _pageWidget;
   }
 
   setJournee() {
     setState(() {
-      _pageWidget = JourneeUI(
-        journee: Journee(cours: widget.cal.cours),
+      List<SingleChildScrollView> jours = List<SingleChildScrollView>();
+
+      for (Journee j in widget.cal.jours) {
+        jours.add(SingleChildScrollView(
+          child: Container(
+            margin: EdgeInsets.only(top: 50),
+            child: JourneeUI(
+              journee: j,
+            ),
+          ),
+        ));
+      }
+
+      _pageWidget = PageView(
+        children: jours,
       );
     });
   }
@@ -88,7 +99,7 @@ class _JourneeUIState extends State<JourneeUI> {
       Container(
         margin: EdgeInsets.only(bottom: 20),
         child: Text(
-          _nomJour, // TODO date
+          _nomJour,
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w700,

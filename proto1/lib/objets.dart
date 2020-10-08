@@ -13,6 +13,12 @@ class Horaire {
       heures = heures + (minutes / 60).floor();
       minutes = minutes % 60;
     }
+
+    if (date == null) {
+      DateTime now = DateTime.now();
+      date = DateTime(now.year, now.month, now.day);
+      date = date.add(Duration(hours: heures, minutes: minutes));
+    }
   }
 
   int get totalMinutes => heures * 60 + minutes;
@@ -78,12 +84,7 @@ class Journee {
         if (last != null) {
           Duration dif = c.debut.date.difference(last.fin.date);
           if (dif.inMinutes > 15) {
-            if (c.debut.date.day == last.fin.date.day) {
-              this.cours.add(Pause(last.fin, c.debut));
-            } else {
-              this.cours.add(Pause(
-                  last.fin, Horaire(c.debut.heures + 24, c.debut.minutes)));
-            }
+            this.cours.add(Pause(last.fin, c.debut));
           }
         }
 
@@ -135,7 +136,7 @@ abstract class HeureCours {
 
   HeureCours(this.debut, this.fin);
 
-  double get duree => fin.totalHeures - debut.totalHeures;
+  double get duree => (fin.totalHeures - debut.totalHeures).abs();
 
   String get horaireString {
     return debut.heureStr + ' - ' + fin.heureStr;
