@@ -108,7 +108,7 @@ class _JourneeUIState extends State<JourneeUI> {
           'Mercredi 7 octobre', // TODO date
           style: TextStyle(
             fontSize: 30,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),

@@ -21,6 +21,10 @@ class Horaire {
     return toStr2Dig(heures) + ':' + toStr2Dig(minutes);
   }
 
+  String get heureSoloStr {
+    return toStr2Dig(heures) + 'H';
+  }
+
   static String toStr2Dig(int n) {
     if (n < 10)
       return '0' + n.toString();
