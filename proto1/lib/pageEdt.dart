@@ -4,67 +4,42 @@ import 'package:flutter/material.dart';
 import 'objets.dart';
 
 class PageEDT extends StatefulWidget {
+  Calendar cal;
+
   @override
   _PageEDTState createState() => _PageEDTState();
 
-  static const tailleHeure = 70;
+  static const tailleHeure = 85;
   static const opaciteCours = 0.45;
 }
 
 class _PageEDTState extends State<PageEDT> {
-  _PageEDTState() {
-    Calendar().aff();
+  Widget _pageWidget;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _pageWidget = LoadingEdt();
+    widget.cal = Calendar(readyFunc: setJournee);
   }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
         margin: EdgeInsets.only(top: 50, bottom: 15),
-        child: JourneeUI(
-          journee: Journee(cours: [
-            Cours(
-              matiere: Matiere('CM Système'),
-              prof: 'François BOURDON',
-              debut: Horaire(8, 0),
-              fin: Horaire(9, 0),
-              salle: 'Amphi',
-            ),
-            Cours(
-              matiere: Matiere('TD Proba/Stats'),
-              prof: 'Stéphane SECOUARD',
-              debut: Horaire(9, 0),
-              fin: Horaire(11, 0),
-              salle: '2124',
-            ),
-            Cours(
-              matiere: Matiere('TDP Conception Objet'),
-              prof: 'Paul DORBEC',
-              debut: Horaire(11, 0),
-              fin: Horaire(13, 0),
-              salle: '2235',
-            ),
-            Pause(
-              Horaire(13, 0),
-              Horaire(14, 0),
-            ),
-            Cours(
-              matiere: Matiere('TD PHP'),
-              prof: 'Eric PORCQ',
-              debut: Horaire(14, 0),
-              fin: Horaire(16, 0),
-              salle: '2236',
-            ),
-            Cours(
-              matiere: Matiere('TP Anglais'),
-              prof: 'Sylvian DELHOUMI',
-              debut: Horaire(16, 0),
-              fin: Horaire(17, 0),
-              salle: 'Labo langue',
-            ),
-          ]),
-        ),
+        child: _pageWidget,
       ),
     );
+  }
+
+  setJournee() {
+    setState(() {
+      _pageWidget = JourneeUI(
+        journee: Journee(cours: widget.cal.cours),
+      );
+    });
   }
 }
 
@@ -79,6 +54,8 @@ class JourneeUI extends StatefulWidget {
 
 class _JourneeUIState extends State<JourneeUI> {
   List<Widget> _coursUi;
+
+  String _nomJour;
 
   _JourneeUIState() {
     _coursUi = List<Widget>();
@@ -97,6 +74,12 @@ class _JourneeUIState extends State<JourneeUI> {
         _coursUi.add(PauseUI(cours));
       }
     }
+
+    String jour = Calendar.jourSemaine(widget.journee.date);
+    int numJour = widget.journee.date.day;
+    String mois = Calendar.mois(widget.journee.date);
+
+    _nomJour = jour + " " + numJour.toString() + " " + mois;
   }
 
   @override
@@ -105,7 +88,7 @@ class _JourneeUIState extends State<JourneeUI> {
       Container(
         margin: EdgeInsets.only(bottom: 20),
         child: Text(
-          'Mercredi 7 octobre', // TODO date
+          _nomJour, // TODO date
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w700,
@@ -292,5 +275,14 @@ class PauseLigne extends StatelessWidget {
   }
 }
 
-// --TODO--
-// - Génération edt
+class LoadingEdt extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        child: Text("Chargement..."),
+      ),
+    );
+  }
+}
