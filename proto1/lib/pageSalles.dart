@@ -32,42 +32,40 @@ class _PageSallesState extends State<PageSalles> {
               children: [
                 PlageHoraire(debut: Horaire(8, 0), fin: Horaire(9, 0)),
                 Salle(
-                  salle: Salles.SALLE_1110,
+                  salle: Salles.S1110,
                   possedeOrdis: false,
                 ),
                 Salle(
-                  salle: Salles.SALLE_2127,
+                  salle: Salles.S2127,
                   possedeOrdis: false,
                 ),
                 Salle(
-                  salle: Salles.SALLE_2129,
+                  salle: Salles.S2129,
                   possedeOrdis: false,
                 ),
                 Salle(
-                  salle: Salles.SALLE_2236,
+                  salle: Salles.S2236,
                   possedeOrdis: true,
                 ),
                 PlageHoraire(debut: Horaire(9, 0), fin: Horaire(10, 0)),
                 Salle(
-                  salle: Salles.SALLE_1110,
+                  salle: Salles.S1110,
                   possedeOrdis: false,
                 ),
                 Salle(
-                  salle: Salles.SALLE_2236,
+                  salle: Salles.S2236,
                   possedeOrdis: true,
                 ),
                 PlageHoraire(debut: Horaire(10, 0), fin: Horaire(11, 0)),
                 Salle(
-                  salle: Salles.SALLE_2236,
+                  salle: Salles.S2236,
                   possedeOrdis: true,
                 ),
                 Salle(
-                  salle: Salles.SALLE_2127,
+                  salle: Salles.S2127,
                   possedeOrdis: false,
                 ),
               ],
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
             ),
           ],
         ),
@@ -86,7 +84,7 @@ class PlageHoraire extends StatefulWidget {
   PlageHoraire({Key key, this.debut, this.fin}) : super(key: key);
 
   String get horaireString {
-    return debut.heureSoloStr + " - " + fin.heureSoloStr;
+    return debut.heureSoloStr + "H - " + fin.heureSoloStr + "H";
   }
 }
 
@@ -96,28 +94,25 @@ class _PlageHoraireState extends State<PlageHoraire> {
     return Container(
       margin: EdgeInsets.only(
         left: 125,
-        top: 5,
+        top: 40,
         right: 125,
-        bottom: 5,
+        bottom: 20,
       ),
       padding: EdgeInsets.only(left: 14, top: 10, right: 14, bottom: 10),
       height: 50,
       decoration: BoxDecoration(
         color: Colors.grey[350],
-        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
       child: Row(
         children: [
           Flexible(
             fit: FlexFit.tight,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  width: double.infinity,
                   child: Text(
                     widget.horaireString,
-                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 25,
                       color: Colors.black,
@@ -171,7 +166,6 @@ class _SalleState extends State<Salle> {
       child: Row(
         children: [
           Flexible(
-            fit: FlexFit.tight,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -179,7 +173,6 @@ class _SalleState extends State<Salle> {
                   width: double.infinity,
                   child: Text(
                     widget.salle.nom,
-                    textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 23,
                       color: Colors.black,
@@ -211,27 +204,20 @@ class _SalleState extends State<Salle> {
 }
 
 enum Salles {
-  SALLE_2129,
-  SALLE_2127,
-  SALLE_1110,
-  SALLE_2236,
+  S2129,
+  S2127,
+  S1110,
+  S2236,
 }
 
 extension DetailsSalles on Salles {
   static const noms = {
-    Salles.SALLE_1110: 'Salle 1110',
-    Salles.SALLE_2127: 'Salle 2127',
-    Salles.SALLE_2129: 'Salle 2129',
-    Salles.SALLE_2236: 'Salle 2236'
-  };
-
-  static final couleurs = {
-    Salles.SALLE_1110: Colors.purple[300],
-    Salles.SALLE_2127: Colors.yellow[300],
-    Salles.SALLE_2129: Colors.blue[300],
-    Salles.SALLE_2236: Colors.red[300],
+    Salles.S1110: 'Salle 1110',
+    Salles.S2127: 'Salle 2127',
+    Salles.S2129: 'Salle 2129',
+    Salles.S2236: 'Salle 2236'
   };
 
   String get nom => noms[this];
-  Color get couleur => couleurs[this];
+  Color get couleur => Matiere.couleurString(nom);
 }

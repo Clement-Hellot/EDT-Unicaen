@@ -23,7 +23,7 @@ class Horaire {
   }
 
   String get heureSoloStr {
-    return toStr2Dig(heures) + 'H';
+    return toStr2Dig(heures);
   }
 
   static String toStr2Dig(int n) {
@@ -104,9 +104,13 @@ class Matiere {
 
   Matiere(this.nom);
 
+  Color couleur() {
+    return couleurString(nom);
+  }
+
   /// Retourne une couleur propre à cette matière, générée à partir
   /// de son nom
-  Color couleur() {
+  static Color couleurString(String nom) {
     String nomOnlyAscii = nom.replaceAll(RegExp(r"[^\s\w]"), '');
     int nomInt = 0;
 
