@@ -4,40 +4,56 @@ import 'package:flutter/material.dart';
 import 'objets.dart';
 
 class PageEDT extends StatefulWidget {
-  Calendar cal;
-
   @override
   _PageEDTState createState() => _PageEDTState();
 
   static const tailleHeure = 85;
   static const opaciteCours = 0.45;
+
+  static Calendar calendrier;
+  static List<SingleChildScrollView> joursScrolls;
+  static PageView joursView;
 }
 
-class _PageEDTState extends State<PageEDT> {
+class _PageEDTState extends State<PageEDT>
+    with AutomaticKeepAliveClientMixin<PageEDT> {
   Widget _pageWidget;
 
   @override
   void initState() {
     super.initState();
 
-    _pageWidget = LoadingEdt();
-    widget.cal = Calendar(
-      readyFunc: setJournee,
-      nbWeeks: 6,
-    );
+    if (PageEDT.calendrier == null) {
+      _pageWidget = LoadingEdt();
+
+      PageEDT.calendrier = Calendar(
+        readyFunc: setJournees,
+        nbWeeks: 8,
+      );
+    } else {
+      _pageWidget = PageEDT.joursView;
+    }
   }
 
   @override
+  // ignore: must_call_super
   Widget build(BuildContext context) {
-    return _pageWidget;
+    return AnimatedSwitcher(
+      duration: Duration(milliseconds: 500),
+      switchInCurve: Curves.ease,
+      transitionBuilder: (Widget child, Animation<double> animation) {
+        return FadeTransition(child: child, opacity: animation);
+      },
+      child: _pageWidget,
+    );
   }
 
-  setJournee() {
+  setJournees() {
     setState(() {
-      List<SingleChildScrollView> jours = List<SingleChildScrollView>();
+      PageEDT.joursScrolls = List<SingleChildScrollView>();
 
-      for (Journee j in widget.cal.jours) {
-        jours.add(SingleChildScrollView(
+      for (Journee j in PageEDT.calendrier.jours) {
+        PageEDT.joursScrolls.add(SingleChildScrollView(
           child: Container(
             margin: EdgeInsets.only(top: 50),
             child: JourneeUI(
@@ -48,10 +64,15 @@ class _PageEDTState extends State<PageEDT> {
       }
 
       _pageWidget = PageView(
-        children: jours,
+        children: PageEDT.joursScrolls,
       );
+
+      PageEDT.joursView = _pageWidget;
     });
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class JourneeUI extends StatefulWidget {
@@ -292,7 +313,11 @@ class LoadingEdt extends StatelessWidget {
     return Align(
       alignment: Alignment.center,
       child: Container(
-        child: Text("Chargement..."),
+        child: Icon(
+          Icons.hourglass_empty,
+          size: 60,
+          color: Colors.grey[500],
+        ),
       ),
     );
   }

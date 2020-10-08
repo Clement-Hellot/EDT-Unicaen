@@ -30,10 +30,6 @@ class Calendar {
     getHtmlCal();
   }
 
-  aff() {
-    //this.rawCal = await getHtmlCal();
-  }
-
   traitement() {
     List<String> coursStr = this.rawCal.split("BEGIN:VEVENT");
 
@@ -68,8 +64,9 @@ class Calendar {
       } else if (prop.contains("LOCATION")) {
         salle = prop.split(":")[1];
       } else if (prop.contains("DESCRIPTION")) {
-        prof = prop.split("\\n")[4];
-        takeNext = true;
+        List<String> morceaux = prop.split("\\n");
+        prof = morceaux[4];
+        if (morceaux.length <= 5) takeNext = true;
       } else if (takeNext && prop[0] == ' ' && !prop.contains("UID")) {
         takeNext = false;
         prof += prop.split("\\n")[0].substring(1);
