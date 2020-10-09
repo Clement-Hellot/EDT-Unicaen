@@ -142,7 +142,7 @@ class _SemaineCcUIState  extends State<SemaineCcUI> {
       height: 60 + PageControles.taileCc*widget.semaineCc.controles.length,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(5)),
-        color: Colors.amber,
+        color: Colors.grey[300],
       ),
       child : Column(//la semaine
         children: [
@@ -195,7 +195,7 @@ class _ControleUIState extends State<ControleUI> {
       height: PageControles.taileCc,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Colors.grey[600],
+        color: Colors.grey[500],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
