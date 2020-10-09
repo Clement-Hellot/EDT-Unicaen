@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
@@ -13,6 +14,8 @@ import 'controleObjets.dart';
 
 class PageControles extends StatefulWidget {
   @override
+
+  static const taileCc = 70.0;
   _PageControlesState createState() => _PageControlesState();
 }
 
@@ -32,26 +35,23 @@ class _PageControlesState extends State<PageControles> {
     setState(() {
       List<Widget> semaines = [];
       for (SemaineCc semaineCc in _listeSemaineCc) {
-        semaines.add(SemaineCcUI(semaineCc));
+        print(semaineCc);
+        semaines.add(SemaineCcUI(semaineCc: semaineCc));
       }
 
       _widgetSemaineCc = Container(
-          margin: EdgeInsets.symmetric(vertical: 5),
-          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          margin: EdgeInsets.symmetric(vertical: 0),
+          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
           width: double.infinity,
+          /*
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(15)),
-            color: Colors.grey[600],
-          ),
-          child : Column(//la semaine
-            children: [
-              Text("cette semaine"),//le nom de la semaine (cette semaine, semaine prochaine etc
-              Column(//les cc de la semaine
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            color: Colors.grey[300],
+          ),*/
+          child : Column(//les cc de la semaine
                 children: semaines,
               ),
-            ],
-          ),
-      );
+          );
 
 
       _semaineCcWrapper = _widgetSemaineCc;
@@ -78,7 +78,7 @@ class _PageControlesState extends State<PageControles> {
               ),
             ),
             Container(
-              margin: EdgeInsets.all(20),
+              margin: EdgeInsets.all(5),
               width: double.infinity,
               child: _semaineCcWrapper,
             ),
@@ -89,9 +89,89 @@ class _PageControlesState extends State<PageControles> {
   }
 }
 
+class SemaineCcUI extends StatefulWidget {
+
+  final SemaineCc semaineCc;
+
+  SemaineCcUI({this.semaineCc}){;
+    print("je suis dans le constructor");
+    print(this.semaineCc.toString());
+  }
+
+  @override
+  _SemaineCcUIState createState() => _SemaineCcUIState();
+
+}
+
+//une semaine avec ses controles
+class _SemaineCcUIState  extends State<SemaineCcUI> {
+
+  Column _widgetControle;
+  Widget _loadingText = Text('Chargement...');
+  Widget _controleWrapper;
+
+  _SemaineCcUIState();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controleWrapper = _loadingText;
+    List<Widget> controles = List<Widget>();
+    for (Controle cc in widget.semaineCc.controles) {
+      controles.add(ControleUI(cc));
+    }
+
+    _widgetControle =  Column(//la semaine
+      children: [
+        Column(//les cc de la semaine
+          children: controles,
+        ),
+      ],
+    );
+
+    _controleWrapper = _widgetControle;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 5),
+      padding: EdgeInsets.all(10.0),
+      width: double.infinity,
+      height: 60 + PageControles.taileCc*widget.semaineCc.controles.length,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+        color: Colors.grey[300],
+      ),
+      child : Column(//la semaine
+        children: [
+          Container(
+            margin: EdgeInsets.only(left: 5.0),
+            width: double.infinity,
+            child: Text(
+              widget.semaineCc.semaine,
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                fontSize: 19,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+            ),//le nom de la semaine (cette semaine, semaine prochaine etc
+          ),
+          Container(
+            width: double.infinity,
+            child: _controleWrapper,
+          ),
+        ],
+      ),
+    );
+  }
+
+}
+
 class ControleUI extends StatefulWidget {
   final Controle cc;
-
   ControleUI(this.cc);
 
   @override
@@ -109,89 +189,67 @@ class _ControleUIState extends State<ControleUI> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 5),
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      margin: EdgeInsets.only(bottom: 5),
+      padding: EdgeInsets.all(10),
       width: double.infinity,
+      height: PageControles.taileCc,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(15)),
-        color: Colors.grey[600],
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        color: Colors.grey[500],
       ),
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(cleanUp(widget.cc.jourSemaine.name), style: _style),
-          Text(cleanUp(widget.cc.matiere), style: _style),
-          Text(cleanUp(widget.cc.enseignant), style: _style),
-          Text(cleanUp(widget.cc.epreuve), style: _style),
-          Text(cleanUp(widget.cc.lieu), style: _style),
-          Text(cleanUp(widget.cc.debut.format()), style: _style),
-          Text(cleanUp(widget.cc.debut.getHeureFinEvenement(widget.cc.duree).format()), style: _style),
-        ],
-      ),
-    );
-  }
-}
-
-class SemaineCcUI extends StatefulWidget {
-
-  final SemaineCc semaineCc;
-
-  SemaineCcUI(this.semaineCc);
-
-  @override
-  _SemaineCcUIState createState() => _SemaineCcUIState();
-
-}
-
-//une semaine avec ses controles
-class _SemaineCcUIState  extends State<SemaineCcUI> {
-
-  Column _widgetControle;
-  Widget _loadingText = Text('Chargement...');
-  Widget _controleWrapper;
-
-  _SemaineCcUIState() {
-    _controleWrapper = _loadingText;
-      List<Widget> controles = [];
-      for (Controle cc in widget.semaineCc.controles) {
-        controles.add(ControleUI(cc));
-      }
-
-      _widgetControle =  Column(//la semaine
-          children: [
-            Text("cette semaine"),//le nom de la semaine (cette semaine, semaine prochaine etc
-            Column(//les cc de la semaine
-              children: controles,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.cc.epreuve,
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Text(
+                widget.cc.lieu,
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.black,
+                ),
+              ),
+            ],
             ),
-          ],
-        );
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.cc.jourSemaine.name,
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Text(
+                widget.cc.debut.format(),
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
 
-
-      _controleWrapper = _widgetControle;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 5),
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(15)),
-        color: Colors.amber,
-      ),
-      child : Column(//la semaine
-        children: [
-          Text("cette semaine"),//le nom de la semaine (cette semaine, semaine prochaine etc
-          Container(
-            margin: EdgeInsets.all(20),
-            width: double.infinity,
-            child: _controleWrapper,
-          ),
+            ),
         ],
       ),
     );
   }
-
 }
 
 
@@ -241,7 +299,6 @@ class _SemaineCcUIState  extends State<SemaineCcUI> {
 /// Attend le html, puis le mets dans la liste et appelle la fonction
 fetchCc(List<SemaineCc> list, Function nextF) async {
   list.addAll(sortData(await getHtmlCC('2a')));
-
   nextF();
 }
 
@@ -256,7 +313,7 @@ Future<http.Response> getHtmlCC(String annee) async {
 List<SemaineCc> sortData(var code) {
   List<Controle> cc = [];
   List<SemaineCc> semaineCc = [];
-
+  /*
   var doc = parse(code.body);
   var table = doc.getElementsByTagName('table');
   table = table[0].children;
@@ -289,7 +346,23 @@ List<SemaineCc> sortData(var code) {
       cc.add(new Controle(jourSemaine, matiere, enseignant, epreuve, lieu, Heure(heures:1,minutes: 30), Heure(heures: 8,minutes: 30)));
     }
   }
-  semaineCc.add( SemaineCc(cc,"semaine de test"));
+  */
+
+  String semaine = "cette semaine";
+  JourSemaine jourSemaine = JourSemaine.LUNDI;
+  String matiere = "M2104";
+  String enseignant = "PORCQ";
+  String epreuve = "CC de PHP";
+  String lieu = "salle examen";
+  Heure duree = Heure(heures: 1,minutes: 0);
+  Heure debut = Heure(heures: 10,minutes: 0);
+
+  cc.add(Controle(jourSemaine, matiere, enseignant, epreuve, lieu, duree, debut));
+  cc.add(Controle(jourSemaine, matiere, enseignant, epreuve, lieu, duree, debut));
+
+  semaineCc.add( SemaineCc(cc,semaine));
+  cc.add(Controle(jourSemaine, matiere, enseignant, epreuve, lieu, duree, debut));
+  semaineCc.add( SemaineCc(cc,"semaine prochaine"));
   return semaineCc;
 }
 
