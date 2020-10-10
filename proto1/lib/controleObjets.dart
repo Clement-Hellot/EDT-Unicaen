@@ -9,24 +9,24 @@ class Controle {
   JourSemaine jourSemaine;
   Matiere matiere;
   String enseignant;
-  String epreuve;
+  Epreuve epreuve;
   String lieu;
-  Heure duree;
-  Heure debut;
+  Horaire fin;
+  Horaire debut;
 
   Controle(this.jourSemaine, this.matiere, this.enseignant, this.epreuve, this.lieu,
-      this.duree, this.debut);
+      this.fin, this.debut);
 
   @override
   String toString() {
-    return 'Cc(jour: $jourSemaine , matiere: $matiere, enseignant: $enseignant, epreuve: $epreuve, lieu: $lieu, duree: $duree)';
+    return 'Cc(jour: $jourSemaine , matiere: $matiere, enseignant: $enseignant, epreuve: $epreuve, lieu: $lieu, fin: $fin)';
   }
+
 
   void display() {
     print(this.toString());
   }
 }
-
 
 class SemaineCc {
   String semaine;//TODO mieux faire que ca, genre passer par une classe spe
@@ -78,8 +78,7 @@ class SemaineCc {
   }
 }
 
-
-
+/*
 class Heure{
 
   int heures;
@@ -109,7 +108,7 @@ class Heure{
     return "$heures:$minutes";
   }
 }
-
+*/
 enum JourSemaine {
   LUNDI,
   MARDI,
@@ -141,4 +140,10 @@ extension JourSemaineExtension on JourSemaine {
 
     }
   }
+}
+
+
+class Epreuve extends Matiere {
+  Epreuve(String nom) : super(nom);
+
 }

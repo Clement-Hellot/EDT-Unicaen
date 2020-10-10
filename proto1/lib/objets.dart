@@ -124,6 +124,13 @@ class Matiere {
     return HSVColor.fromAHSV(1, randHue, 0.65, 1.0).toColor();
   }
 
+  //quand le nom de la matiere est trop long
+  String shortVersion() {
+    if (this.nom.length < 15)
+      return this.nom;
+    else
+      return this.nom.substring(0,13)+"...";
+  }
   @override
   String toString() {
     return nom;

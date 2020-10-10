@@ -1,10 +1,8 @@
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
-
 import 'objets.dart';
 import 'controleObjets.dart';
 
@@ -21,7 +19,7 @@ class PageControles extends StatefulWidget {
   _PageControlesState createState() => _PageControlesState();
 }
 
-class _PageControlesState extends State<PageControles> with AutomaticKeepAliveClientMixin<PageControles>{
+class _PageControlesState extends State<PageControles> /*with AutomaticKeepAliveClientMixin<PageControles>*/{
   List<SemaineCc> _listeSemaineCc = [];
 
   Container _widgetSemaineCc;
@@ -223,7 +221,7 @@ class _ControleUIState extends State<ControleUI> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 5, right: 10, left: 10),
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       width: double.infinity,
       height: PageControles.taileCc,
       decoration: BoxDecoration(
@@ -236,14 +234,15 @@ class _ControleUIState extends State<ControleUI> {
         children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                widget.cc.epreuve,
+                widget.cc.matiere.shortVersion(),
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontSize: 18,
                   color: Colors.black,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               Text(
@@ -258,18 +257,19 @@ class _ControleUIState extends State<ControleUI> {
             ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 widget.cc.jourSemaine.name,
-                textAlign: TextAlign.right,
+                textAlign: TextAlign.left,
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               Text(
-                widget.cc.debut.format(),
+                widget.cc.debut.toString() +" - "+ widget.cc.fin.toString(),
                 textAlign: TextAlign.right,
                 style: TextStyle(
                   color: Colors.black,
@@ -363,12 +363,12 @@ List<SemaineCc> sortData(var code) {
     String duree;
 
     var col = item.children;
-    if (col.length > 1 &&
-        col[1].innerHtml.length > 3 &&
-        col[1].innerHtml.contains("-")) {
+    //print(col[1]);
+    if (col.length > 1 && col[1].innerHtml.length > 3 && col[1].innerHtml.contains("-")) {
       semaine = col[0].innerHtml;
 
       var content = col[1].innerHtml.split(" - ");
+      print(content);
       matiere = content[0];
       enseignant = content[1];
       epreuve = content[2];
@@ -376,27 +376,31 @@ List<SemaineCc> sortData(var code) {
       lieu = col[2].innerHtml;
 
       duree = col[3].innerHtml;
+
       jourSemaine = JourSemaine.LUNDI;
-      cc.add(new Controle(jourSemaine, matiere, enseignant, epreuve, lieu, Heure(heures:1,minutes: 30), Heure(heures: 8,minutes: 30)));
+      cc.add(new Controle(jourSemaine, Matiere(matiere), enseignant, Epreuve(epreuve), lieu, Horaire(1,30), Horaire(8,30)));
+      //print(cc);
     }
   }
-  */
+*/
+
 
   String semaine = "cette semaine";
   JourSemaine jourSemaine = JourSemaine.LUNDI;
-  String matiere = "M2104";
+  String matiere = "CC de php";
   String enseignant = "PORCQ";
   String epreuve = "CC de PHP";
   String lieu = "salle examen";
-  Heure duree = Heure(heures: 1,minutes: 0);
-  Heure debut = Heure(heures: 10,minutes: 0);
+  Horaire fin = Horaire(1,0);
+  Horaire debut = Horaire(10,0);
 
-  cc.add(Controle(jourSemaine, Matiere(matiere), enseignant, epreuve, lieu, duree, debut));
-  cc.add(Controle(jourSemaine, Matiere(matiere), enseignant, epreuve, lieu, duree, debut));
+  cc.add(Controle(jourSemaine, Matiere(matiere), enseignant, Epreuve(epreuve), lieu, fin, debut));
+  cc.add(Controle(jourSemaine, Matiere(matiere), enseignant, Epreuve(epreuve), lieu, fin, debut));
 
   semaineCc.add( SemaineCc(cc,semaine));
-  cc.add(Controle(jourSemaine, Matiere(matiere), enseignant, epreuve, lieu, duree, debut));
+  cc.add(Controle(jourSemaine, Matiere(matiere), enseignant, Epreuve(epreuve), lieu, fin, debut));
   semaineCc.add( SemaineCc(cc,"semaine prochaine"));
+
   return semaineCc;
 }
 
