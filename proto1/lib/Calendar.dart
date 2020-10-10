@@ -93,6 +93,16 @@ class Calendar {
       if (current == null || dateJour(c.debut.date).isAfter(current)) {
         if (current != null) {
           jours.add(Journee(cours: coursJours, date: current));
+
+          Duration dif = dateJour(c.debut.date).difference(current);
+          int days = dif.inDays;
+
+          if (days > 1)
+            for (int i = 1; i < days; i++) {
+              jours.add(Journee(
+                  date:
+                      DateTime(current.year, current.month, current.day + i)));
+            }
         }
 
         coursJours = List<Cours>();

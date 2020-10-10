@@ -55,7 +55,7 @@ class _PageEDTState extends State<PageEDT>
       for (Journee j in PageEDT.calendrier.jours) {
         PageEDT.joursScrolls.add(SingleChildScrollView(
           child: Container(
-            margin: EdgeInsets.only(top: 50),
+            margin: EdgeInsets.only(top: 50, bottom: 15),
             child: JourneeUI(
               journee: j,
             ),
@@ -97,14 +97,18 @@ class _JourneeUIState extends State<JourneeUI> {
   void initState() {
     super.initState();
 
-    for (HeureCours cours in widget.journee.cours) {
-      if (cours is Cours) {
-        _coursUi.add(CoursUI(
-          cours: cours,
-        ));
-      } else if (cours is Pause) {
-        _coursUi.add(PauseUI(cours));
+    if (widget.journee.cours != null) {
+      for (HeureCours cours in widget.journee.cours) {
+        if (cours is Cours) {
+          _coursUi.add(CoursUI(
+            cours: cours,
+          ));
+        } else if (cours is Pause) {
+          _coursUi.add(PauseUI(cours));
+        }
       }
+    } else {
+      _coursUi.add(PasCours());
     }
 
     String jour = Calendar.jourSemaine(widget.journee.date);
@@ -159,7 +163,7 @@ class _CoursUIState extends State<CoursUI> {
         bottom: 5,
       ),
       padding: EdgeInsets.only(left: 14, top: 10, right: 14, bottom: 10),
-      height: widget.cours.duree * PageEDT.tailleHeure,
+      height: widget.cours.duree * PageEDT.tailleHeure, // TODO minheight
       decoration: BoxDecoration(
         color: widget.cours.matiere.couleur().withOpacity(PageEDT.opaciteCours),
         borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -320,5 +324,29 @@ class LoadingEdt extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class PasCours extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.only(top: 150),
+        child: Column(
+          children: [
+            Container(
+              margin: EdgeInsets.only(bottom: 15),
+              child: Icon(
+                Icons.notifications_off,
+                size: 60,
+                color: Colors.grey[600],
+              ),
+            ),
+            Text(
+              "Repos !",
+              style: TextStyle(fontSize: 18),
+            )
+          ],
+        ));
   }
 }
