@@ -228,8 +228,8 @@ class _ControleUIState extends State<ControleUI> {
       height: PageControles.taileCc,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
-        //color: widget.cc.matiere.couleur().withOpacity(PageControles.opaciteCours),
-        color: Colors.grey[400]
+        color: widget.cc.matiere.couleur().withOpacity(PageControles.opaciteCours),
+        //color: Colors.grey[400]
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
