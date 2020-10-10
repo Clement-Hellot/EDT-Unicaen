@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
@@ -14,12 +16,12 @@ import 'controleObjets.dart';
 
 class PageControles extends StatefulWidget {
   @override
-
+  static const opaciteCours = 0.45;
   static const taileCc = 70.0;
   _PageControlesState createState() => _PageControlesState();
 }
 
-class _PageControlesState extends State<PageControles> {
+class _PageControlesState extends State<PageControles> with AutomaticKeepAliveClientMixin<PageControles>{
   List<SemaineCc> _listeSemaineCc = [];
 
   Container _widgetSemaineCc;
@@ -35,7 +37,6 @@ class _PageControlesState extends State<PageControles> {
     setState(() {
       List<Widget> semaines = [];
       for (SemaineCc semaineCc in _listeSemaineCc) {
-        print(semaineCc);
         semaines.add(SemaineCcUI(semaineCc: semaineCc));
       }
 
@@ -87,16 +88,17 @@ class _PageControlesState extends State<PageControles> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
 
 class SemaineCcUI extends StatefulWidget {
 
   final SemaineCc semaineCc;
 
-  SemaineCcUI({this.semaineCc}){;
-    print("je suis dans le constructor");
-    print(this.semaineCc.toString());
-  }
+  SemaineCcUI({this.semaineCc});
 
   @override
   _SemaineCcUIState createState() => _SemaineCcUIState();
@@ -105,7 +107,7 @@ class SemaineCcUI extends StatefulWidget {
 
 //une semaine avec ses controles
 class _SemaineCcUIState  extends State<SemaineCcUI> {
-
+  bool _droppedDown = true;
   Column _widgetControle;
   Widget _loadingText = Text('Chargement...');
   Widget _controleWrapper;
@@ -137,32 +139,63 @@ class _SemaineCcUIState  extends State<SemaineCcUI> {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5),
-      padding: EdgeInsets.all(10.0),
       width: double.infinity,
-      height: 60 + PageControles.taileCc*widget.semaineCc.controles.length,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(5)),
-        color: Colors.grey[300],
+        //color: Colors.grey[300],
       ),
       child : Column(//la semaine
         children: [
+         InkWell(
+           child:  Container(
+             margin: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+             padding: EdgeInsets.all(5),
+             width: double.infinity,
+             decoration: BoxDecoration(
+               borderRadius: BorderRadius.all(Radius.circular(5)),
+               color: Colors.grey[300],
+             ),
+             child: Row(
+               children : [
+                 AnimatedCrossFade(
+                   duration: const Duration(milliseconds: 100),
+                   firstChild : Icon(Icons.keyboard_arrow_right),
+                   secondChild: Transform.rotate(
+                                  angle: 90 * pi/180,
+                                  child:  Icon(Icons.keyboard_arrow_right),
+                                ),
+                   crossFadeState: _droppedDown == true ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                 ),
+
+                 Text(
+                   widget.semaineCc.semaine,
+                   textAlign: TextAlign.left,
+                   style: TextStyle(
+                     fontSize: 19,
+                     color: Colors.black,
+                     fontWeight: FontWeight.w500,
+                   ),
+                 ),
+               ],
+             ),
+           ),
+           onTap: () {
+             setState(() {
+
+               _droppedDown == true ? _droppedDown = false: _droppedDown = true;
+             });
+           },
+         ),
           Container(
-            margin: EdgeInsets.only(left: 5.0),
             width: double.infinity,
-            child: Text(
-              widget.semaineCc.semaine,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                fontSize: 19,
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-              ),
-            ),//le nom de la semaine (cette semaine, semaine prochaine etc
-          ),
-          Container(
-            width: double.infinity,
-            child: _controleWrapper,
-          ),
+            child : AnimatedCrossFade(
+              duration: const Duration(milliseconds: 100),
+              firstChild : Container(),
+              secondChild: _controleWrapper,
+              crossFadeState: _droppedDown == true ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            ),
+          )
+
         ],
       ),
     );
@@ -189,13 +222,14 @@ class _ControleUIState extends State<ControleUI> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 5),
+      margin: EdgeInsets.only(bottom: 5, right: 10, left: 10),
       padding: EdgeInsets.all(10),
       width: double.infinity,
       height: PageControles.taileCc,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Colors.grey[500],
+        //color: widget.cc.matiere.couleur().withOpacity(PageControles.opaciteCours),
+        color: Colors.grey[400]
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -357,11 +391,11 @@ List<SemaineCc> sortData(var code) {
   Heure duree = Heure(heures: 1,minutes: 0);
   Heure debut = Heure(heures: 10,minutes: 0);
 
-  cc.add(Controle(jourSemaine, matiere, enseignant, epreuve, lieu, duree, debut));
-  cc.add(Controle(jourSemaine, matiere, enseignant, epreuve, lieu, duree, debut));
+  cc.add(Controle(jourSemaine, Matiere(matiere), enseignant, epreuve, lieu, duree, debut));
+  cc.add(Controle(jourSemaine, Matiere(matiere), enseignant, epreuve, lieu, duree, debut));
 
   semaineCc.add( SemaineCc(cc,semaine));
-  cc.add(Controle(jourSemaine, matiere, enseignant, epreuve, lieu, duree, debut));
+  cc.add(Controle(jourSemaine, Matiere(matiere), enseignant, epreuve, lieu, duree, debut));
   semaineCc.add( SemaineCc(cc,"semaine prochaine"));
   return semaineCc;
 }

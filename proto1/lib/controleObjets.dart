@@ -3,9 +3,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import 'objets.dart';
+
 class Controle {
   JourSemaine jourSemaine;
-  String matiere;
+  Matiere matiere;
   String enseignant;
   String epreuve;
   String lieu;
