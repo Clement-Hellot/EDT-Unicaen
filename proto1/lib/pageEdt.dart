@@ -7,8 +7,10 @@ class PageEDT extends StatefulWidget {
   @override
   _PageEDTState createState() => _PageEDTState();
 
-  static const tailleHeure = 85;
-  static const opaciteCours = 0.45;
+  static const int tailleHeure = 85;
+  static const double opaciteCours = 0.45;
+
+  static final Horaire premiereHeure = Horaire(8, 0);
 
   static Calendar calendrier;
   static List<SingleChildScrollView> joursScrolls;
@@ -88,6 +90,7 @@ class _JourneeUIState extends State<JourneeUI> {
   List<Widget> _coursUi;
 
   String _nomJour;
+  double dodoBonus = 0;
 
   _JourneeUIState() {
     _coursUi = List<Widget>();
@@ -97,7 +100,7 @@ class _JourneeUIState extends State<JourneeUI> {
   void initState() {
     super.initState();
 
-    if (widget.journee.cours != null) {
+    if (widget.journee.cours != null && widget.journee.cours.length > 0) {
       for (HeureCours cours in widget.journee.cours) {
         if (cours is Cours) {
           _coursUi.add(CoursUI(
@@ -107,6 +110,9 @@ class _JourneeUIState extends State<JourneeUI> {
           _coursUi.add(PauseUI(cours));
         }
       }
+
+      dodoBonus = widget.journee.cours[0].debut.totalHeures -
+          PageEDT.premiereHeure.totalHeures;
     } else {
       _coursUi.add(PasCours());
     }
@@ -122,7 +128,7 @@ class _JourneeUIState extends State<JourneeUI> {
   Widget build(BuildContext context) {
     return Column(children: [
       Container(
-        margin: EdgeInsets.only(bottom: 20),
+        margin: EdgeInsets.only(bottom: 20 + dodoBonus * PageEDT.tailleHeure),
         child: Text(
           _nomJour,
           style: TextStyle(
