@@ -9,8 +9,6 @@ class Calendar {
   final int projectId;
   final int nbWeeks;
 
-  final Function readyFunc;
-
   String url;
   String rawCal;
   List<Cours> cours;
@@ -20,14 +18,11 @@ class Calendar {
     this.ressource = 1205,
     this.projectId = 4,
     this.nbWeeks = 2,
-    this.readyFunc,
   }) {
     this.url =
         "http://ade.unicaen.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=$ressource&projectId=$projectId&calType=ical&nbWeeks=$nbWeeks";
     cours = new List<Cours>();
     jours = new List<Journee>();
-
-    getHtmlCal();
   }
 
   traitement() {
@@ -41,8 +36,6 @@ class Calendar {
 
     rangerCours();
     creerJours();
-
-    readyFunc();
   }
 
   creerCours(String calEvent) {
@@ -112,6 +105,11 @@ class Calendar {
         coursJours.add(c);
       }
     }
+  }
+
+  Future<List<Journee>> fetchJours() async {
+    await getHtmlCal();
+    return jours;
   }
 
   String convertDate(String date) {

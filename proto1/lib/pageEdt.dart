@@ -27,9 +27,9 @@ class _PageEDTState extends State<PageEDT>
       _pageWidget = LoadingEdt();
 
       PageEDT.calendrier = Calendar(
-        readyFunc: setJournees,
         nbWeeks: 8,
       );
+      setJournees();
     } else {
       _pageWidget = PageEDT.joursView;
     }
@@ -48,21 +48,21 @@ class _PageEDTState extends State<PageEDT>
     );
   }
 
-  setJournees() {
-    setState(() {
-      PageEDT.joursScrolls = List<SingleChildScrollView>();
+  setJournees() async {
+    PageEDT.joursScrolls = List<SingleChildScrollView>();
 
-      for (Journee j in PageEDT.calendrier.jours) {
-        PageEDT.joursScrolls.add(SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.only(top: 50, bottom: 15),
-            child: JourneeUI(
-              journee: j,
-            ),
+    for (Journee j in await PageEDT.calendrier.fetchJours()) {
+      PageEDT.joursScrolls.add(SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.only(top: 50, bottom: 15),
+          child: JourneeUI(
+            journee: j,
           ),
-        ));
-      }
+        ),
+      ));
+    }
 
+    setState(() {
       _pageWidget = PageView(
         children: PageEDT.joursScrolls,
       );
