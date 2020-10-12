@@ -13,7 +13,7 @@ class PageEDT extends StatefulWidget {
   static final Horaire premiereHeure = Horaire(8, 0);
 
   static Calendar calendrier;
-  static List<SingleChildScrollView> joursScrolls;
+  static List<JourneeUI> joursScrolls;
   static PageView joursView;
 }
 
@@ -51,17 +51,14 @@ class _PageEDTState extends State<PageEDT>
   }
 
   setJournees() async {
-    PageEDT.joursScrolls = List<SingleChildScrollView>();
+    PageEDT.joursScrolls = List<JourneeUI>();
 
     for (Journee j in await PageEDT.calendrier.fetchJours()) {
-      PageEDT.joursScrolls.add(SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.only(top: 50, bottom: 15),
-          child: JourneeUI(
-            journee: j,
-          ),
+      PageEDT.joursScrolls.add(
+        JourneeUI(
+          journee: j,
         ),
-      ));
+      );
     }
 
     setState(() {
@@ -126,23 +123,35 @@ class _JourneeUIState extends State<JourneeUI> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Container(
-        margin: EdgeInsets.only(bottom: 20 + dodoBonus * PageEDT.tailleHeure),
-        child: Text(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
           _nomJour,
           style: TextStyle(
             fontSize: 30,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w400,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0.0,
+        toolbarHeight: 70.0,
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.only(bottom: 15),
+          child: Container(
+            margin: EdgeInsets.only(top: 5 + dodoBonus * PageEDT.tailleHeure),
+            child: Column(
+              children: _coursUi,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+            ),
           ),
         ),
       ),
-      Column(
-        children: _coursUi,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-      ),
-    ]);
+    );
   }
 }
 
@@ -169,7 +178,7 @@ class _CoursUIState extends State<CoursUI> {
         bottom: 5,
       ),
       padding: EdgeInsets.only(left: 14, top: 10, right: 14, bottom: 10),
-      height: widget.cours.duree * PageEDT.tailleHeure, // TODO minheight
+      height: widget.cours.duree * PageEDT.tailleHeure,
       decoration: BoxDecoration(
         color: widget.cours.matiere.couleur().withOpacity(PageEDT.opaciteCours),
         borderRadius: BorderRadius.all(Radius.circular(8)),
