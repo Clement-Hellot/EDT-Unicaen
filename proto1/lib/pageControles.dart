@@ -1,12 +1,11 @@
 import 'dart:math';
+import 'package:edt_mobile/Calendrier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'objets.dart';
 import 'controleObjets.dart';
 import 'PageEDT.dart';
-import 'Calendar.dart';
 
 // TODO
 // - affichage
@@ -21,7 +20,8 @@ class PageControles extends StatefulWidget {
   _PageControlesState createState() => _PageControlesState();
 }
 
-class _PageControlesState extends State<PageControles> /*with AutomaticKeepAliveClientMixin<PageControles>*/{
+class _PageControlesState extends State<
+    PageControles> /*with AutomaticKeepAliveClientMixin<PageControles>*/ {
   List<SemaineCc> _listeSemaineCc = [];
 
   Container _widgetSemaineCc;
@@ -29,9 +29,8 @@ class _PageControlesState extends State<PageControles> /*with AutomaticKeepAlive
   Widget _semaineCcWrapper;
 
   _PageControlesState() {
-    _semaineCcWrapper = _loadingText;// en attendant que les cc soient chargés
+    _semaineCcWrapper = _loadingText; // en attendant que les cc soient chargés
     fetchCc(_listeSemaineCc, _dispListeSemaineCc);
-
   }
   @override
   void initState() {
@@ -47,19 +46,19 @@ class _PageControlesState extends State<PageControles> /*with AutomaticKeepAlive
       }
 
       _widgetSemaineCc = Container(
-          margin: EdgeInsets.symmetric(vertical: 0),
-          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-          width: double.infinity,
-          /*
+        margin: EdgeInsets.symmetric(vertical: 0),
+        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+        width: double.infinity,
+        /*
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
             color: Colors.grey[300],
           ),*/
-          child : Column(//les cc de la semaine
-                children: semaines,
-              ),
-          );
-
+        child: Column(
+          //les cc de la semaine
+          children: semaines,
+        ),
+      );
 
       _semaineCcWrapper = _widgetSemaineCc;
     });
@@ -101,18 +100,16 @@ class _PageControlesState extends State<PageControles> /*with AutomaticKeepAlive
 }
 
 class SemaineCcUI extends StatefulWidget {
-
   final SemaineCc semaineCc;
 
   SemaineCcUI({this.semaineCc});
 
   @override
   _SemaineCcUIState createState() => _SemaineCcUIState();
-
 }
 
 //une semaine avec ses controles
-class _SemaineCcUIState  extends State<SemaineCcUI> {
+class _SemaineCcUIState extends State<SemaineCcUI> {
   bool _droppedDown = true;
   Column _widgetControle;
   Widget _loadingText = Text('Chargement...');
@@ -130,9 +127,11 @@ class _SemaineCcUIState  extends State<SemaineCcUI> {
       controles.add(ControleUI(cc));
     }
 
-    _widgetControle =  Column(//la semaine
+    _widgetControle = Column(
+      //la semaine
       children: [
-        Column(//les cc de la semaine
+        Column(
+          //les cc de la semaine
           children: controles,
         ),
       ],
@@ -150,63 +149,68 @@ class _SemaineCcUIState  extends State<SemaineCcUI> {
         borderRadius: BorderRadius.all(Radius.circular(5)),
         //color: Colors.grey[300],
       ),
-      child : Column(//la semaine
+      child: Column(
+        //la semaine
         children: [
-         InkWell(
-           child:  Container(
-             margin: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
-             padding: EdgeInsets.all(5),
-             width: double.infinity,
-             decoration: BoxDecoration(
-               borderRadius: BorderRadius.all(Radius.circular(5)),
-               color: Colors.grey[300],
-             ),
-             child: Row(
-               children : [
-                 AnimatedCrossFade(
-                   duration: const Duration(milliseconds: 100),
-                   firstChild : Icon(Icons.keyboard_arrow_right),
-                   secondChild: Transform.rotate(
-                                  angle: 90 * pi/180,
-                                  child:  Icon(Icons.keyboard_arrow_right),
-                                ),
-                   crossFadeState: _droppedDown == true ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                 ),
-
-                 Text(
-                   widget.semaineCc.nom(),
-                   textAlign: TextAlign.left,
-                   style: TextStyle(
-                     fontSize: 19,
-                     color: Colors.black,
-                     fontWeight: FontWeight.w500,
-                   ),
-                 ),
-               ],
-             ),
-           ),
-           onTap: () {
-             setState(() {
-
-               _droppedDown == true ? _droppedDown = false: _droppedDown = true;
-             });
-           },
-         ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
+            child: InkWell(
+              child: Ink(
+                padding: EdgeInsets.all(5),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  color: Colors.grey[300],
+                ),
+                child: Row(
+                  children: [
+                    AnimatedCrossFade(
+                      duration: const Duration(milliseconds: 100),
+                      firstChild: Icon(Icons.keyboard_arrow_right),
+                      secondChild: Transform.rotate(
+                        angle: 90 * pi / 180,
+                        child: Icon(Icons.keyboard_arrow_right),
+                      ),
+                      crossFadeState: _droppedDown == true
+                          ? CrossFadeState.showSecond
+                          : CrossFadeState.showFirst,
+                    ),
+                    Text(
+                      widget.semaineCc.nom(),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 19,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              onTap: () {
+                setState(() {
+                  _droppedDown == true
+                      ? _droppedDown = false
+                      : _droppedDown = true;
+                });
+              },
+            ),
+          ),
           Container(
             width: double.infinity,
-            child : AnimatedCrossFade(
+            child: AnimatedCrossFade(
               duration: const Duration(milliseconds: 100),
-              firstChild : Container(),
+              firstChild: Container(),
               secondChild: _controleWrapper,
-              crossFadeState: _droppedDown == true ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+              crossFadeState: _droppedDown == true
+                  ? CrossFadeState.showSecond
+                  : CrossFadeState.showFirst,
             ),
           )
-
         ],
       ),
     );
   }
-
 }
 
 class ControleUI extends StatefulWidget {
@@ -215,7 +219,6 @@ class ControleUI extends StatefulWidget {
 
   @override
   _ControleUIState createState() => _ControleUIState();
-
 }
 
 //un controle
@@ -234,7 +237,8 @@ class _ControleUIState extends State<ControleUI> {
       height: PageControles.taileCc,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: widget.cc.matiere.couleur().withOpacity(PageControles.opaciteCours),
+        color:
+            widget.cc.matiere.couleur().withOpacity(PageControles.opaciteCours),
         //color: Colors.grey[400]
       ),
       child: Row(
@@ -262,7 +266,7 @@ class _ControleUIState extends State<ControleUI> {
                 ),
               ),
             ],
-            ),
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -277,7 +281,7 @@ class _ControleUIState extends State<ControleUI> {
                 ),
               ),
               Text(
-                widget.cc.debut.toString() +" - "+ widget.cc.fin.toString(),
+                widget.cc.debut.toString() + " - " + widget.cc.fin.toString(),
                 textAlign: TextAlign.right,
                 style: TextStyle(
                   color: Colors.black,
@@ -286,26 +290,18 @@ class _ControleUIState extends State<ControleUI> {
                 ),
               ),
             ],
-
-            ),
+          ),
         ],
       ),
     );
   }
 }
 
-
-
-
-
-
-
-
 List<SemaineCc> ajouterControleEDT(listeSemainesCC) {
-  Calendar calendrier = PageEDT.calendrier;
-  bool isEntered= false;
+  Calendrier calendrier = PageEDT.calendrier;
+  bool isEntered = false;
   print(PageEDT.tailleHeure);
-  if(PageEDT.calendrier == null){
+  if (PageEDT.calendrier == null) {
     print("error calendrier vide");
     return listeSemainesCC;
   }
@@ -315,61 +311,23 @@ List<SemaineCc> ajouterControleEDT(listeSemainesCC) {
     multiLine: false,
   );
 
-  for(Cours cours in calendrier.cours) {
+  for (Cours cours in calendrier.cours) {
     isEntered = false;
-    if(regExp.hasMatch(cours.matiere.nom)) {
-      print("le cours est ajouté : "+cours.matiere.nom);
-      for(SemaineCc semaineCc in listeSemainesCC) {
-
-        if(semaineCc.semaineDate.start.isBefore(cours.debut.date) && semaineCc.semaineDate.end.isAfter(cours.debut.date) && isEntered==false) {
-          semaineCc.controles.add(Controle(cours.matiere, cours.prof, cours.salle,cours.debut, cours.fin));
+    if (regExp.hasMatch(cours.matiere.nom)) {
+      print("le cours est ajouté : " + cours.matiere.nom);
+      for (SemaineCc semaineCc in listeSemainesCC) {
+        if (semaineCc.semaineDate.start.isBefore(cours.debut.date) &&
+            semaineCc.semaineDate.end.isAfter(cours.debut.date) &&
+            isEntered == false) {
+          semaineCc.controles.add(Controle(
+              cours.matiere, cours.prof, cours.salle, cours.debut, cours.fin));
           isEntered = true;
         }
       }
     }
-
   }
   return listeSemainesCC;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /// Attend le html, puis le mets dans la liste et appelle la fonction
 fetchCc(List<SemaineCc> list, Function nextF) async {
@@ -425,22 +383,27 @@ List<SemaineCc> sortData(var code) {
   }
 */
 
-
   String semaine = "cette semaine";
   JourSemaine jourSemaine = JourSemaine.LUNDI;
   String matiere = "CC de php";
   String enseignant = "PORCQ";
   String epreuve = "CC de PHP";
   String lieu = "salle examen";
-  Horaire fin = Horaire(1,0);
-  Horaire debut = Horaire(10,0);
+  Horaire fin = Horaire(1, 0);
+  Horaire debut = Horaire(10, 0);
 
   cc.add(Controle(Matiere(matiere), enseignant, lieu, debut, fin));
   cc.add(Controle(Matiere(matiere), enseignant, lieu, debut, fin));
 
-  semaineCc.add( SemaineCc(cc,DateTimeRange(start: DateTime.utc(2020,10,11), end: DateTime.utc(2020,10,17))));
+  semaineCc.add(SemaineCc(
+      cc,
+      DateTimeRange(
+          start: DateTime.utc(2020, 10, 11), end: DateTime.utc(2020, 10, 17))));
   cc.add(Controle(Matiere(matiere), enseignant, lieu, debut, fin));
-  semaineCc.add( SemaineCc(cc,DateTimeRange(start: DateTime.utc(2020,10,18), end: DateTime.utc(2020,10,24))));
+  semaineCc.add(SemaineCc(
+      cc,
+      DateTimeRange(
+          start: DateTime.utc(2020, 10, 18), end: DateTime.utc(2020, 10, 24))));
 
   return semaineCc;
 }
@@ -458,4 +421,3 @@ String toString(List<Controle> list) {
 String cleanUp(String str) {
   return str.replaceAll('<br>', '').trim();
 }
-
