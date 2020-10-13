@@ -5,6 +5,8 @@ import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'objets.dart';
 import 'controleObjets.dart';
+import 'PageEDT.dart';
+import 'Calendar.dart';
 
 // TODO
 // - affichage
@@ -29,6 +31,12 @@ class _PageControlesState extends State<PageControles> /*with AutomaticKeepAlive
   _PageControlesState() {
     _semaineCcWrapper = _loadingText;// en attendant que les cc soient chargés
     fetchCc(_listeSemaineCc, _dispListeSemaineCc);
+
+  }
+  @override
+  void initState() {
+    super.initState();
+    ajouterControleEDT(_listeSemaineCc);
   }
 
   _dispListeSemaineCc() {
@@ -166,7 +174,7 @@ class _SemaineCcUIState  extends State<SemaineCcUI> {
                  ),
 
                  Text(
-                   widget.semaineCc.semaine,
+                   widget.semaineCc.nom(),
                    textAlign: TextAlign.left,
                    style: TextStyle(
                      fontSize: 19,
@@ -260,7 +268,7 @@ class _ControleUIState extends State<ControleUI> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                widget.cc.jourSemaine.name,
+                widget.cc.nomJour(),
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   color: Colors.black,
@@ -290,6 +298,39 @@ class _ControleUIState extends State<ControleUI> {
 
 
 
+
+
+
+List<SemaineCc> ajouterControleEDT(listeSemainesCC) {
+  Calendar calendrier = PageEDT.calendrier;
+  bool isEntered= false;
+  print(PageEDT.tailleHeure);
+  if(PageEDT.calendrier == null){
+    print("error calendrier vide");
+    return listeSemainesCC;
+  }
+  RegExp regExp = new RegExp(
+    r"cc|ctp",
+    caseSensitive: false,
+    multiLine: false,
+  );
+
+  for(Cours cours in calendrier.cours) {
+    isEntered = false;
+    if(regExp.hasMatch(cours.matiere.nom)) {
+      print("le cours est ajouté : "+cours.matiere.nom);
+      for(SemaineCc semaineCc in listeSemainesCC) {
+
+        if(semaineCc.semaineDate.start.isBefore(cours.debut.date) && semaineCc.semaineDate.end.isAfter(cours.debut.date) && isEntered==false) {
+          semaineCc.controles.add(Controle(cours.matiere, cours.prof, cours.salle,cours.debut, cours.fin));
+          isEntered = true;
+        }
+      }
+    }
+
+  }
+  return listeSemainesCC;
+}
 
 
 
@@ -394,12 +435,12 @@ List<SemaineCc> sortData(var code) {
   Horaire fin = Horaire(1,0);
   Horaire debut = Horaire(10,0);
 
-  cc.add(Controle(jourSemaine, Matiere(matiere), enseignant, Epreuve(epreuve), lieu, fin, debut));
-  cc.add(Controle(jourSemaine, Matiere(matiere), enseignant, Epreuve(epreuve), lieu, fin, debut));
+  cc.add(Controle(Matiere(matiere), enseignant, lieu, debut, fin));
+  cc.add(Controle(Matiere(matiere), enseignant, lieu, debut, fin));
 
-  semaineCc.add( SemaineCc(cc,semaine));
-  cc.add(Controle(jourSemaine, Matiere(matiere), enseignant, Epreuve(epreuve), lieu, fin, debut));
-  semaineCc.add( SemaineCc(cc,"semaine prochaine"));
+  semaineCc.add( SemaineCc(cc,DateTimeRange(start: DateTime.utc(2020,10,11), end: DateTime.utc(2020,10,17))));
+  cc.add(Controle(Matiere(matiere), enseignant, lieu, debut, fin));
+  semaineCc.add( SemaineCc(cc,DateTimeRange(start: DateTime.utc(2020,10,18), end: DateTime.utc(2020,10,24))));
 
   return semaineCc;
 }
@@ -417,3 +458,4 @@ String toString(List<Controle> list) {
 String cleanUp(String str) {
   return str.replaceAll('<br>', '').trim();
 }
+
