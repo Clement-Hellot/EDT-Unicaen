@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'objets.dart';
 import 'controleObjets.dart';
 import 'PageEDT.dart';
+import "CalendrierJours.dart";
 
 // TODO
 // - affichage
@@ -31,11 +32,12 @@ class _PageControlesState extends State<
   _PageControlesState() {
     _semaineCcWrapper = _loadingText; // en attendant que les cc soient chargés
     fetchCc(_listeSemaineCc, _dispListeSemaineCc);
+    ajouterControleEDT(_listeSemaineCc);
   }
   @override
   void initState() {
     super.initState();
-    ajouterControleEDT(_listeSemaineCc);
+
   }
 
   _dispListeSemaineCc() {
@@ -298,22 +300,24 @@ class _ControleUIState extends State<ControleUI> {
 }
 
 List<SemaineCc> ajouterControleEDT(listeSemainesCC) {
-  Calendrier calendrier = PageEDT.calendrier;
+
+  CalendrierJours calendrier = PageEDT.calendrier;
   bool isEntered = false;
   if (PageEDT.calendrier == null) {
     print("error calendrier vide");
     return listeSemainesCC;
   }
   RegExp regExp = new RegExp(
-    r"cc|ctp",
+    r"cc",
     caseSensitive: false,
     multiLine: false,
   );
-
+  print("liste de :" + calendrier.jours.length.toString());
   for (Cours cours in calendrier.cours) {
+    print(cours.toString()+"\n");
     isEntered = false;
     if (regExp.hasMatch(cours.matiere.nom)) {
-      print("le cours est ajouté : " + cours.matiere.nom);
+      print("le cours est ajouté : " + cours.matiere.nom+"\n");
       for (SemaineCc semaineCc in listeSemainesCC) {
         if (semaineCc.semaineDate.start.isBefore(cours.debut.date) &&
             semaineCc.semaineDate.end.isAfter(cours.debut.date) &&
@@ -323,10 +327,27 @@ List<SemaineCc> ajouterControleEDT(listeSemainesCC) {
           isEntered = true;
         }
       }
+    } else {
+      print("pas de match pour : "+ cours.matiere.nom+"\n");
     }
   }
   return listeSemainesCC;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /// Attend le html, puis le mets dans la liste et appelle la fonction
 fetchCc(List<SemaineCc> list, Function nextF) async {
