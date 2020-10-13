@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:edt_mobile/Calendar.dart';
 import 'package:flutter/material.dart';
 
@@ -88,6 +90,7 @@ class _JourneeUIState extends State<JourneeUI> {
 
   String _nomJour;
   double dodoBonus = 0;
+  double dodoMargin = 0;
 
   _JourneeUIState() {
     _coursUi = List<Widget>();
@@ -110,6 +113,7 @@ class _JourneeUIState extends State<JourneeUI> {
 
       dodoBonus = widget.journee.cours[0].debut.totalHeures -
           PageEDT.premiereHeure.totalHeures;
+      dodoMargin = min(dodoBonus * PageEDT.tailleHeure, 0);
     } else {
       _coursUi.add(PasCours());
     }
@@ -142,7 +146,7 @@ class _JourneeUIState extends State<JourneeUI> {
         child: Container(
           margin: EdgeInsets.only(bottom: 15),
           child: Container(
-            margin: EdgeInsets.only(top: 5 + dodoBonus * PageEDT.tailleHeure),
+            margin: EdgeInsets.only(top: 5 + dodoMargin),
             child: Column(
               children: _coursUi,
               mainAxisAlignment: MainAxisAlignment.start,
