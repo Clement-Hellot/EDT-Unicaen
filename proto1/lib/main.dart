@@ -1,10 +1,11 @@
-import 'package:edt_mobile/pageOptions.dart';
 import 'package:flutter/material.dart';
 
+import 'CalendrierJours.dart';
 import 'pageEdt.dart';
 import 'pageMails.dart';
 import 'pageSalles.dart';
 import 'pageControles.dart';
+import 'pageOptions.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,6 +29,8 @@ class MyApp extends StatelessWidget {
 
 class PagePrincipale extends StatefulWidget {
   PagePrincipale({Key key}) : super(key: key);
+
+  static CalendrierJours calendrier;
 
   @override
   _PagePrincipaleState createState() => _PagePrincipaleState();
