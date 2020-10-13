@@ -12,7 +12,7 @@ class CalendrierJours extends Calendrier {
     int projectId = 4,
     int nbWeeks = 2,
   })  : jours = new List<Journee>(),
-        super(ressource: ressource, projectId: projectId, nbWeeks: nbWeeks);
+        super(ressource: ressource, nbWeeks: nbWeeks);
 
   @override
   traitement() {

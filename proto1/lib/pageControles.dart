@@ -300,7 +300,6 @@ class _ControleUIState extends State<ControleUI> {
 List<SemaineCc> ajouterControleEDT(listeSemainesCC) {
   Calendrier calendrier = PageEDT.calendrier;
   bool isEntered = false;
-  print(PageEDT.tailleHeure);
   if (PageEDT.calendrier == null) {
     print("error calendrier vide");
     return listeSemainesCC;

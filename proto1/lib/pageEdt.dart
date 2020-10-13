@@ -15,9 +15,25 @@ class PageEDT extends StatefulWidget {
 
   static final Horaire premiereHeure = Horaire(8, 0);
 
-  static CalendrierJours calendrier;
+  static CalendrierJours get calendrier {
+    if (_calendrier == null) {
+      initCal();
+    }
+
+    return _calendrier;
+  }
+
+  static CalendrierJours _calendrier;
   static List<JourneeUI> joursScrolls;
   static PageView joursView;
+
+  static initCal() {
+    _calendrier = CalendrierJours(
+      nbWeeks: 8,
+    );
+
+    PageEDT._calendrier = _calendrier;
+  }
 }
 
 class _PageEDTState extends State<PageEDT>
@@ -28,17 +44,15 @@ class _PageEDTState extends State<PageEDT>
   void initState() {
     super.initState();
 
-    if (PageEDT.calendrier == null) {
+    if (PageEDT._calendrier == null) {
       _pageWidget = LoadingEdt();
 
-      PageEDT.calendrier = CalendrierJours(
-        nbWeeks: 8,
-      );
+      PageEDT.initCal();
+
       setJournees();
     } else {
       _pageWidget = PageEDT.joursView;
     }
-    print(PageEDT.calendrier.cours);
   }
 
   @override
