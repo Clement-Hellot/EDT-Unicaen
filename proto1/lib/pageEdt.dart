@@ -113,7 +113,7 @@ class _JourneeUIState extends State<JourneeUI> {
 
       dodoBonus = widget.journee.cours[0].debut.totalHeures -
           PageEDT.premiereHeure.totalHeures;
-      dodoMargin = min(dodoBonus * PageEDT.tailleHeure, 0);
+      dodoMargin = max(dodoBonus * PageEDT.tailleHeure, 0);
     } else {
       _coursUi.add(PasCours());
     }
