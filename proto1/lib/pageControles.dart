@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:edt_mobile/Calendrier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -7,6 +6,7 @@ import 'objets.dart';
 import 'controleObjets.dart';
 import 'PageEDT.dart';
 import "CalendrierJours.dart";
+import 'Calendrier.dart';
 
 // TODO
 // - affichage
@@ -23,7 +23,7 @@ class PageControles extends StatefulWidget {
 
 class _PageControlesState extends State<
     PageControles> /*with AutomaticKeepAliveClientMixin<PageControles>*/ {
-  List<SemaineCc> _listeSemaineCc = [];
+  List<SemaineCc> _listeSemaineCc = List<SemaineCc>();
 
   Container _widgetSemaineCc;
   Widget _loadingText = Text('Chargement...');
@@ -32,7 +32,6 @@ class _PageControlesState extends State<
   _PageControlesState() {
     _semaineCcWrapper = _loadingText; // en attendant que les cc soient chargés
     fetchCc(_listeSemaineCc, _dispListeSemaineCc);
-    ajouterControleEDT(_listeSemaineCc);
   }
   @override
   void initState() {
@@ -299,8 +298,7 @@ class _ControleUIState extends State<ControleUI> {
   }
 }
 
-List<SemaineCc> ajouterControleEDT(listeSemainesCC) {
-
+List<SemaineCc> ajouterControleEDT(List<SemaineCc> listeSemainesCC) {
   CalendrierJours calendrier = PageEDT.calendrier;
   bool isEntered = false;
   if (PageEDT.calendrier == null) {
@@ -308,27 +306,34 @@ List<SemaineCc> ajouterControleEDT(listeSemainesCC) {
     return listeSemainesCC;
   }
   RegExp regExp = new RegExp(
-    r"cc",
+    r"cc|ctp",
     caseSensitive: false,
     multiLine: false,
   );
   print("liste de :" + calendrier.jours.length.toString());
   for (Cours cours in calendrier.cours) {
-    print(cours.toString()+"\n");
     isEntered = false;
     if (regExp.hasMatch(cours.matiere.nom)) {
-      print("le cours est ajouté : " + cours.matiere.nom+"\n");
       for (SemaineCc semaineCc in listeSemainesCC) {
-        if (semaineCc.semaineDate.start.isBefore(cours.debut.date) &&
-            semaineCc.semaineDate.end.isAfter(cours.debut.date) &&
-            isEntered == false) {
-          semaineCc.controles.add(Controle(
-              cours.matiere, cours.prof, cours.salle, cours.debut, cours.fin));
+        //print("test : "+semaineCc.semaineDate.start.isBefore(cours.debut.date).toString()+"/"+semaineCc.semaineDate.end.isAfter(cours.debut.date).toString());
+        if (semaineCc.semaineDate.start.isBefore(cours.debut.date) && semaineCc.semaineDate.end.isAfter(cours.debut.date) && isEntered == false) {
+          semaineCc.controles.add(Controle(cours.matiere, cours.prof, cours.salle, cours.debut, cours.fin));
           isEntered = true;
         }
       }
-    } else {
-      print("pas de match pour : "+ cours.matiere.nom+"\n");
+      if(!isEntered){
+
+        List<Controle> listeTemp = List<Controle>();
+        listeTemp.add(Controle(cours.matiere, cours.prof, cours.salle, cours.debut, cours.fin));
+        /*DateTime debutSemaine = cours.debut.date;
+        DateTime finSemaine = cours.debut.date;
+        print("avant"+debutSemaine.toString());
+        debutSemaine.subtract(Duration(days: 3));
+        print("apres"+debutSemaine.toString());
+        finSemaine.add(Duration(days: 7 - cours.debut.date.weekday));*/
+        DateTime dateCours = cours.debut.date;
+        listeSemainesCC.add(SemaineCc(listeTemp, DateTimeRange(start: DateTime(dateCours.year,dateCours.month,dateCours.day-dateCours.weekday+1), end:DateTime(dateCours.year,dateCours.month,dateCours.day + (7 - dateCours.weekday)))));
+      }
     }
   }
   return listeSemainesCC;
@@ -351,7 +356,9 @@ List<SemaineCc> ajouterControleEDT(listeSemainesCC) {
 
 /// Attend le html, puis le mets dans la liste et appelle la fonction
 fetchCc(List<SemaineCc> list, Function nextF) async {
+
   list.addAll(sortData(await getHtmlCC('2a')));
+  ajouterControleEDT(list);
   nextF();
 }
 
@@ -364,8 +371,8 @@ Future<http.Response> getHtmlCC(String annee) async {
 }
 
 List<SemaineCc> sortData(var code) {
-  List<Controle> cc = [];
-  List<SemaineCc> semaineCc = [];
+  List<Controle> cc = List<Controle>();
+  List<SemaineCc> semaineCc = List<SemaineCc>();
   /*
   var doc = parse(code.body);
   var table = doc.getElementsByTagName('table');
@@ -402,7 +409,7 @@ List<SemaineCc> sortData(var code) {
     }
   }
 */
-
+/*
   String semaine = "cette semaine";
   JourSemaine jourSemaine = JourSemaine.LUNDI;
   String matiere = "CC de php";
@@ -424,8 +431,9 @@ List<SemaineCc> sortData(var code) {
       cc,
       DateTimeRange(
           start: DateTime.utc(2020, 10, 18), end: DateTime.utc(2020, 10, 24))));
-
+*/
   return semaineCc;
+
 }
 
 String toString(List<Controle> list) {

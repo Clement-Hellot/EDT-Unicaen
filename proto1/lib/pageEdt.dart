@@ -1,8 +1,9 @@
 import 'dart:math';
 
-import 'package:edt_mobile/Calendrier.dart';
 import 'package:flutter/material.dart';
 
+import 'main.dart';
+import 'Calendrier.dart';
 import 'CalendrierJours.dart';
 import 'objets.dart';
 
@@ -16,23 +17,20 @@ class PageEDT extends StatefulWidget {
   static final Horaire premiereHeure = Horaire(8, 0);
 
   static CalendrierJours get calendrier {
-    if (_calendrier == null) {
-      initCal();
-    }
-
-    return _calendrier;
+    return PagePrincipale.calendrier;
   }
 
-  static CalendrierJours _calendrier;
+  static set calendrier(CalendrierJours cal) {
+    PagePrincipale.calendrier = cal;
+  }
+
   static List<JourneeUI> joursScrolls;
   static PageView joursView;
 
   static initCal() {
-    _calendrier = CalendrierJours(
+    PageEDT.calendrier = CalendrierJours(
       nbWeeks: 8,
     );
-
-    PageEDT._calendrier = _calendrier;
   }
 }
 
@@ -44,7 +42,7 @@ class _PageEDTState extends State<PageEDT>
   void initState() {
     super.initState();
 
-    if (PageEDT._calendrier == null) {
+    if (PageEDT.calendrier == null) {
       _pageWidget = LoadingEdt();
 
       PageEDT.initCal();

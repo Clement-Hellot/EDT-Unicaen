@@ -126,7 +126,7 @@ class Matiere {
 
   //quand le nom de la matiere est trop long
   String shortVersion() {
-    if (this.nom.length < 15)
+    if (this.nom.length < 25)
       return this.nom;
     else
       return this.nom.substring(0,13)+"...";

@@ -81,7 +81,19 @@ class SemaineCc {
   }
 
   String nom() {
-    return "cette semaine";
+    if(this.semaineDate.start.isBefore(DateTime.now()) && this.semaineDate.end.isAfter(DateTime.now()))
+      return "cette semaine";
+    /*
+    print("difference :"+this.semaineDate.end.difference(DateTime.now()).inDays.toString());
+
+    //if(this.semaineDate.start.isBefore(DateTime.now()) && this.semaineDate.end.difference(DateTime.now()).inDays.toString()))
+      return "semaine prochaine";
+
+    if(this.semaineDate.start.isBefore(DateTime.now()) && DateTime.now().day - this.semaineDate.end.day > 7)
+      return "dans 15 jours";
+      */
+
+    return "du "+this.semaineDate.start.day.toString()+" au "+this.semaineDate.end.day.toString();
   }
   @override
   String toString() {
