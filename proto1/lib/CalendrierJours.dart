@@ -1,30 +1,20 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
+import 'package:edt_mobile/Calendrier.dart';
 
 import 'objets.dart';
 
-class Calendar {
-  final int ressource;
-  final int projectId;
-  final int nbWeeks;
-
-  String url;
-  String rawCal;
-  List<Cours> cours;
+class CalendrierJours extends Calendrier {
   List<Journee> jours;
 
-  Calendar({
-    this.ressource = 1205,
-    this.projectId = 4,
-    this.nbWeeks = 2,
-  }) {
-    this.url =
-        "http://ade.unicaen.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=$ressource&projectId=$projectId&calType=ical&nbWeeks=$nbWeeks";
-    cours = new List<Cours>();
-    jours = new List<Journee>();
-  }
+  CalendrierJours({
+    int ressource = 1205,
+    int projectId = 4,
+    int nbWeeks = 2,
+  })  : jours = new List<Journee>(),
+        super(ressource: ressource, projectId: projectId, nbWeeks: nbWeeks);
 
+  @override
   traitement() {
     List<String> coursStr = this.rawCal.split("BEGIN:VEVENT");
 
@@ -38,6 +28,7 @@ class Calendar {
     creerJours();
   }
 
+  @override
   creerCours(String calEvent) {
     String matiere;
     String prof;
@@ -83,11 +74,12 @@ class Calendar {
     List<Cours> coursJours;
 
     for (Cours c in cours) {
-      if (current == null || dateJour(c.debut.date).isAfter(current)) {
+      if (current == null ||
+          Calendrier.dateJour(c.debut.date).isAfter(current)) {
         if (current != null) {
           jours.add(Journee(cours: coursJours, date: current));
 
-          Duration dif = dateJour(c.debut.date).difference(current);
+          Duration dif = Calendrier.dateJour(c.debut.date).difference(current);
           int days = dif.inDays;
 
           if (days > 1)
@@ -100,7 +92,7 @@ class Calendar {
 
         coursJours = List<Cours>();
         coursJours.add(c);
-        current = dateJour(c.debut.date);
+        current = Calendrier.dateJour(c.debut.date);
       } else {
         coursJours.add(c);
       }
@@ -110,23 +102,6 @@ class Calendar {
   Future<List<Journee>> fetchJours() async {
     await getHtmlCal();
     return jours;
-  }
-
-  String convertDate(String date) {
-    StringBuffer newDate = StringBuffer();
-    newDate.write(date.substring(0, 4));
-    newDate.write("-");
-    newDate.write(date.substring(4, 6));
-    newDate.write("-");
-    newDate.write(date.substring(6, 8));
-    newDate.write(" ");
-    newDate.write(date.substring(9, 11));
-    newDate.write(":");
-    newDate.write(date.substring(11, 13));
-    newDate.write(":");
-    newDate.write(date.substring(13));
-
-    return newDate.toString();
   }
 
   String trimMatiere(String mat) {
@@ -148,57 +123,5 @@ class Calendar {
       return prof;
     else
       return '';
-  }
-
-  getHtmlCal() async {
-    this.rawCal = await http.read(url);
-    traitement();
-  }
-
-  rangerCours() {
-    cours.sort((a, b) => a.debut.date.compareTo(b.debut.date));
-  }
-
-  printCours() {
-    for (Cours c in cours) {
-      print(c);
-    }
-  }
-
-  static jourSemaine(DateTime date) {
-    var jours = {
-      1: "Lundi",
-      2: "Mardi",
-      3: "Mercredi",
-      4: "Jeudi",
-      5: "Vendredi",
-      6: "Samedi",
-      7: "Dimanche",
-    };
-
-    return jours[date.weekday];
-  }
-
-  static mois(DateTime date) {
-    var jours = {
-      1: "Janvier",
-      2: "Février",
-      3: "Mars",
-      4: "Avril",
-      5: "Mai",
-      6: "Juin",
-      7: "Juillet",
-      8: "Août",
-      9: "Septembre",
-      10: "Octobre",
-      11: "Novembre",
-      12: "Décembre",
-    };
-
-    return jours[date.month];
-  }
-
-  static DateTime dateJour(DateTime date) {
-    return DateTime(date.year, date.month, date.day);
   }
 }
