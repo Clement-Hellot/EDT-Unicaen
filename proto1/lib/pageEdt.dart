@@ -37,6 +37,7 @@ class _PageEDTState extends State<PageEDT>
     } else {
       _pageWidget = PageEDT.joursView;
     }
+    print(PageEDT.calendrier.cours);
   }
 
   @override

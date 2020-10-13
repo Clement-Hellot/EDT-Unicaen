@@ -6,22 +6,38 @@ import 'package:flutter/material.dart';
 import 'objets.dart';
 
 class Controle {
-  JourSemaine jourSemaine;
   Matiere matiere;
   String enseignant;
-  Epreuve epreuve;
   String lieu;
   Horaire fin;
   Horaire debut;
 
-  Controle(this.jourSemaine, this.matiere, this.enseignant, this.epreuve, this.lieu,
-      this.fin, this.debut);
+  Controle(this.matiere, this.enseignant, this.lieu,
+      this.debut, this.fin);
 
   @override
   String toString() {
-    return 'Cc(jour: $jourSemaine , matiere: $matiere, enseignant: $enseignant, epreuve: $epreuve, lieu: $lieu, fin: $fin)';
+    return 'Cc(matiere: $matiere, enseignant: $enseignant, lieu: $lieu, fin: $fin)';
   }
 
+  String nomJour(){
+    switch(this.debut.date.weekday) {
+      case 1:
+        return "lundi";
+      case 2:
+        return "mardi";
+      case 3:
+        return "mercredi";
+      case 4:
+        return "jeudi";
+      case 5:
+        return "vendredi";
+      case 6:
+        return "samedi";
+      case 7:
+        return "dimanche";
+    }
+  }
 
   void display() {
     print(this.toString());
@@ -29,14 +45,14 @@ class Controle {
 }
 
 class SemaineCc {
-  String semaine;//TODO mieux faire que ca, genre passer par une classe spe
+  DateTimeRange semaineDate;
   List<Controle> controles;
 
-  SemaineCc(List<Controle> cc,semaine){
+  SemaineCc(List<Controle> cc,DateTimeRange semaineDate){
     if (cc != null) {
       ajouterCc(cc);
     }
-    this.semaine = semaine;
+    this.semaineDate = semaineDate;
   }
 
   ajouterCc(List<Controle> cc) {
@@ -64,6 +80,9 @@ class SemaineCc {
     */
   }
 
+  String nom() {
+    return "cette semaine";
+  }
   @override
   String toString() {
     String retour ="semaine :\n";
@@ -140,10 +159,4 @@ extension JourSemaineExtension on JourSemaine {
 
     }
   }
-}
-
-
-class Epreuve extends Matiere {
-  Epreuve(String nom) : super(nom);
-
 }
