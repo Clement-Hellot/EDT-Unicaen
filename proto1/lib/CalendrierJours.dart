@@ -30,11 +30,11 @@ class CalendrierJours extends Calendrier {
 
   @override
   creerCours(String calEvent) {
-    String matiere;
-    String prof;
-    String salle;
-    String debut;
-    String fin;
+    String matiere = "";
+    String prof = "";
+    String salle = "";
+    String debut = "";
+    String fin = "";
 
     bool takeNext = false;
 
@@ -46,11 +46,18 @@ class CalendrierJours extends Calendrier {
       } else if (prop.contains("SUMMARY")) {
         matiere = prop.split(":")[1];
       } else if (prop.contains("LOCATION")) {
-        salle = prop.split(":")[1];
+        List<String> s = prop.split(":");
+        if (s.length > 1) {
+          salle = prop.split(":")[1];
+        }
       } else if (prop.contains("DESCRIPTION")) {
         List<String> morceaux = prop.split("\\n");
-        prof = morceaux[4];
-        if (morceaux.length <= 5) takeNext = true;
+        if (morceaux.length > 4) {
+          prof = morceaux[4];
+          if (morceaux.length <= 5) {
+            takeNext = true;
+          }
+        }
       } else if (takeNext && prop[0] == ' ' && !prop.contains("UID")) {
         takeNext = false;
         prof += prop.split("\\n")[0].substring(1);
