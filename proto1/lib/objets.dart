@@ -125,16 +125,21 @@ class Matiere {
   }
 
   //quand le nom de la matiere est trop long
-  String shortVersion() {
-    if (this.nom.length < 25)
-      return this.nom;
-    else
-      return this.nom.substring(0,13)+"...";
+  String shortVersion({int longueur = 25}) {
+    return shortString(this.nom, longueur: longueur);
   }
+
   @override
   String toString() {
     return nom;
   }
+}
+
+String shortString(String str, {int longueur = 25}) {
+  if (str.length <= longueur)
+    return str;
+  else
+    return str.substring(0, longueur - 2) + "...";
 }
 
 abstract class HeureCours {

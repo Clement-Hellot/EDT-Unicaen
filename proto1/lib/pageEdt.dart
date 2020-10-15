@@ -13,6 +13,8 @@ class PageEDT extends StatefulWidget {
 
   static const int tailleHeure = 85;
   static const double opaciteCours = 0.45;
+  static const int matiereLongMax = 30;
+  static const int salleLongMax = 23;
 
   static final Horaire premiereHeure = Horaire(8, 0);
 
@@ -210,7 +212,10 @@ class _CoursUIState extends State<CoursUI> {
                 Container(
                   width: double.infinity,
                   child: Text(
-                    widget.cours.matiere.nom,
+                    widget.cours.matiere.shortVersion(
+                      longueur:
+                          (PageEDT.matiereLongMax * widget.cours.duree).ceil(),
+                    ),
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 19,
@@ -223,7 +228,11 @@ class _CoursUIState extends State<CoursUI> {
                   margin: EdgeInsets.only(top: 3),
                   width: double.infinity,
                   child: Text(
-                    widget.cours.salle,
+                    shortString(
+                      widget.cours.salle,
+                      longueur:
+                          (PageEDT.salleLongMax * widget.cours.duree).floor(),
+                    ),
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 15,
