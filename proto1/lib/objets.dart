@@ -14,6 +14,7 @@ class Horaire {
       minutes = minutes % 60;
     }
 
+
     if (date == null) {
       DateTime now = DateTime.now();
       date = DateTime(now.year, now.month, now.day);
@@ -41,7 +42,10 @@ class Horaire {
 
   @override
   String toString() {
-    return heureStr;
+    if(heures == null && minutes == null)
+      return "NC";
+    else
+      return heureStr;
   }
 
   static Horaire fromCalendar(String debut) {

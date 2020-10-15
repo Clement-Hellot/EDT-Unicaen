@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'objets.dart';
 import 'controleObjets.dart';
@@ -21,7 +22,7 @@ class PageControles extends StatefulWidget {
 }
 
 class _PageControlesState extends State<PageControles>
-    with AutomaticKeepAliveClientMixin<PageControles> {
+    /*with AutomaticKeepAliveClientMixin<PageControles> */{
   List<SemaineCc> _listeSemaineCc = List<SemaineCc>();
 
   Container _widgetSemaineCc;
@@ -362,9 +363,9 @@ Future<http.Response> getHtmlCC(String annee) async {
 }
 
 List<SemaineCc> sortData(var code) {
-  //List<Controle> cc = List<Controle>();
+  List<Controle> cc = List<Controle>();
   List<SemaineCc> semaineCc = List<SemaineCc>();
-  /*
+
   var doc = parse(code.body);
   var table = doc.getElementsByTagName('table');
   table = table[0].children;
@@ -380,26 +381,50 @@ List<SemaineCc> sortData(var code) {
     String duree;
 
     var col = item.children;
-    //print(col[1]);
     if (col.length > 1 && col[1].innerHtml.length > 3 && col[1].innerHtml.contains("-")) {
+
+     
       semaine = col[0].innerHtml;
+      DateTime debutSemaine = DateTime(2000+int.parse(semaine.substring(9,11)),int.parse(semaine.substring(6,8)),int.parse(semaine.substring(3,5)));
+      DateTime finSemaine = DateTime(2000+int.parse(semaine.substring(21,23)),int.parse(semaine.substring(18,20)),int.parse(semaine.substring(15,17)));
+      var tabInfo = col[1].innerHtml.split("<br>");
+      var tabLieu = col[2].innerHtml.split("<br>");
+      var tabDuree = col[3].innerHtml.split("<br>");
+      for(int i=0 ; i<tabInfo.length ; i++){
 
-      var content = col[1].innerHtml.split(" - ");
-      print(content);
-      matiere = content[0];
-      enseignant = content[1];
-      epreuve = content[2];
+        var info = tabInfo[i].split("-");
+        lieu = tabLieu[i].toString().trimLeft().trimRight();
+        duree = tabDuree[i].toString().trimLeft().trimRight();
 
-      lieu = col[2].innerHtml;
+        matiere = info[1];
+        enseignant = info[2];
+        epreuve = info[3];
+        print(semaine+" - "+matiere+" - "+enseignant+" - "+epreuve+" - "+lieu+" - "+duree+" - ");
 
-      duree = col[3].innerHtml;
+        if(duree.contains("-")) {
+          DateTime dureeDateTime = null;
+        } else {
+          //traitement de la duree
+          //TODO traiter la duree
+          DateTime dureeDateTime = DateTime(2020, 10, 12);
+        }
 
-      jourSemaine = JourSemaine.LUNDI;
-      cc.add(new Controle(jourSemaine, Matiere(matiere), enseignant, Epreuve(epreuve), lieu, Horaire(1,30), Horaire(8,30)));
-      //print(cc);
+        if(lieu.contains("-")) {
+          lieu = "NC";
+        }
+        //en an 2000 pour dire qu'il n'y a pas d'année
+        //TODO mieux faire que ça
+        cc.add(new Controle(Matiere(matiere), enseignant, lieu, Horaire(0,0,date: DateTime(2000)),  Horaire(0,0)));
+        print(cc);
+
+
+      }
+      //TODO pareil
+      if(finSemaine.isAfter(DateTime.now()))
+        semaineCc.add(SemaineCc(cc, DateTimeRange(start: debutSemaine,end: finSemaine)));
+      cc = List<Controle>();
     }
   }
-*/
 /*
   String semaine = "cette semaine";
   JourSemaine jourSemaine = JourSemaine.LUNDI;
