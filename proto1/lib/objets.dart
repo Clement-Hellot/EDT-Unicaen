@@ -54,12 +54,6 @@ class Horaire {
 }
 
 class Journee {
-  // TODO
-  // - Attribut date (format date unix)
-  // - getter jour de la semaine
-  // - getter format Mercredi 7 Octobre
-  // - getter format 07/10/2020 ou 2020-10-07
-
   DateTime date;
 
   List<HeureCours> cours;

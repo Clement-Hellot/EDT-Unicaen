@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import 'objets.dart';
@@ -12,16 +9,15 @@ class Controle {
   Horaire fin;
   Horaire debut;
 
-  Controle(this.matiere, this.enseignant, this.lieu,
-      this.debut, this.fin);
+  Controle(this.matiere, this.enseignant, this.lieu, this.debut, this.fin);
 
   @override
   String toString() {
     return 'Cc(matiere: $matiere, enseignant: $enseignant, lieu: $lieu, fin: $fin)';
   }
 
-  String nomJour(){
-    switch(this.debut.date.weekday) {
+  String nomJour() {
+    switch (this.debut.date.weekday) {
       case 1:
         return "lundi";
       case 2:
@@ -36,6 +32,8 @@ class Controle {
         return "samedi";
       case 7:
         return "dimanche";
+      default:
+        return null;
     }
   }
 
@@ -48,7 +46,7 @@ class SemaineCc {
   DateTimeRange semaineDate;
   List<Controle> controles;
 
-  SemaineCc(List<Controle> cc,DateTimeRange semaineDate){
+  SemaineCc(List<Controle> cc, DateTimeRange semaineDate) {
     if (cc != null) {
       ajouterCc(cc);
     }
@@ -81,8 +79,8 @@ class SemaineCc {
   }
 
   String nom() {
-    if(this.semaineDate.start.isBefore(DateTime.now()) && this.semaineDate.end.isAfter(DateTime.now()))
-      return "cette semaine";
+    if (this.semaineDate.start.isBefore(DateTime.now()) &&
+        this.semaineDate.end.isAfter(DateTime.now())) return "cette semaine";
     /*
     print("difference :"+this.semaineDate.end.difference(DateTime.now()).inDays.toString());
 
@@ -93,12 +91,16 @@ class SemaineCc {
       return "dans 15 jours";
       */
 
-    return "du "+this.semaineDate.start.day.toString()+" au "+this.semaineDate.end.day.toString();
+    return "du " +
+        this.semaineDate.start.day.toString() +
+        " au " +
+        this.semaineDate.end.day.toString();
   }
+
   @override
   String toString() {
-    String retour ="semaine :\n";
-    for(Controle cc in this.controles){
+    String retour = "semaine :\n";
+    for (Controle cc in this.controles) {
       retour += cc.toString() + "\n";
     }
     return retour;
@@ -140,18 +142,9 @@ class Heure{
   }
 }
 */
-enum JourSemaine {
-  LUNDI,
-  MARDI,
-  MECREDI,
-  JEUDI,
-  VENDREDI,
-  SAMEDI,
-  DIMANCHE
-}
+enum JourSemaine { LUNDI, MARDI, MECREDI, JEUDI, VENDREDI, SAMEDI, DIMANCHE }
 
 extension JourSemaineExtension on JourSemaine {
-
   String get name {
     switch (this) {
       case JourSemaine.LUNDI:
@@ -168,7 +161,8 @@ extension JourSemaineExtension on JourSemaine {
         return 'samedi';
       case JourSemaine.DIMANCHE:
         return 'dimanche';
-
+      default:
+        return null;
     }
   }
 }
