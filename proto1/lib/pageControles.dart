@@ -22,7 +22,7 @@ class PageControles extends StatefulWidget {
 }
 
 class _PageControlesState extends State<PageControles>
-    /*with AutomaticKeepAliveClientMixin<PageControles> */{
+    with AutomaticKeepAliveClientMixin<PageControles> {
   List<SemaineCc> _listeSemaineCc = List<SemaineCc>();
 
   Container _widgetSemaineCc;
@@ -31,6 +31,7 @@ class _PageControlesState extends State<PageControles>
 
   _PageControlesState() {
     _semaineCcWrapper = _loadingText; // en attendant que les cc soient chargés
+
     fetchCc(_listeSemaineCc, _dispListeSemaineCc);
   }
   @override
@@ -40,7 +41,7 @@ class _PageControlesState extends State<PageControles>
 
   _dispListeSemaineCc() {
     setState(() {
-      List<Widget> semaines = [];
+      List<Widget> semaines = List<Widget>();
       for (SemaineCc semaineCc in _listeSemaineCc) {
         semaines.add(SemaineCcUI(semaineCc: semaineCc));
       }
@@ -62,12 +63,13 @@ class _PageControlesState extends State<PageControles>
 
       _semaineCcWrapper = _widgetSemaineCc;
     });
+
   }
 
   @override
   // ignore: must_call_super
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return RefreshIndicator(onRefresh: _handleRefresh, child: SingleChildScrollView(
       child: Align(
         alignment: Alignment.center,
         child: Column(
@@ -92,9 +94,16 @@ class _PageControlesState extends State<PageControles>
           ],
         ),
       ),
+    ),
     );
   }
 
+  Future<void> _handleRefresh() async {
+    setState(() {
+      _listeSemaineCc = List<SemaineCc>();
+      fetchCc(_listeSemaineCc, _dispListeSemaineCc);
+    });
+  }
   @override
   bool get wantKeepAlive => true;
 }
@@ -399,7 +408,7 @@ List<SemaineCc> sortData(var code) {
         matiere = info[1];
         enseignant = info[2];
         epreuve = info[3];
-        print(semaine+" - "+matiere+" - "+enseignant+" - "+epreuve+" - "+lieu+" - "+duree+" - ");
+        //print(semaine+" - "+matiere+" - "+enseignant+" - "+epreuve+" - "+lieu+" - "+duree+" - ");
 
         if(duree.contains("-")) {
           DateTime dureeDateTime = null;
@@ -415,7 +424,7 @@ List<SemaineCc> sortData(var code) {
         //en an 2000 pour dire qu'il n'y a pas d'année
         //TODO mieux faire que ça
         cc.add(new Controle(Matiere(matiere), enseignant, lieu, Horaire(0,0,date: DateTime(2000)),  Horaire(0,0)));
-        print(cc);
+        //print(cc);
 
 
       }
