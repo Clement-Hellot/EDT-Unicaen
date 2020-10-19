@@ -17,6 +17,9 @@ class Controle {
   }
 
   String nomJour() {
+    if(this.debut.date.year == 2000) {
+      return "";
+    }
     switch (this.debut.date.weekday) {
       case 1:
         return "lundi";
