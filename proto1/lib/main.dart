@@ -61,6 +61,10 @@ class _PagePrincipaleState extends State<PagePrincipale> {
   // Changement de page
   void _onItemTapped(int index) {
     setState(() {
+      if (_selectedIndex == 0 && index == 0) {
+        (_widgetOptions[0] as PageEDT).premierePage();
+      }
+
       _changePageIndex(index);
       controller.animateToPage(
         index,

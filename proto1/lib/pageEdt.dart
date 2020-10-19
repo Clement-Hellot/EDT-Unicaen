@@ -34,6 +34,20 @@ class PageEDT extends StatefulWidget {
       nbWeeks: 8,
     );
   }
+
+  final PageController controller = PageController(
+    initialPage: 0,
+  );
+
+  premierePage() {
+    try {
+      controller.animateToPage(
+        0,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.ease,
+      );
+    } catch (e) {}
+  }
 }
 
 class _PageEDTState extends State<PageEDT>
@@ -82,6 +96,7 @@ class _PageEDTState extends State<PageEDT>
     setState(() {
       _pageWidget = PageView(
         children: PageEDT.joursScrolls,
+        controller: widget.controller,
       );
 
       PageEDT.joursView = _pageWidget;
