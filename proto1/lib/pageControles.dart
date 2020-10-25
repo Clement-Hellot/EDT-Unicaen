@@ -12,6 +12,7 @@ import "CalendrierJours.dart";
 // - stocker la liste au démarrage de l'appli
 //  -> déplacer le traitement ?
 //  -> ou variable static ?
+//  -> Proxy ?
 
 class PageControles extends StatefulWidget {
   static const opaciteCours = 0.45;
