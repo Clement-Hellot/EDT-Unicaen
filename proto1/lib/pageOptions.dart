@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 
 class PageOptions extends StatefulWidget {
   @override
@@ -59,7 +62,6 @@ class _PageOptionsState extends State<PageOptions> {
             child: const Text('à propos'),
             color: Theme.of(context).accentColor,
             elevation: 4.0,
-            splashColor: Colors.amberAccent,
             textColor: const Color(0xFFFFFFFF),
             onPressed: () {
               showDialog(
@@ -120,13 +122,24 @@ class BoutonAPropos extends StatelessWidget {
   Widget build(BuildContext context) {}
 }
 
-Widget _popupAPropos(BuildContext context) {
+Widget _popupAPropos(BuildContext context){
+  String appInfo;
+
+  Timer.run(() async {
+    appInfo = await getPackageInfo();
+  });
+
   return new AlertDialog(
     title: const Text('à propos'),
     content: new Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [Text("test")]),
+        children: [
+          Text(
+            appInfo
+          ),
+        ]
+    ),
     actions: <Widget>[
       new FlatButton(
         onPressed: () {
@@ -137,4 +150,12 @@ Widget _popupAPropos(BuildContext context) {
       ),
     ],
   );
+}
+
+Future<String> getPackageInfo() async{
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  String versionName = packageInfo.version;
+  String versionCode = packageInfo.buildNumber;
+
+  return versionName + versionCode;
 }
