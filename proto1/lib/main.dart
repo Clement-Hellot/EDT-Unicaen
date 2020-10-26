@@ -6,6 +6,7 @@ import 'pageMails.dart';
 import 'pageSalles.dart';
 import 'pageControles.dart';
 import 'pageOption/pageOptions.dart';
+import 'pageOption/theme.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,6 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      color: AppTheme().backgroundColor,
       title: 'EDT Info',
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
@@ -99,9 +101,10 @@ class _PagePrincipaleState extends State<PagePrincipale> {
           ],
         ),
         child: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
+          items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
+              icon: Icon(Icons.calendar_today, color: AppTheme().iconColor),
+              activeIcon: Icon(Icons.calendar_today, color: AppTheme().iconSelectedColor),
               // Un peu sale mais apparemment il faut un title
               // Ce qui est assez bizarre parce que title est sensé
               // être déprécié pour utiliser label à la place
@@ -109,42 +112,51 @@ class _PagePrincipaleState extends State<PagePrincipale> {
                 '',
                 style: TextStyle(
                   fontSize: 0,
+                  color: AppTheme().textColor
                 ),
               ),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.mail_outline),
+              icon: Icon(Icons.mail_outline, color: AppTheme().iconColor,),
+              activeIcon: Icon(Icons.mail_outline, color: AppTheme().iconSelectedColor,),
               title: Text(
                 '',
                 style: TextStyle(
                   fontSize: 0,
+                  color: AppTheme().textColor
                 ),
               ),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.desktop_windows),
+              icon: Icon(Icons.desktop_windows, color: AppTheme().iconColor),
+              activeIcon: Icon(Icons.desktop_windows, color: AppTheme().iconSelectedColor),
               title: Text(
                 '',
                 style: TextStyle(
                   fontSize: 0,
+                  color: AppTheme().textColor
                 ),
               ),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.assignment),
+              icon: Icon(Icons.assignment, color: AppTheme().iconColor),
+              activeIcon: Icon(Icons.assignment, color: AppTheme().iconSelectedColor),
               title: Text(
                 '',
                 style: TextStyle(
                   fontSize: 0,
+                  color: AppTheme().textColor
                 ),
               ),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.more_horiz),
+              icon: Icon(Icons.more_horiz, color: AppTheme().iconColor),
+              activeIcon: Icon(Icons.more_horiz, color: AppTheme().iconSelectedColor),
               title: Text(
                 '',
                 style: TextStyle(
                   fontSize: 0,
+                  color: AppTheme().textColor
                 ),
               ),
             ),
@@ -153,10 +165,10 @@ class _PagePrincipaleState extends State<PagePrincipale> {
           onTap: _onItemTapped,
           // backgroundColor: Colors.lightBlue[500],
           type: BottomNavigationBarType.fixed,
-          backgroundColor:
-              Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+          backgroundColor: AppTheme().backgroundColor,
+              //Theme.of(context).bottomNavigationBarTheme.backgroundColor, //Remplacé par le contenu de AppTheme pour avoir un mode sombre - Arthur
           iconSize: 30,
-          selectedItemColor: Theme.of(context).accentColor,
+          //selectedItemColor: Theme.of(context).accentColor, //Remplacé par ActiveIcon: Icon(...); pour pouvoir définir les couleurs des icones non séléctionnées à la main - Arthur
         ),
       ),
     );

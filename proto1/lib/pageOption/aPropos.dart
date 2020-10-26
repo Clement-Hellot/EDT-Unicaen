@@ -31,7 +31,6 @@ class _popupAProposState extends State<popupAPropos> {
   }
 
   Future<void> _initPackageInfo() async {
-    print('coucou');
     final PackageInfo info = await PackageInfo.fromPlatform();
     setState(() {
       _packageInfo = info;

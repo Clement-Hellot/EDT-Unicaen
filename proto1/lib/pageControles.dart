@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:edt_mobile/pageOption/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
@@ -157,7 +158,6 @@ class _SemaineCcUIState extends State<SemaineCcUI> {
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(5)),
-        //color: Colors.grey[300],
       ),
       child: Column(
         //la semaine
@@ -249,7 +249,7 @@ class _ControleUIState extends State<ControleUI> {
         borderRadius: BorderRadius.all(Radius.circular(10)),
         color:
             widget.cc.matiere.couleur().withOpacity(PageControles.opaciteCours),
-        //color: Colors.grey[400]
+        //color:Colors.grey[400]
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

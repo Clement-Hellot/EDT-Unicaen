@@ -6,6 +6,7 @@ import 'main.dart';
 import 'Calendrier.dart';
 import 'CalendrierJours.dart';
 import 'objets.dart';
+import 'pageOption/theme.dart';
 
 class PageEDT extends StatefulWidget {
   @override
@@ -159,24 +160,28 @@ class _JourneeUIState extends State<JourneeUI> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: AppTheme().backgroundColor, //Je comprends pas pourquoi la couleur ne s'aligne pas au reste de l'app
       appBar: AppBar(
+        backgroundColor: AppTheme().topBarColor,
         title: Text(
           _nomJour,
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w400,
+            //color: AppTheme().textColor,
           ),
           textAlign: TextAlign.center,
         ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0.0,
         toolbarHeight: 70.0,
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Container(
+          //color: AppTheme().backgroundColor,
           margin: EdgeInsets.only(bottom: 15),
           child: Container(
+            //color: AppTheme().backgroundColor,
             margin: EdgeInsets.only(top: 5 + dodoMargin),
             child: Column(
               children: _coursUi,
