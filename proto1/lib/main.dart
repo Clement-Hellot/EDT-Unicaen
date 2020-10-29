@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      color: AppTheme().backgroundColor,
+      //color: AppTheme().backgroundColor,
       title: 'EDT Info',
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
@@ -79,6 +79,7 @@ class _PagePrincipaleState extends State<PagePrincipale> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme().backgroundColor,
       body: Center(
         child: PageView(
           controller: controller,
@@ -101,6 +102,7 @@ class _PagePrincipaleState extends State<PagePrincipale> {
           ],
         ),
         child: BottomNavigationBar(
+          selectedFontSize: 0,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today, color: AppTheme().iconColor),
@@ -108,57 +110,29 @@ class _PagePrincipaleState extends State<PagePrincipale> {
               // Un peu sale mais apparemment il faut un title
               // Ce qui est assez bizarre parce que title est sensé
               // être déprécié pour utiliser label à la place
-              title: Text(
-                '',
-                style: TextStyle(
-                  fontSize: 0,
-                  color: AppTheme().textColor
-                ),
-              ),
+
+              //En mettant selectedFontSize à 0 dans la BottomNavigationBar on peut laisser le label vide
+              label: "",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.mail_outline, color: AppTheme().iconColor,),
               activeIcon: Icon(Icons.mail_outline, color: AppTheme().iconSelectedColor,),
-              title: Text(
-                '',
-                style: TextStyle(
-                  fontSize: 0,
-                  color: AppTheme().textColor
-                ),
-              ),
+              label: "",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.desktop_windows, color: AppTheme().iconColor),
               activeIcon: Icon(Icons.desktop_windows, color: AppTheme().iconSelectedColor),
-              title: Text(
-                '',
-                style: TextStyle(
-                  fontSize: 0,
-                  color: AppTheme().textColor
-                ),
-              ),
+              label: "",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.assignment, color: AppTheme().iconColor),
               activeIcon: Icon(Icons.assignment, color: AppTheme().iconSelectedColor),
-              title: Text(
-                '',
-                style: TextStyle(
-                  fontSize: 0,
-                  color: AppTheme().textColor
-                ),
-              ),
+              label: "",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.more_horiz, color: AppTheme().iconColor),
               activeIcon: Icon(Icons.more_horiz, color: AppTheme().iconSelectedColor),
-              title: Text(
-                '',
-                style: TextStyle(
-                  fontSize: 0,
-                  color: AppTheme().textColor
-                ),
-              ),
+              label: "",
             ),
           ],
           currentIndex: _selectedIndex,

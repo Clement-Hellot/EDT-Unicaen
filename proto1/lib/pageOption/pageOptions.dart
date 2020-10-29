@@ -9,10 +9,13 @@ class PageOptions extends StatefulWidget {
 }
 
 class _PageOptionsState extends State<PageOptions> {
+  Color background = AppTheme().backgroundColor;
+  Color text = AppTheme().textColor;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme().backgroundColor,
+      backgroundColor: background,
       body: Column(
         children: [
           Container(
@@ -31,7 +34,7 @@ class _PageOptionsState extends State<PageOptions> {
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.w600,
-                color: AppTheme().textColor,
+                color: text,
               ),
             ),
           ),
@@ -53,7 +56,7 @@ class _PageOptionsState extends State<PageOptions> {
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme().textColor
+                    color: text,
                 ),
                 textAlign: TextAlign.left,
               ),
@@ -68,9 +71,9 @@ class _PageOptionsState extends State<PageOptions> {
             children: [
               RaisedButton(
                 child: const Text('A propos'),
-                color: AppTheme().backgroundColor,
+                color: background,
                 elevation: 4.0,
-                textColor: AppTheme().textColor,
+                textColor: text,
                 onPressed: () {
                   showDialog(
                     context: context,

@@ -1,6 +1,7 @@
 import 'pageOptions.dart';
 
 import 'package:flutter/material.dart';
+import '../pageEdt.dart';
 
 /// Le bouton déroulant pour choisir entre clair et sombre
 class BoutonTheme extends StatefulWidget {
@@ -30,7 +31,7 @@ class _BoutonThemeState extends State<StatefulWidget> {
           if(newValue!=dropdownValue) {
             AppTheme().changerTheme();
             dropdownValue = newValue;
-            setState(() {}); //TODO refresh la page courante
+            //TODO refresh la page courante
           }
         });
       },
@@ -69,9 +70,10 @@ class AppTheme {  //Singleton
     changerTheme();
   }
 
-  void changerTheme(){  //Applique le thème actuellement choisi
-    isClair=!isClair;
-    if(isClair) {
+  void changerTheme() {
+    //Applique le thème actuellement choisi
+    isClair = !isClair;
+    if (isClair) {
       etat = "Sombre";
       topBarColor = Color(0xFF050E25);
       backgroundColor = Color(0xFF050E25);

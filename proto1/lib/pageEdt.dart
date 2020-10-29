@@ -12,7 +12,7 @@ class PageEDT extends StatefulWidget {
   @override
   _PageEDTState createState() => _PageEDTState();
 
-  static const int tailleHeure = 85;
+  static const int tailleHeure = 107;
   static const double opaciteCours = 0.45;
   static const int matiereLongMax = 30;
   static const int salleLongMax = 23;
@@ -160,15 +160,12 @@ class _JourneeUIState extends State<JourneeUI> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: AppTheme().backgroundColor, //Je comprends pas pourquoi la couleur ne s'aligne pas au reste de l'app
       appBar: AppBar(
-        backgroundColor: AppTheme().topBarColor,
         title: Text(
           _nomJour,
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w400,
-            //color: AppTheme().textColor,
           ),
           textAlign: TextAlign.center,
         ),
@@ -178,10 +175,8 @@ class _JourneeUIState extends State<JourneeUI> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          //color: AppTheme().backgroundColor,
           margin: EdgeInsets.only(bottom: 15),
           child: Container(
-            //color: AppTheme().backgroundColor,
             margin: EdgeInsets.only(top: 5 + dodoMargin),
             child: Column(
               children: _coursUi,

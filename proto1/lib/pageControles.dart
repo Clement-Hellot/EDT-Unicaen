@@ -72,6 +72,7 @@ class _PageControlesState extends State<PageControles>
   // ignore: must_call_super
   Widget build(BuildContext context) {
     return RefreshIndicator(onRefresh: _handleRefresh, child: SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
       child: Align(
         alignment: Alignment.center,
         child: Column(
@@ -85,6 +86,7 @@ class _PageControlesState extends State<PageControles>
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w600,
+                  color: AppTheme().textColor,
                 ),
               ),
             ),
