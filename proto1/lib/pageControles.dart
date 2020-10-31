@@ -31,6 +31,8 @@ class _PageControlesState extends State<PageControles>
   Widget _loadingText = Text('Chargement...');
   Widget _semaineCcWrapper;
 
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+
   _PageControlesState() {
     _semaineCcWrapper = _loadingText; // en attendant que les cc soient chargés
 
@@ -41,8 +43,8 @@ class _PageControlesState extends State<PageControles>
     super.initState();
   }
 
-  _dispListeSemaineCc() {
-    setState(() {
+  _dispListeSemaineCc(List<SemaineCc> listeSemainesCC) {
+      _listeSemaineCc = listeSemainesCC;
       List<Widget> semaines = List<Widget>();
       for (SemaineCc semaineCc in _listeSemaineCc) {
         semaines.add(SemaineCcUI(semaineCc: semaineCc));
@@ -62,47 +64,49 @@ class _PageControlesState extends State<PageControles>
           children: semaines,
         ),
       );
-
       _semaineCcWrapper = _widgetSemaineCc;
-    });
-
+       print("la liste est mise a jour");
   }
 
   @override
   // ignore: must_call_super
   Widget build(BuildContext context) {
-    return RefreshIndicator(onRefresh: _handleRefresh, child: SingleChildScrollView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      child: Align(
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: 50, bottom: 30),
-              width: double.infinity,
-              child: Text(
-                'Contrôles',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme().textColor,
+    return RefreshIndicator(
+      key: _refreshIndicatorKey,
+      onRefresh: _handleRefresh,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Align(
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 50, bottom: 30),
+                width: double.infinity,
+                child: Text(
+                  'Contrôles',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme().textColor,
+                  ),
                 ),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.all(5),
-              width: double.infinity,
-              child: _semaineCcWrapper,
-            ),
-          ],
+              Container(
+                margin: EdgeInsets.all(5),
+                width: double.infinity,
+                child: _semaineCcWrapper,
+              ),
+            ],
+          ),
         ),
       ),
-    ),
     );
   }
 
-  Future<void> _handleRefresh() async {
+  Future<void> _handleRefresh() {
+    return fetchCc(List<SemaineCc>(), _dispListeSemaineCc).then((value) => _listeSemaineCc=value);
     setState(() {
       _listeSemaineCc = List<SemaineCc>();
       fetchCc(_listeSemaineCc, _dispListeSemaineCc);
@@ -309,6 +313,20 @@ class _ControleUIState extends State<ControleUI> {
   }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 List<SemaineCc> ajouterControleEDT(List<SemaineCc> listeSemainesCC) {
   CalendrierJours calendrier = PageEDT.calendrier;
   bool isEntered = false;
@@ -356,14 +374,16 @@ List<SemaineCc> ajouterControleEDT(List<SemaineCc> listeSemainesCC) {
       }
     }
   }
+  //print(listeSemainesCC);
   return listeSemainesCC;
 }
 
 /// Attend le html, puis le mets dans la liste et appelle la fonction
-fetchCc(List<SemaineCc> list, Function nextF) async {
-  list.addAll(sortData(await getHtmlCC('2a')));
-  ajouterControleEDT(list);
-  nextF();
+Future<List<SemaineCc>> fetchCc(List<SemaineCc> list, Function nextF) async {
+  //list = sortData(await getHtmlCC('2a'));
+  list = ajouterControleEDT(list);
+  nextF(list);
+  return list;
 }
 
 // Recupere le code HTML de la page des CC @param
@@ -382,6 +402,11 @@ List<SemaineCc> sortData(var code) {
   var table = doc.getElementsByTagName('table');
   table = table[0].children;
   var tbody = table[1].children;
+  RegExp regExp = new RegExp(
+    r"<|>",
+    caseSensitive: false,
+    multiLine: false,
+  );
 
   for (var item in tbody) {
     String semaine;
@@ -397,6 +422,9 @@ List<SemaineCc> sortData(var code) {
 
      
       semaine = col[0].innerHtml;
+      print(semaine);
+      semaine = removeColorDecoration(semaine);
+
       DateTime debutSemaine = DateTime(2000+int.parse(semaine.substring(9,11)),int.parse(semaine.substring(6,8)),int.parse(semaine.substring(3,5)));
       DateTime finSemaine = DateTime(2000+int.parse(semaine.substring(21,23)),int.parse(semaine.substring(18,20)),int.parse(semaine.substring(15,17)));
       var tabInfo = col[1].innerHtml.split("<br>");
@@ -405,12 +433,12 @@ List<SemaineCc> sortData(var code) {
       for(int i=0 ; i<tabInfo.length ; i++){
 
         var info = tabInfo[i].split("-");
-        lieu = tabLieu[i].toString().trimLeft().trimRight();
-        duree = tabDuree[i].toString().trimLeft().trimRight();
+        lieu = removeColorDecoration(tabLieu[i].toString().trimLeft().trimRight());
+        duree = removeColorDecoration(tabDuree[i].toString().trimLeft().trimRight());
 
-        matiere = info[1];
-        enseignant = info[2];
-        epreuve = info[3];
+        matiere = removeColorDecoration(info[1]);
+        enseignant= removeColorDecoration(info[2]);
+        epreuve = removeColorDecoration(info[3]);
         //print(semaine+" - "+matiere+" - "+enseignant+" - "+epreuve+" - "+lieu+" - "+duree+" - ");
 
         if(duree.contains("-")) {
@@ -460,6 +488,7 @@ List<SemaineCc> sortData(var code) {
       DateTimeRange(
           start: DateTime.utc(2020, 10, 18), end: DateTime.utc(2020, 10, 24))));
 */
+print(semaineCc);
   return semaineCc;
 }
 
@@ -475,4 +504,33 @@ String toString(List<Controle> list) {
 
 String cleanUp(String str) {
   return str.replaceAll('<br>', '').trim();
+}
+
+
+String removeColorDecoration(String chaine){
+  RegExp regExp1 = new RegExp(
+    r"^<",
+    caseSensitive: false,
+    multiLine: false,
+  );
+  RegExp regExp2 = new RegExp(
+    r">$",
+    caseSensitive: false,
+    multiLine: false,
+  );
+  if(regExp1.hasMatch(chaine)){
+    //print("ce n'est pas bon");
+    print("avant :"+chaine);
+    chaine = chaine.substring(chaine.indexOf(">")+1,chaine.length);
+    print("apres :"+chaine);
+    //print(semaine);
+  }
+  if(regExp2.hasMatch(chaine)){
+    //print("ce n'est pas bon");
+    print("avant :"+chaine);
+    chaine = chaine.substring(0,chaine.indexOf("<"));
+    print("apres :"+chaine);
+    //print(semaine);
+  }
+  return chaine;
 }

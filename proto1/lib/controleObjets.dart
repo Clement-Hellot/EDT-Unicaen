@@ -95,9 +95,39 @@ class SemaineCc {
       */
 
     return "du " +
-        this.semaineDate.start.day.toString() +
+        this.semaineDate.start.day.toString() +" "+ getMonthName(this.semaineDate.start.month.toInt()).substring(0,3) +
         " au " +
-        this.semaineDate.end.day.toString();
+        this.semaineDate.end.day.toString() +" "+  getMonthName(this.semaineDate.end.month.toInt()).substring(0,3);
+  }
+
+  String getMonthName(int num){
+    switch(num) {
+      case 1:
+        return "Janvier";
+      case 2:
+        return "Fevrier";
+      case 3:
+        return "Avril";
+      case 4:
+        return "Mars";
+      case 5:
+        return "Mai";
+      case 6:
+        return "Juin";
+      case 7:
+        return "Juillet";
+      case 8:
+        return "Aout";
+      case 9:
+        return "Septembre";
+      case 10:
+        return "Octobre";
+      case 11:
+        return "Novembre";
+      case 12:
+        return "Decembre";
+
+    }
   }
 
   @override
