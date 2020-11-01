@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -32,12 +33,12 @@ class _PageMailsState extends State<PageMails> {
   }
 }
 
-class Mail extends StatefulWidget {
+class MailContent extends StatefulWidget {
   @override
   _Mail createState() => _Mail();
 }
 
-class _Mail extends State<Mail> {
+class _Mail extends State<MailContent> {
   Widget build(BuildContext context) {
     return Text('hey');
   }
@@ -45,7 +46,7 @@ class _Mail extends State<Mail> {
 
 Future<void> mailImap() async {
   String username = '21905584';
-  String password = '123456';
+  String password = '';
   String host = "imap.unicaen.fr";
   int port = 993;
   // printImapClientDebugLog();
@@ -84,13 +85,26 @@ Future<List> getFolderList(ImapClient client) async {
 void getMail(ImapFolder folder) async {
   int size = folder.mailCount;
 
-  for (int i = size - 1; i < size; i++) {
-    Map<int, Map<String, dynamic>> mail = await folder
+  for (int i = size - 20; i < size; i++) {
+    Map<int, Map<String, dynamic>> mailFrom = await folder
         .fetch(["BODY.PEEK[HEADER.FIELDS (FROM)]"], messageIds: [i]);
-    int mailNumber = mail.keys.first;
-    String from = mail.values.last.values.last;
-    print(mailNumber);
-    print(from);
+
+    int mailNumber = mailFrom.keys.first;
+    String from = mailFrom.values.last.values.last;
+    from = from.split(':')[1];
+
+    Map<int, Map<String, dynamic>> mailSubject = await folder
+        .fetch(["BODY.PEEK[HEADER.FIELDS (SUBJECT)]"], messageIds: [i]);
+    String subject = mailSubject.values.last.values.last;
+    subject = subject.split(':')[1];
+
+    Map<int, Map<String, dynamic>> mailDate = await folder
+        .fetch(["BODY.PEEK[HEADER.FIELDS (DATE)]"], messageIds: [i]);
+    String date = mailDate.values.last.values.last;
+    date = date.substring(5);
+
+    Mail mail = new Mail(from, subject, date);
+    mail.aff();
   }
 }
 
@@ -110,5 +124,21 @@ bool getError(ImapTaggedResponse response) {
       break;
     default:
       return false;
+  }
+}
+
+class Mail {
+  String from;
+  String objet;
+  String date;
+
+  Mail(String from, String objet, String date) {
+    this.from = from;
+    this.objet = objet;
+    this.date = date;
+  }
+
+  aff() {
+    print(from + objet + date);
   }
 }
