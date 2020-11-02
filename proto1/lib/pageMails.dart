@@ -126,7 +126,7 @@ class Mail {
 
 class MailClient {
   String username = '21905584';
-  String password = 'Boomer76440!';
+  String password = '';
   ImapClient imapClient;
   String imapHost = "imap.unicaen.fr";
   int port = 993;
