@@ -15,14 +15,6 @@ class _PageMailsState extends State<PageMails> {
       alignment: Alignment.center,
       child: Column(
         children: <Widget>[
-          FlatButton(
-              onPressed: mailImap,
-              color: Colors.white,
-              child: Text('click me')),
-          FlatButton(
-              onPressed: mailImap,
-              color: Colors.green,
-              child: Text('click me')),
           Text(
             'data',
             style: TextStyle(color: Colors.red),
@@ -34,7 +26,7 @@ class _PageMailsState extends State<PageMails> {
                 icon: Icon(Icons.search),
                 tooltip: 'Search',
                 color: Colors.white,
-                onPressed: () {},
+                onPressed: exec,
               ),
               IconButton(
                 icon: Icon(Icons.refresh),
@@ -63,6 +55,7 @@ class MailContent extends StatefulWidget {
 }
 
 class _Mail extends State<MailContent> {
+  @override
   Widget build(BuildContext context) {
     return Container(
         margin: EdgeInsets.only(
@@ -106,86 +99,12 @@ class _Mail extends State<MailContent> {
   }
 }
 
-Future<void> mailImap() async {
-  String username = '21905584';
-  String password = '';
-  String host = "imap.unicaen.fr";
-  int port = 993;
-  // printImapClientDebugLog();
-
-  ImapClient client = new ImapClient();
-
-  await client.connect(host, port, true);
-
-  ImapTaggedResponse logResponse =
-      await Future.delayed(Duration(seconds: 0), () {
-    return client.login(username, password);
-  });
-
-  if (getError(logResponse)) {
-    ImapFolder inbox = await Future.delayed(Duration(seconds: 0), () {
-      return client.getFolder('inbox');
-    });
-
-    getMail(inbox);
-  }
-}
-
-Future<List> getFolderList(ImapClient client) async {
-  List<ImapListResponse> folders =
-      await Future.delayed(Duration(seconds: 0), () {
-    return client.list('*');
-  });
-
-  List liste = [];
-  folders.forEach((element) {
-    liste.add(element.name);
-  });
-  return liste;
-}
-
-void getMail(ImapFolder folder) async {
-  int size = folder.mailCount;
-
-  for (int i = size - 20; i < size; i++) {
-    Map<int, Map<String, dynamic>> mailFrom = await folder
-        .fetch(["BODY.PEEK[HEADER.FIELDS (FROM)]"], messageIds: [i]);
-
-    int mailNumber = mailFrom.keys.first;
-    String from = mailFrom.values.last.values.last;
-    from = from.split(':')[1];
-
-    Map<int, Map<String, dynamic>> mailSubject = await folder
-        .fetch(["BODY.PEEK[HEADER.FIELDS (SUBJECT)]"], messageIds: [i]);
-    String subject = mailSubject.values.last.values.last;
-    subject = subject.split(':')[1];
-
-    Map<int, Map<String, dynamic>> mailDate = await folder
-        .fetch(["BODY.PEEK[HEADER.FIELDS (DATE)]"], messageIds: [i]);
-    String date = mailDate.values.last.values.last;
-    date = date.substring(5);
-
-    Mail mail = new Mail(from, subject, date);
-    mail.aff();
-  }
-}
-
-bool getError(ImapTaggedResponse response) {
-  switch (response) {
-    case ImapTaggedResponse.ok:
-      print('ok');
-      return true;
-      break;
-    case ImapTaggedResponse.no:
-      print('echec');
-      return false;
-      break;
-    case ImapTaggedResponse.bad:
-      print('command not accepted');
-      return false;
-      break;
-    default:
-      return false;
+void exec() async {
+  MailClient client = new MailClient();
+  bool connected = await client.connect();
+  if (connected) {
+    List folder = await client.getFolderList();
+    print(folder[3]);
   }
 }
 
@@ -202,5 +121,92 @@ class Mail {
 
   aff() {
     print(from + objet + date);
+  }
+}
+
+class MailClient {
+  String username = '21905584';
+  String password = 'Boomer76440!';
+  ImapClient imapClient;
+  String imapHost = "imap.unicaen.fr";
+  int port = 993;
+
+  MailClient() {
+    imapClient = new ImapClient();
+  }
+
+  Future<bool> connect() async {
+    await imapClient.connect(imapHost, port, true);
+    ImapTaggedResponse response = await imapClient.login(username, password);
+    if (!getError(response))
+      throw new ErrorDescription("Echec Connexion");
+    else
+      return true;
+  }
+
+  Future<List> getFolderList() async {
+    List<ImapListResponse> folder = await imapClient.list('*');
+    List liste = [];
+    folder.forEach((element) {
+      liste.add(element.name);
+    });
+    return liste;
+  }
+
+  ImapClient getClient() {
+    return this.imapClient;
+  }
+
+  Future<List<Mail>> getMail(String folderName) async {
+    ImapFolder folder = await imapClient.getFolder(folderName);
+    int size = folder.mailCount;
+    List<Mail> liste;
+
+    for (int i = size - 1; i < size; i++) {
+      int mailNumber;
+      String from, objet, date;
+      Mail mail;
+
+      folder.fetch(["BODY.PEEK[HEADER.FIELDS (FROM)]"], messageIds: [i]).then(
+          (value) {
+        mailNumber = value.keys.first;
+        from = value.values.last.values.last;
+        from = from.split(':')[1];
+      });
+
+      folder.fetch(["BODY.PEEK[HEADER.FIELDS (SUBJECT)]"],
+          messageIds: [i]).then((value) {
+        objet = value.values.last.values.last;
+        objet = objet.split(':')[1];
+      });
+
+      folder.fetch(["BODY.PEEK[HEADER.FIELDS (DATE)]"], messageIds: [i]).then(
+          (value) {
+        date = value.values.last.values.last;
+        date = date.substring(5);
+        mail = new Mail(from, objet, date);
+        liste.add(mail);
+      });
+    }
+    return liste;
+  }
+
+  bool getError(ImapTaggedResponse response) {
+    switch (response) {
+      case ImapTaggedResponse.ok:
+        print('ok');
+        return true;
+        break;
+      case ImapTaggedResponse.no:
+        print('echec');
+        return false;
+        break;
+      case ImapTaggedResponse.bad:
+        print('command not accepted');
+        return false;
+        break;
+      default:
+        return false;
+    }
   }
 }
