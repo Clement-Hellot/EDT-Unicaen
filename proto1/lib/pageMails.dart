@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -13,23 +12,48 @@ class _PageMailsState extends State<PageMails> {
   @override
   Widget build(BuildContext context) {
     return Align(
-        alignment: Alignment.center,
-        child: Row(
-          children: <Widget>[
-            FlatButton(
-                onPressed: mailImap,
+      alignment: Alignment.center,
+      child: Column(
+        children: <Widget>[
+          FlatButton(
+              onPressed: mailImap,
+              color: Colors.white,
+              child: Text('click me')),
+          FlatButton(
+              onPressed: mailImap,
+              color: Colors.green,
+              child: Text('click me')),
+          Text(
+            'data',
+            style: TextStyle(color: Colors.red),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.search),
+                tooltip: 'Search',
                 color: Colors.white,
-                child: Text('click me')),
-            FlatButton(
-                onPressed: mailImap,
-                color: Colors.green,
-                child: Text('click me')),
-            Text(
-              'data',
-              style: TextStyle(color: Colors.red),
-            )
-          ],
-        ));
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(Icons.refresh),
+                tooltip: 'Refresh',
+                color: Colors.white,
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(Icons.settings),
+                tooltip: 'Refresh',
+                color: Colors.white,
+                onPressed: () {},
+              ),
+            ],
+          ),
+          MailContent(),
+        ],
+      ),
+    );
   }
 }
 
@@ -40,7 +64,45 @@ class MailContent extends StatefulWidget {
 
 class _Mail extends State<MailContent> {
   Widget build(BuildContext context) {
-    return Text('hey');
+    return Container(
+        margin: EdgeInsets.only(
+          left: 25,
+          top: 5,
+          right: 25,
+          bottom: 5,
+        ),
+        padding: EdgeInsets.only(left: 14, top: 10, right: 14, bottom: 10),
+        decoration: BoxDecoration(
+          color: Colors.grey[800],
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'Objet',
+                  style: TextStyle(color: Colors.white),
+                ),
+                Text(
+                  'Heure',
+                  style: TextStyle(color: Colors.white),
+                  textAlign: TextAlign.right,
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'From Clement',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            )
+          ],
+        ));
   }
 }
 
