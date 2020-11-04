@@ -15,9 +15,18 @@ class _PageMailsState extends State<PageMails> {
       alignment: Alignment.center,
       child: Column(
         children: <Widget>[
-          Text(
-            'data',
-            style: TextStyle(color: Colors.red),
+          Container(
+            color: Colors.lightBlue,
+            height: 104.5,
+            alignment: Alignment.center,
+            child: Text(
+              'Mail',
+              style: TextStyle(color: Colors.black,
+              fontSize: 45,
+              fontWeight: FontWeight.w400,      
+              height: 2.1,                      
+              ),
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -42,6 +51,7 @@ class _PageMailsState extends State<PageMails> {
               ),
             ],
           ),
+          
           MailContent(),
         ],
       ),
@@ -66,7 +76,7 @@ class _Mail extends State<MailContent> {
         ),
         padding: EdgeInsets.only(left: 14, top: 10, right: 14, bottom: 10),
         decoration: BoxDecoration(
-          color: Colors.grey[800],
+          color: Colors.grey[700],
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
         child: Column(
@@ -99,6 +109,7 @@ class _Mail extends State<MailContent> {
   }
 }
 
+
 void exec() async {
   MailClient client = new MailClient();
   bool connected = await client.connect();
@@ -125,7 +136,7 @@ class Mail {
 }
 
 class MailClient {
-  String username = '21905584';
+  String username = '';
   String password = '';
   ImapClient imapClient;
   String imapHost = "imap.unicaen.fr";
