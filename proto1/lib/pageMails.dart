@@ -21,10 +21,11 @@ class _PageMailsState extends State<PageMails> {
             alignment: Alignment.center,
             child: Text(
               'Mail',
-              style: TextStyle(color: Colors.black,
-              fontSize: 45,
-              fontWeight: FontWeight.w400,      
-              height: 2.1,                      
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 45,
+                fontWeight: FontWeight.w400,
+                height: 2.1,
               ),
             ),
           ),
@@ -51,7 +52,6 @@ class _PageMailsState extends State<PageMails> {
               ),
             ],
           ),
-          
           MailContent(),
         ],
       ),
@@ -109,13 +109,14 @@ class _Mail extends State<MailContent> {
   }
 }
 
-
 void exec() async {
   MailClient client = new MailClient();
   bool connected = await client.connect();
+
   if (connected) {
     List folder = await client.getFolderList();
-    print(folder[3]);
+    List mails = await client.getMail('inbox');
+    print(mails);
   }
 }
 
@@ -132,6 +133,7 @@ class Mail {
 
   aff() {
     print(from + objet + date);
+    print("-----------------------------------");
   }
 }
 
@@ -168,36 +170,51 @@ class MailClient {
     return this.imapClient;
   }
 
-  Future<List<Mail>> getMail(String folderName) async {
+  Future<String> getFrom(ImapFolder folder, int number) async {
+    String res;
+    Map<int, Map<String, dynamic>> from = await folder
+        .fetch(["BODY.PEEK[HEADER.FIELDS (FROM)]"], messageIds: [number]);
+    res = from.values.last.values.last;
+    res = res.split(":")[1];
+
+    return res;
+  }
+
+  Future<String> getObjet(ImapFolder folder, int number) async {
+    String res;
+    Map<int, Map<String, dynamic>> objet = await folder
+        .fetch(["BODY.PEEK[HEADER.FIELDS (SUBJECT)]"], messageIds: [number]);
+    res = objet.values.last.values.last;
+    res = res.split(":")[1];
+
+    return res;
+  }
+
+  Future<String> getDate(ImapFolder folder, int number) async {
+    String res;
+    Map<int, Map<String, dynamic>> date = await folder
+        .fetch(["BODY.PEEK[HEADER.FIELDS (DATE)]"], messageIds: [number]);
+    res = date.values.last.values.last;
+    res = res.split(":")[1];
+    return res;
+  }
+
+  Future<List> getMail(String folderName) async {
     ImapFolder folder = await imapClient.getFolder(folderName);
     int size = folder.mailCount;
-    List<Mail> liste;
+    List<Mail> liste = new List();
 
-    for (int i = size - 1; i < size; i++) {
+    for (int i = size - 2; i < size; i++) {
       int mailNumber;
       String from, objet, date;
       Mail mail;
 
-      folder.fetch(["BODY.PEEK[HEADER.FIELDS (FROM)]"], messageIds: [i]).then(
-          (value) {
-        mailNumber = value.keys.first;
-        from = value.values.last.values.last;
-        from = from.split(':')[1];
-      });
+      from = await getFrom(folder, i);
+      objet = await getObjet(folder, i);
+      date = await getDate(folder, i);
 
-      folder.fetch(["BODY.PEEK[HEADER.FIELDS (SUBJECT)]"],
-          messageIds: [i]).then((value) {
-        objet = value.values.last.values.last;
-        objet = objet.split(':')[1];
-      });
-
-      folder.fetch(["BODY.PEEK[HEADER.FIELDS (DATE)]"], messageIds: [i]).then(
-          (value) {
-        date = value.values.last.values.last;
-        date = date.substring(5);
-        mail = new Mail(from, objet, date);
-        liste.add(mail);
-      });
+      mail = new Mail(from, objet, date);
+      liste.add(mail);
     }
     return liste;
   }
