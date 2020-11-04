@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:imap_client/imap_client.dart';
 
 class PageMails extends StatefulWidget {
@@ -79,44 +80,91 @@ class _Mail extends State<MailContent> {
           color: Colors.grey[700],
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Objet',
-                  style: TextStyle(color: Colors.white),
-                ),
-                Text(
-                  'Heure',
-                  style: TextStyle(color: Colors.white),
-                  textAlign: TextAlign.right,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'From Clement',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ],
-            )
-          ],
+        child: FutureBuilder(
+          future: exec(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<Mail> mail = snapshot.data;
+              return ListView.builder(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return Container(
+                        child: Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Flexible(
+                              child: Text(
+                                mail[index].getObjet(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Flexible(
+                              child: Text(
+                                mail[index].getDate(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Flexible(
+                              child: Text(
+                                mail[index].getFrom(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ));
+                  },
+                  itemCount: snapshot.data.length);
+            }
+          },
         ));
   }
 }
 
-void exec() async {
+Future<List> exec() async {
   MailClient client = new MailClient();
   bool connected = await client.connect();
 
   if (connected) {
-    List folder = await client.getFolderList();
-    List mails = await client.getMail('inbox');
+    List<Mail> mails = await client.getMail('inbox');
     print(mails);
+
+    String from = mails[1].getFrom();
+    String objet = mails[1].getObjet();
+    String date = mails[1].getDate();
+
+    print(from);
+    print(objet);
+    print(date);
+
+    return mails;
+
+    /*mails.forEach((element){    
+    String from = element(1).getFrom;
+    print(from);
+  });*/
   }
 }
 
@@ -131,6 +179,18 @@ class Mail {
     this.date = date;
   }
 
+  String getFrom() {
+    return from;
+  }
+
+  String getObjet() {
+    return objet;
+  }
+
+  String getDate() {
+    return date;
+  }
+
   aff() {
     print(from + objet + date);
     print("-----------------------------------");
@@ -138,8 +198,8 @@ class Mail {
 }
 
 class MailClient {
-  String username = '';
-  String password = '';
+  String username = '21906426';
+  String password = '_CD2001_';
   ImapClient imapClient;
   String imapHost = "imap.unicaen.fr";
   int port = 993;
