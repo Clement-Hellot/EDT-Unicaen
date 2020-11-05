@@ -37,7 +37,7 @@ class _PageMailsState extends State<PageMails> {
                 icon: Icon(Icons.search),
                 tooltip: 'Search',
                 color: Colors.white,
-                onPressed: exec,
+                onPressed: abc,
               ),
               IconButton(
                 icon: Icon(Icons.refresh),
@@ -69,17 +69,7 @@ class _Mail extends State<MailContent> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(
-          left: 25,
-          top: 5,
-          right: 25,
-          bottom: 5,
-        ),
         padding: EdgeInsets.only(left: 14, top: 10, right: 14, bottom: 10),
-        decoration: BoxDecoration(
-          color: Colors.grey[700],
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-        ),
         child: FutureBuilder(
           future: exec(),
           builder: (context, snapshot) {
@@ -89,57 +79,79 @@ class _Mail extends State<MailContent> {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     return Container(
+                        margin: EdgeInsets.only(
+                          left: 25,
+                          top: 5,
+                          right: 25,
+                          bottom: 5,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[600],
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                        ),
                         child: Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Flexible(
-                              child: Text(
-                                mail[index].getObjet(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Flexible(
+                                  child: Text(
+                                    mail[index].getObjet(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Flexible(
+                                  child: Text(
+                                    mail[index].getDate(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                    textAlign: TextAlign.right,
+                                  ),
                                 ),
-                              ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Flexible(
+                                  child: Text(
+                                    mail[index].getFrom(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             )
                           ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Flexible(
-                              child: Text(
-                                mail[index].getDate(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                ),
-                                textAlign: TextAlign.right,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Flexible(
-                              child: Text(
-                                mail[index].getFrom(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ));
+                        ));
                   },
                   itemCount: snapshot.data.length);
             }
           },
         ));
+  }
+}
+
+void abc() async {
+  MailClient client = new MailClient();
+  bool connected = await client.connect();
+
+  if (connected) {
+    List<Mail> mails = await client.getMail('inbox');
+    mails.forEach((element) {
+      element.aff();
+    });
   }
 }
 
@@ -191,7 +203,7 @@ class Mail {
     return date;
   }
 
-  aff() {
+  void aff() {
     print(from + objet + date);
     print("-----------------------------------");
   }
@@ -236,7 +248,6 @@ class MailClient {
         .fetch(["BODY.PEEK[HEADER.FIELDS (FROM)]"], messageIds: [number]);
     res = from.values.last.values.last;
     res = res.split(":")[1];
-
     return res;
   }
 
@@ -252,10 +263,13 @@ class MailClient {
 
   Future<String> getDate(ImapFolder folder, int number) async {
     String res;
+    List liste = new List();
     Map<int, Map<String, dynamic>> date = await folder
         .fetch(["BODY.PEEK[HEADER.FIELDS (DATE)]"], messageIds: [number]);
     res = date.values.last.values.last;
-    res = res.split(":")[1];
+    liste = res.split(":");
+    liste.removeAt(0);
+    res = liste.join(":");
     return res;
   }
 
