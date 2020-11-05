@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -124,7 +125,7 @@ class _Mail extends State<MailContent> {
                             children: <Widget>[
                               Flexible(
                                 child: Text(
-                                  mail[index].getFrom(),
+                                  mail[index].getNomFrom(),
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 12,
@@ -165,7 +166,7 @@ Future<List> exec() async {
     List<Mail> mails = await client.getMail('inbox');
     print(mails);
 
-    String from = mails[1].getFrom();
+    String from = mails[1].getEmailFrom();
     String objet = mails[1].getObjet();
     String date = mails[1].getDate();
 
@@ -185,18 +186,40 @@ Future<List> exec() async {
 }
 
 class Mail {
-  String from;
+  String nomFrom;
+  String emailFrom;
   String objet;
   String date;
 
   Mail(String from, String objet, String date) {
-    this.from = from;
+    setNom(from);
+    setEmailFrom(from);
     this.objet = objet;
     this.date = date;
   }
 
-  String getFrom() {
-    return from;
+  void setNom(String from) {
+    if (from.contains("<") && from.indexOf("<") != 1) {
+      nomFrom = from.split("<")[0];
+    }
+  }
+
+  void setEmailFrom(String from) {
+    if (from.contains("<") && from.indexOf("<") != 1) {
+      emailFrom = from.split("<")[1];
+      emailFrom = emailFrom.replaceRange(
+          emailFrom.length - 2, emailFrom.length - 1, "");
+    } else {
+      emailFrom = from;
+    }
+  }
+
+  String getNomFrom() {
+    return nomFrom;
+  }
+
+  String getEmailFrom() {
+    return emailFrom;
   }
 
   String getObjet() {
@@ -208,7 +231,7 @@ class Mail {
   }
 
   void aff() {
-    print(from + objet + date);
+    print(nomFrom + emailFrom + objet + date);
     print("-----------------------------------");
   }
 }
@@ -247,8 +270,11 @@ class MailClient {
   }
 
   String quoPriToUtf(String txt) {
-    print("Quoted printed");
-    txt = txt.replaceAll("=?UTF-8?Q?", "");
+    if (txt.contains("=?UTF-8?Q?")) {
+      txt = txt.replaceAll("=?UTF-8?Q?", "");
+    } else {
+      txt = txt.replaceAll("=?utf-8?Q?", "");
+    }
     txt = txt.replaceAll("?=", "");
     if (txt.contains("_")) {
       txt = txt.replaceAll("_", " ");
@@ -258,7 +284,14 @@ class MailClient {
       int i = txt.indexOf("=");
       String search = txt[i + 1] + txt[i + 2];
       int hexa = hex.decode(search).first;
-      txt = txt.replaceAll("=" + search, String.fromCharCode(hexa));
+      if (i + 5 < txt.length && txt[i + 3] == "=") {
+        String search2 = txt[i + 4] + txt[i + 5];
+        int hexa2 = hex.decode(search2).first;
+        txt = txt.replaceAll(
+            "=" + search + "=" + search2, utf8.decode([hexa, hexa2]));
+      } else {
+        txt = txt.replaceAll("=" + search, String.fromCharCode(hexa));
+      }
     }
 
     return txt;
@@ -270,15 +303,21 @@ class MailClient {
         .fetch(["BODY.PEEK[HEADER.FIELDS (FROM)]"], messageIds: [number]);
     res = from.values.last.values.last;
     res = res.split(":")[1];
+    if (res.contains("=?utf-8?Q?")) {
+      res = quoPriToUtf(res);
+    }
     return res;
   }
 
   Future<String> getObjet(ImapFolder folder, int number) async {
     String res;
+    List liste = new List();
     Map<int, Map<String, dynamic>> objet = await folder
         .fetch(["BODY.PEEK[HEADER.FIELDS (SUBJECT)]"], messageIds: [number]);
     res = objet.values.last.values.last;
-    res = res.split(":")[1];
+    liste = res.split(":");
+    liste.removeAt(0);
+    res = liste.join(":");
 
     if (res.contains("=?UTF-8?Q?")) {
       res = quoPriToUtf(res);
@@ -310,7 +349,7 @@ class MailClient {
     int size = folder.mailCount;
     List<Mail> liste = new List();
 
-    for (int i = size - 3; i < size; i++) {
+    for (int i = size; i > size - 20; i--) {
       int mailNumber;
       String from, objet, date;
       Mail mail;
