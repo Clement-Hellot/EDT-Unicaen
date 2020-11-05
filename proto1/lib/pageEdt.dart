@@ -169,6 +169,7 @@ class _JourneeUIState extends State<JourneeUI> {
           ),
           textAlign: TextAlign.center,
         ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0.0,
         toolbarHeight: 70.0,
         centerTitle: true,

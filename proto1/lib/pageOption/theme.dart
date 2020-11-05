@@ -28,7 +28,7 @@ class _BoutonThemeState extends State<StatefulWidget> {
       ),
       onChanged: (String newValue) {
         setState(() {
-          if(newValue!=dropdownValue) {
+          if (newValue != dropdownValue) {
             AppTheme().changerTheme();
             dropdownValue = newValue;
             //TODO refresh la page courante
@@ -46,8 +46,8 @@ class _BoutonThemeState extends State<StatefulWidget> {
   }
 }
 
-
-class AppTheme {  //Singleton
+class AppTheme {
+  //Singleton
   static AppTheme _instance = AppTheme._internal(); //Instancié au lancement
 
   /*Constance de thème
@@ -61,12 +61,14 @@ class AppTheme {  //Singleton
   Color backgroundColor, textColor, iconColor, topBarColor, iconSelectedColor;
   String etat = "Clair";
 
-  factory AppTheme() {  //Constructeur : retourne l'instance du singleton
+  factory AppTheme() {
+    //Constructeur : retourne l'instance du singleton
     return _instance;
   }
 
-  AppTheme._internal() {  //"Vrai" constructeur (initialise l'appli sur le thème de l'utilisateur
-    isClair = false;
+  AppTheme._internal() {
+    //"Vrai" constructeur (initialise l'appli sur le thème de l'utilisateur
+    isClair = true;
     changerTheme();
   }
 
@@ -80,8 +82,7 @@ class AppTheme {  //Singleton
       textColor = Color(0xFFFFFFFF);
       iconColor = Color(0xFF36393F);
       iconSelectedColor = Color(0xFF3E6DE7);
-    }
-    else {
+    } else {
       etat = "Clair";
       topBarColor = Color(0xFF42AFEC);
       backgroundColor = Color(0xFFFCFCFC);
