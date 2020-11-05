@@ -55,7 +55,7 @@ class _PageMailsState extends State<PageMails> {
               ),
             ],
           ),
-          MailContent(),
+          Expanded(child: MailContent()),
         ],
       ),
     );
@@ -71,81 +71,80 @@ class _Mail extends State<MailContent> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.only(top: 10, bottom: 10),
-        child: FutureBuilder(
-          future: exec(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              List<Mail> mail = snapshot.data;
-              return ListView.builder(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return Container(
-                        margin: EdgeInsets.only(
-                          left: 25,
-                          top: 5,
-                          right: 25,
-                          bottom: 5,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[600],
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        ),
-                        child: Column(
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Flexible(
-                                  child: Text(
-                                    mail[index].getObjet(),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Flexible(
-                                  child: Text(
-                                    mail[index].getDate(),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                    ),
-                                    textAlign: TextAlign.right,
+      padding: EdgeInsets.only(top: 10),
+      child: FutureBuilder(
+        future: exec(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<Mail> mail = snapshot.data;
+            return ListView.builder(
+                itemBuilder: (_, index) => Container(
+                      margin: EdgeInsets.only(
+                        left: 25,
+                        top: 5,
+                        right: 25,
+                        bottom: 5,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[600],
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Flexible(
+                                child: Text(
+                                  mail[index].getObjet(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
                                   ),
                                 ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Flexible(
-                                  child: Text(
-                                    mail[index].getFrom(),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                    ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              Flexible(
+                                child: Text(
+                                  mail[index].getDate(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Flexible(
+                                child: Text(
+                                  mail[index].getFrom(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
                                   ),
                                 ),
-                              ],
-                            )
-                          ],
-                        ));
-                  },
-                  itemCount: snapshot.data.length);
-            } else {
-              return Center(
-                child: Icon(Icons.hourglass_bottom_rounded),
-              );
-            }
-          },
-        ));
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                itemCount: snapshot.data.length);
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
+    );
   }
 }
 
