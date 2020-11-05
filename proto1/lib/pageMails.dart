@@ -137,6 +137,10 @@ class _Mail extends State<MailContent> {
                         ));
                   },
                   itemCount: snapshot.data.length);
+            } else {
+              return Center(
+                child: Icon(Icons.hourglass_bottom_rounded),
+              );
             }
           },
         ));
@@ -177,6 +181,8 @@ Future<List> exec() async {
     String from = element(1).getFrom;
     print(from);
   });*/
+  } else {
+    return List<Mail>();
   }
 }
 
