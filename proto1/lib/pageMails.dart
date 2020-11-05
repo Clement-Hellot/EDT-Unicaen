@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:imap_client/imap_client.dart';
+import 'package:convert/convert.dart';
+import 'pageOption/theme.dart';
 
 class PageMails extends StatefulWidget {
   @override
@@ -36,19 +38,19 @@ class _PageMailsState extends State<PageMails> {
               IconButton(
                 icon: Icon(Icons.search),
                 tooltip: 'Search',
-                color: Colors.white,
+                color: AppTheme().iconColor,
                 onPressed: abc,
               ),
               IconButton(
                 icon: Icon(Icons.refresh),
                 tooltip: 'Refresh',
-                color: Colors.white,
+                color: AppTheme().iconColor,
                 onPressed: () {},
               ),
               IconButton(
                 icon: Icon(Icons.settings),
                 tooltip: 'Refresh',
-                color: Colors.white,
+                color: AppTheme().iconColor,
                 onPressed: () {},
               ),
             ],
@@ -69,7 +71,7 @@ class _Mail extends State<MailContent> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.only(left: 14, top: 10, right: 14, bottom: 10),
+        padding: EdgeInsets.only(top: 10, bottom: 10),
         child: FutureBuilder(
           future: exec(),
           builder: (context, snapshot) {
@@ -153,9 +155,6 @@ void abc() async {
 
   if (connected) {
     List<Mail> mails = await client.getMail('inbox');
-    mails.forEach((element) {
-      element.aff();
-    });
   }
 }
 
@@ -248,6 +247,24 @@ class MailClient {
     return this.imapClient;
   }
 
+  String quoPriToUtf(String txt) {
+    print("Quoted printed");
+    txt = txt.replaceAll("=?UTF-8?Q?", "");
+    txt = txt.replaceAll("?=", "");
+    if (txt.contains("_")) {
+      txt = txt.replaceAll("_", " ");
+    }
+
+    while (txt.contains("=")) {
+      int i = txt.indexOf("=");
+      String search = txt[i + 1] + txt[i + 2];
+      int hexa = hex.decode(search).first;
+      txt = txt.replaceAll("=" + search, String.fromCharCode(hexa));
+    }
+
+    return txt;
+  }
+
   Future<String> getFrom(ImapFolder folder, int number) async {
     String res;
     Map<int, Map<String, dynamic>> from = await folder
@@ -263,6 +280,16 @@ class MailClient {
         .fetch(["BODY.PEEK[HEADER.FIELDS (SUBJECT)]"], messageIds: [number]);
     res = objet.values.last.values.last;
     res = res.split(":")[1];
+
+    if (res.contains("=?UTF-8?Q?")) {
+      res = quoPriToUtf(res);
+    }
+    // if (res.contains("?=")) {
+    //   res = res.replaceAll("?=", "");
+    // }
+    // if (res.contains('=?UTF-8?Q')) {
+    //   res = res.replaceAll("=?UTF-8?Q", "");
+    // }
 
     return res;
   }
@@ -284,7 +311,7 @@ class MailClient {
     int size = folder.mailCount;
     List<Mail> liste = new List();
 
-    for (int i = size - 2; i < size; i++) {
+    for (int i = size - 3; i < size; i++) {
       int mailNumber;
       String from, objet, date;
       Mail mail;
