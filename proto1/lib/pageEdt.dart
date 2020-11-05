@@ -372,15 +372,8 @@ class PauseLigne extends StatelessWidget {
 class LoadingEdt extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
-      child: Container(
-        child: Icon(
-          Icons.hourglass_empty,
-          size: 60,
-          color: Colors.grey[500],
-        ),
-      ),
+    return Center(
+      child: CircularProgressIndicator(),
     );
   }
 }

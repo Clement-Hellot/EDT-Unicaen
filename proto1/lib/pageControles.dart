@@ -28,13 +28,13 @@ class _PageControlesState extends State<PageControles>
   List<SemaineCc> _listeSemaineCc = List<SemaineCc>();
 
   Container _widgetSemaineCc;
-  Widget _loadingText = Text('Chargement...');
   Widget _semaineCcWrapper;
 
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
 
   _PageControlesState() {
-    _semaineCcWrapper = _loadingText; // en attendant que les cc soient chargés
+    _semaineCcWrapper = CircularProgressIndicator();
 
     fetchCc(_listeSemaineCc, _dispListeSemaineCc);
   }
@@ -44,28 +44,28 @@ class _PageControlesState extends State<PageControles>
   }
 
   _dispListeSemaineCc(List<SemaineCc> listeSemainesCC) {
-      _listeSemaineCc = listeSemainesCC;
-      List<Widget> semaines = List<Widget>();
-      for (SemaineCc semaineCc in _listeSemaineCc) {
-        semaines.add(SemaineCcUI(semaineCc: semaineCc));
-      }
+    _listeSemaineCc = listeSemainesCC;
+    List<Widget> semaines = List<Widget>();
+    for (SemaineCc semaineCc in _listeSemaineCc) {
+      semaines.add(SemaineCcUI(semaineCc: semaineCc));
+    }
 
-      _widgetSemaineCc = Container(
-        margin: EdgeInsets.symmetric(vertical: 0),
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-        width: double.infinity,
-        /*
+    _widgetSemaineCc = Container(
+      margin: EdgeInsets.symmetric(vertical: 0),
+      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+      width: double.infinity,
+      /*
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
             color: Colors.grey[300],
           ),*/
-        child: Column(
-          //les cc de la semaine
-          children: semaines,
-        ),
-      );
-      _semaineCcWrapper = _widgetSemaineCc;
-       print("la liste est mise a jour");
+      child: Column(
+        //les cc de la semaine
+        children: semaines,
+      ),
+    );
+    _semaineCcWrapper = _widgetSemaineCc;
+    print("la liste est mise a jour");
   }
 
   @override
@@ -106,12 +106,14 @@ class _PageControlesState extends State<PageControles>
   }
 
   Future<void> _handleRefresh() {
-    return fetchCc(List<SemaineCc>(), _dispListeSemaineCc).then((value) => _listeSemaineCc=value);
+    return fetchCc(List<SemaineCc>(), _dispListeSemaineCc)
+        .then((value) => _listeSemaineCc = value);
     setState(() {
       _listeSemaineCc = List<SemaineCc>();
       fetchCc(_listeSemaineCc, _dispListeSemaineCc);
     });
   }
+
   @override
   bool get wantKeepAlive => true;
 }
@@ -129,7 +131,6 @@ class SemaineCcUI extends StatefulWidget {
 class _SemaineCcUIState extends State<SemaineCcUI> {
   bool _droppedDown = true;
   Column _widgetControle;
-  Widget _loadingText = Text('Chargement...');
   Widget _controleWrapper;
 
   _SemaineCcUIState();
@@ -138,7 +139,7 @@ class _SemaineCcUIState extends State<SemaineCcUI> {
   void initState() {
     super.initState();
 
-    _controleWrapper = _loadingText;
+    _controleWrapper = CircularProgressIndicator();
     List<Widget> controles = List<Widget>();
     for (Controle cc in widget.semaineCc.controles) {
       controles.add(ControleUI(cc));
@@ -313,20 +314,6 @@ class _ControleUIState extends State<ControleUI> {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 List<SemaineCc> ajouterControleEDT(List<SemaineCc> listeSemainesCC) {
   CalendrierJours calendrier = PageEDT.calendrier;
   bool isEntered = false;
@@ -418,30 +405,37 @@ List<SemaineCc> sortData(var code) {
     String duree;
 
     var col = item.children;
-    if (col.length > 1 && col[1].innerHtml.length > 3 && col[1].innerHtml.contains("-")) {
-
-     
+    if (col.length > 1 &&
+        col[1].innerHtml.length > 3 &&
+        col[1].innerHtml.contains("-")) {
       semaine = col[0].innerHtml;
       print(semaine);
       semaine = removeColorDecoration(semaine);
 
-      DateTime debutSemaine = DateTime(2000+int.parse(semaine.substring(9,11)),int.parse(semaine.substring(6,8)),int.parse(semaine.substring(3,5)));
-      DateTime finSemaine = DateTime(2000+int.parse(semaine.substring(21,23)),int.parse(semaine.substring(18,20)),int.parse(semaine.substring(15,17)));
+      DateTime debutSemaine = DateTime(
+          2000 + int.parse(semaine.substring(9, 11)),
+          int.parse(semaine.substring(6, 8)),
+          int.parse(semaine.substring(3, 5)));
+      DateTime finSemaine = DateTime(
+          2000 + int.parse(semaine.substring(21, 23)),
+          int.parse(semaine.substring(18, 20)),
+          int.parse(semaine.substring(15, 17)));
       var tabInfo = col[1].innerHtml.split("<br>");
       var tabLieu = col[2].innerHtml.split("<br>");
       var tabDuree = col[3].innerHtml.split("<br>");
-      for(int i=0 ; i<tabInfo.length ; i++){
-
+      for (int i = 0; i < tabInfo.length; i++) {
         var info = tabInfo[i].split("-");
-        lieu = removeColorDecoration(tabLieu[i].toString().trimLeft().trimRight());
-        duree = removeColorDecoration(tabDuree[i].toString().trimLeft().trimRight());
+        lieu =
+            removeColorDecoration(tabLieu[i].toString().trimLeft().trimRight());
+        duree = removeColorDecoration(
+            tabDuree[i].toString().trimLeft().trimRight());
 
         matiere = removeColorDecoration(info[1]);
-        enseignant= removeColorDecoration(info[2]);
+        enseignant = removeColorDecoration(info[2]);
         epreuve = removeColorDecoration(info[3]);
         //print(semaine+" - "+matiere+" - "+enseignant+" - "+epreuve+" - "+lieu+" - "+duree+" - ");
 
-        if(duree.contains("-")) {
+        if (duree.contains("-")) {
           DateTime dureeDateTime = null;
         } else {
           //traitement de la duree
@@ -449,19 +443,20 @@ List<SemaineCc> sortData(var code) {
           DateTime dureeDateTime = DateTime(2020, 10, 12);
         }
 
-        if(lieu.contains("-")) {
+        if (lieu.contains("-")) {
           lieu = "NC";
         }
         //en an 2000 pour dire qu'il n'y a pas d'année
         //TODO mieux faire que ça
-        cc.add(new Controle(Matiere(matiere), enseignant, lieu, Horaire(0,0,date: DateTime(2000)),  Horaire(0,0)));
+        cc.add(new Controle(Matiere(matiere), enseignant, lieu,
+            Horaire(0, 0, date: DateTime(2000)), Horaire(0, 0)));
         //print(cc);
-
 
       }
       //TODO pareil
-      if(finSemaine.isAfter(DateTime.now()))
-        semaineCc.add(SemaineCc(cc, DateTimeRange(start: debutSemaine,end: finSemaine)));
+      if (finSemaine.isAfter(DateTime.now()))
+        semaineCc.add(
+            SemaineCc(cc, DateTimeRange(start: debutSemaine, end: finSemaine)));
       cc = List<Controle>();
     }
   }
@@ -488,7 +483,7 @@ List<SemaineCc> sortData(var code) {
       DateTimeRange(
           start: DateTime.utc(2020, 10, 18), end: DateTime.utc(2020, 10, 24))));
 */
-print(semaineCc);
+  print(semaineCc);
   return semaineCc;
 }
 
@@ -506,8 +501,7 @@ String cleanUp(String str) {
   return str.replaceAll('<br>', '').trim();
 }
 
-
-String removeColorDecoration(String chaine){
+String removeColorDecoration(String chaine) {
   RegExp regExp1 = new RegExp(
     r"^<",
     caseSensitive: false,
@@ -518,18 +512,18 @@ String removeColorDecoration(String chaine){
     caseSensitive: false,
     multiLine: false,
   );
-  if(regExp1.hasMatch(chaine)){
+  if (regExp1.hasMatch(chaine)) {
     //print("ce n'est pas bon");
-    print("avant :"+chaine);
-    chaine = chaine.substring(chaine.indexOf(">")+1,chaine.length);
-    print("apres :"+chaine);
+    print("avant :" + chaine);
+    chaine = chaine.substring(chaine.indexOf(">") + 1, chaine.length);
+    print("apres :" + chaine);
     //print(semaine);
   }
-  if(regExp2.hasMatch(chaine)){
+  if (regExp2.hasMatch(chaine)) {
     //print("ce n'est pas bon");
-    print("avant :"+chaine);
-    chaine = chaine.substring(0,chaine.indexOf("<"));
-    print("apres :"+chaine);
+    print("avant :" + chaine);
+    chaine = chaine.substring(0, chaine.indexOf("<"));
+    print("apres :" + chaine);
     //print(semaine);
   }
   return chaine;
