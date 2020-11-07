@@ -133,7 +133,19 @@ class _Mail extends State<MailContent> {
                                 ),
                               ),
                             ],
-                          )
+                          ),
+                          if (mail[index].hasPJ())
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Flexible(
+                                  child: Icon(
+                                    Icons.attachment,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          //if
                         ],
                       ),
                     ),
@@ -170,10 +182,6 @@ Future<List> exec() async {
     String objet = mails[1].getObjet();
     String date = mails[1].getDate();
 
-    print(from);
-    print(objet);
-    print(date);
-
     return mails;
 
     /*mails.forEach((element){    
@@ -190,12 +198,18 @@ class Mail {
   String emailFrom;
   String objet;
   String date;
+  bool pj;
 
-  Mail(String from, String objet, String date) {
+  Mail(String from, String objet, String date, bool pj) {
     setNom(from);
     setEmailFrom(from);
     this.objet = objet;
     this.date = date;
+    this.pj = pj;
+  }
+
+  bool hasPJ() {
+    return this.pj;
   }
 
   void setNom(String from) {
@@ -322,12 +336,6 @@ class MailClient {
     if (res.contains("=?UTF-8?Q?")) {
       res = quoPriToUtf(res);
     }
-    // if (res.contains("?=")) {
-    //   res = res.replaceAll("?=", "");
-    // }
-    // if (res.contains('=?UTF-8?Q')) {
-    //   res = res.replaceAll("=?UTF-8?Q", "");
-    // }
 
     return res;
   }
@@ -335,13 +343,36 @@ class MailClient {
   Future<String> getDate(ImapFolder folder, int number) async {
     String res;
     List liste = new List();
-    Map<int, Map<String, dynamic>> date = await folder
-        .fetch(["BODY.PEEK[HEADER.FIELDS (DATE)]"], messageIds: [number]);
+    Map<int, Map<String, dynamic>> date =
+        await folder.fetch(["INTERNALDATE"], messageIds: [number]);
     res = date.values.last.values.last;
-    liste = res.split(":");
-    liste.removeAt(0);
-    res = liste.join(":");
     return res;
+  }
+
+  Future<bool> hasPJ(ImapFolder folder, int number) async {
+    Map<int, Map<String, dynamic>> pj =
+        await folder.fetch(["BODYSTRUCTURE"], messageIds: [number]);
+
+    Map<String, dynamic> bodystruct = pj.values.last.values.last;
+    bodystruct = bodystruct.values.first[1];
+
+    String res;
+    if (bodystruct.values.first is String)
+      res = bodystruct.values.first;
+    else {
+      res = bodystruct.values.first[1].values.first;
+    }
+
+    if (res == "TEXT")
+      return false;
+    else
+      return true;
+  }
+
+  Future<dynamic> getFlags(ImapFolder folder, int number) async {
+    Map<int, Map<String, dynamic>> flags =
+        await folder.fetch(["FLAGS"], messageIds: [number]);
+    return (flags.values.last.values.last);
   }
 
   Future<List> getMail(String folderName) async {
@@ -349,16 +380,19 @@ class MailClient {
     int size = folder.mailCount;
     List<Mail> liste = new List();
 
-    for (int i = size; i > size - 20; i--) {
+    for (int i = size - 7; i > size - 20; i--) {
       int mailNumber;
       String from, objet, date;
+      bool pj;
       Mail mail;
+
+      pj = await hasPJ(folder, i);
 
       from = await getFrom(folder, i);
       objet = await getObjet(folder, i);
       date = await getDate(folder, i);
 
-      mail = new Mail(from, objet, date);
+      mail = new Mail(from, objet, date, pj);
       liste.add(mail);
     }
     return liste;
