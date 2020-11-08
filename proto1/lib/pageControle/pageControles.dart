@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
-import 'objets.dart';
+import '../objets.dart';
 import 'controleObjets.dart';
-import 'PageEDT.dart';
-import "CalendrierJours.dart";
+import '../PageEDT.dart';
+import '../CalendrierJours.dart';
 
 // TODO
 // - stocker la liste au démarrage de l'appli
@@ -240,64 +240,191 @@ class ControleUI extends StatefulWidget {
 
 //un controle
 class _ControleUIState extends State<ControleUI> {
-  // TextStyle _style = TextStyle(
-  //   color: Colors.white,
-  //   fontSize: 15,
-  // );
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 5, right: 10, left: 10),
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      width: double.infinity,
-      height: PageControles.taileCc,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color:
+    return InkWell(
+        onTap: () {//display the popup window with more information about the cc
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => PopupControleUI(widget.cc),
+          );
+        },
+        child: Container(
+          margin: EdgeInsets.only(bottom: 5, right: 10, left: 10),
+          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+          width: double.infinity,
+          height: PageControles.taileCc,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            color:
             widget.cc.matiere.couleur().withOpacity(PageControles.opaciteCours),
-        //color:Colors.grey[400]
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
+            //color:Colors.grey[400]
+          ),
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                widget.cc.matiere.shortVersion(),
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w700,
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.cc.matiere.shortVersion(),
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Text(
+                    widget.cc.lieu,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                widget.cc.lieu,
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.black,
-                ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    widget.cc.nomJour(),
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    widget.cc.debut.toString() + " - " + widget.cc.fin.toString(),
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                widget.cc.nomJour(),
-                textAlign: TextAlign.left,
+        ),
+    );
+  }
+}
+
+
+
+class PopupControleUI extends StatefulWidget {
+  final Controle cc;
+  PopupControleUI(this.cc);
+
+  @override
+  _PopupControleUIState createState() =>  _PopupControleUIState();
+}
+
+//un controle
+class _PopupControleUIState extends State<PopupControleUI> {
+
+  void initState() {
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+
+        borderRadius: BorderRadius.circular(30),
+      ),
+      backgroundColor: Colors.transparent,
+      child: Container(
+        width: double.infinity,
+        margin: EdgeInsets.symmetric(vertical: 0,horizontal: 0),
+        padding: EdgeInsets.all(00),
+        decoration: new BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 10.0,
+              offset: const Offset(0.0, 10.0),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // To make the card compact
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.all(20),
+              width: double.infinity,
+              decoration: new BoxDecoration(
+                color: widget.cc.matiere.couleur().withOpacity(PageControles.opaciteCours),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20)
+                )
+              ),
+              child:Text(
+                widget.cc.matiere.toString(),
                 style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                  fontSize: 23.0,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-              Text(
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(
+                top: 10,
+                right:20,
+                left: 20,
+                bottom: 2,
+              ),
+              width: double.infinity,
+              decoration: new BoxDecoration(
+
+              ),
+              child: Text(
+                widget.cc.dateComplete(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w500
+                ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.symmetric(vertical: 2,horizontal: 20),
+              width: double.infinity,
+              decoration: new BoxDecoration(
+
+              ),
+              child: Text(
+                widget.cc.lieu.toString(),
+                style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black45
+                ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.symmetric(vertical: 2,horizontal: 20),
+              width: double.infinity,
+              decoration: new BoxDecoration(
+
+              ),
+              child: Text(
                 widget.cc.debut.toString() + " - " + widget.cc.fin.toString(),
                 textAlign: TextAlign.right,
                 style: TextStyle(
@@ -306,13 +433,69 @@ class _ControleUIState extends State<ControleUI> {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-            ],
-          ),
-        ],
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(
+                top: 40,
+                right:20,
+                left:20,
+                bottom:0,
+              ),
+              width: double.infinity,
+              decoration: new BoxDecoration(
+
+              ),
+              child: Text(
+                widget.cc.enseignant.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w700
+                ),
+              ),
+            ),
+
+
+            Align(
+              alignment: Alignment.center,
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).pop(); // To close the dialog
+                },
+                child: Container(
+                  margin: EdgeInsets.all(20),
+                  width: 60,
+                  height: 60,
+                  decoration: new BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(200),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black45,
+                        blurRadius: 50.0,
+                        offset: const Offset(0.0, 0.0),
+                      ),
+                    ],
+                  ),
+                  child: Icon(Icons.clear,color:  Colors.black),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
+
   }
 }
+
+
+
+
+
+
 
 List<SemaineCc> ajouterControleEDT(List<SemaineCc> listeSemainesCC) {
   CalendrierJours calendrier = PageEDT.calendrier;

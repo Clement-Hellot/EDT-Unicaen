@@ -4,7 +4,7 @@ import 'CalendrierJours.dart';
 import 'pageEdt.dart';
 import 'pageMails.dart';
 import 'pageSalles.dart';
-import 'pageControles.dart';
+import 'pageControle/pageControles.dart';
 import 'pageOption/pageOptions.dart';
 import 'pageOption/theme.dart';
 

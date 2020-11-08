@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'objets.dart';
+import '../objets.dart';
 
 class Controle {
   Matiere matiere;
@@ -9,7 +9,8 @@ class Controle {
   Horaire fin;
   Horaire debut;
 
-  Controle(this.matiere, this.enseignant, this.lieu, this.debut, this.fin);
+  Controle(this.matiere, this.enseignant, this.lieu, this.debut, this.fin){
+  }
 
   @override
   String toString() {
@@ -42,6 +43,40 @@ class Controle {
 
   void display() {
     print(this.toString());
+  }
+
+  String dateComplete() {
+    return this.nomJour() +" "+ this.debut.date.day.toString() +" "+  this.getMonthName();
+  }
+
+  String getMonthName(){
+    switch(this.debut.date.month) {
+      case 1:
+        return "Janvier";
+      case 2:
+        return "Fevrier";
+      case 3:
+        return "Avril";
+      case 4:
+        return "Mars";
+      case 5:
+        return "Mai";
+      case 6:
+        return "Juin";
+      case 7:
+        return "Juillet";
+      case 8:
+        return "Aout";
+      case 9:
+        return "Septembre";
+      case 10:
+        return "Octobre";
+      case 11:
+        return "Novembre";
+      case 12:
+        return "Decembre";
+
+    }
   }
 }
 
