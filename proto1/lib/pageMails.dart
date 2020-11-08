@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:imap_client/imap_client.dart';
 import 'package:convert/convert.dart';
 import 'pageOption/theme.dart';
@@ -86,66 +85,86 @@ class _Mail extends State<MailContent> {
                         right: 25,
                         bottom: 5,
                       ),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[600],
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                      ),
-                      child: Column(
+                      child: Row(
                         children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Flexible(
-                                child: Text(
-                                  mail[index].getObjet(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: <Widget>[
-                              Flexible(
-                                child: Text(
-                                  mail[index].getDate(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                  ),
-                                  textAlign: TextAlign.right,
-                                ),
+                          if (!mail[index].isSeen())
+                            Flexible(
+                              flex: null,
+                              child: Icon(
+                                Icons.circle,
+                                color: Colors.lightBlue[500],
+                                size: 10,
                               ),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Flexible(
-                                child: Text(
-                                  mail[index].getNomFrom(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          if (mail[index].hasPJ())
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Flexible(
-                                  child: Icon(
-                                    Icons.attachment,
-                                  ),
-                                ),
-                              ],
                             ),
-                          //if
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                left: 10,
+                              ),
+                              padding: EdgeInsets.only(
+                                left: 5,
+                                right: 5,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppTheme().mailBackgroundColor,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(4)),
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Flexible(
+                                        child: Text(
+                                          mail[index].getObjet(),
+                                          style: TextStyle(
+                                            color: AppTheme().textColor,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                          mail[index].getTime(),
+                                          style: TextStyle(
+                                            color: AppTheme().textColor,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.right,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Flexible(
+                                        child: Text(
+                                          mail[index].getNomFrom(),
+                                          style: TextStyle(
+                                            color: AppTheme().textColor,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                      if (mail[index].hasPJ())
+                                        Flexible(
+                                          child: Icon(
+                                            Icons.attachment,
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -197,19 +216,28 @@ class Mail {
   String nomFrom;
   String emailFrom;
   String objet;
-  String date;
+  DateTime date;
   bool pj;
+  List flags;
 
-  Mail(String from, String objet, String date, bool pj) {
+  Mail(String from, String objet, DateTime date, bool pj, List flags) {
     setNom(from);
     setEmailFrom(from);
     this.objet = objet;
     this.date = date;
     this.pj = pj;
+    this.flags = flags;
   }
 
   bool hasPJ() {
     return this.pj;
+  }
+
+  bool isSeen() {
+    if (flags.contains("\\Seen")) {
+      return true;
+    }
+    return false;
   }
 
   void setNom(String from) {
@@ -241,18 +269,30 @@ class Mail {
   }
 
   String getDate() {
-    return date;
+    return date.year.toString() +
+        "-" +
+        date.month.toString() +
+        "-" +
+        date.day.toString();
+  }
+
+  String getTime() {
+    String time = date.hour.toString() + "H";
+
+    if (date.minute.toString().length == 1) time += "0";
+    time += date.minute.toString() + "m" + date.second.toString();
+    return time;
   }
 
   void aff() {
-    print(nomFrom + emailFrom + objet + date);
+    print(nomFrom + emailFrom + objet);
     print("-----------------------------------");
   }
 }
 
 class MailClient {
-  String username = '21906426';
-  String password = '_CD2001_';
+  String username = '21905584';
+  String password = '!Clement76440!';
   ImapClient imapClient;
   String imapHost = "imap.unicaen.fr";
   int port = 993;
@@ -311,6 +351,35 @@ class MailClient {
     return txt;
   }
 
+  String convertDate(String mois) {
+    switch (mois) {
+      case "Jan":
+        return '01';
+      case "Feb":
+        return '02';
+      case "Mar":
+        return "03";
+      case "Apr":
+        return "04";
+      case "May":
+        return "05";
+      case "Jun":
+        return "06";
+      case "Jul":
+        return "07";
+      case "Aug":
+        return "08";
+      case "Sep":
+        return "09";
+      case "Oct":
+        return "10";
+      case "Nov":
+        return "11";
+      case "Dec":
+        return "12";
+    }
+  }
+
   Future<String> getFrom(ImapFolder folder, int number) async {
     String res;
     Map<int, Map<String, dynamic>> from = await folder
@@ -340,13 +409,24 @@ class MailClient {
     return res;
   }
 
-  Future<String> getDate(ImapFolder folder, int number) async {
-    String res;
-    List liste = new List();
+  Future<DateTime> getDate(ImapFolder folder, int number) async {
+    String res, tmp;
+    List<String> liste = new List();
     Map<int, Map<String, dynamic>> date =
         await folder.fetch(["INTERNALDATE"], messageIds: [number]);
     res = date.values.last.values.last;
-    return res;
+
+    liste = res.split('-');
+    liste[1] = convertDate(liste[1]);
+    tmp = liste[0];
+    liste[0] = liste[2].substring(0, 4);
+    liste[2] = tmp + liste[2].substring(4);
+
+    res = liste.join("-");
+    res = res.substring(0, res.length - 6);
+
+    DateTime time = DateTime.parse(res);
+    return time;
   }
 
   Future<bool> hasPJ(ImapFolder folder, int number) async {
@@ -354,7 +434,8 @@ class MailClient {
         await folder.fetch(["BODYSTRUCTURE"], messageIds: [number]);
 
     Map<String, dynamic> bodystruct = pj.values.last.values.last;
-    bodystruct = bodystruct.values.first[1];
+    while (bodystruct.values.first[1] is! String)
+      bodystruct = bodystruct.values.first[1];
 
     String res;
     if (bodystruct.values.first is String)
@@ -369,9 +450,10 @@ class MailClient {
       return true;
   }
 
-  Future<dynamic> getFlags(ImapFolder folder, int number) async {
+  Future<List> getFlags(ImapFolder folder, int number) async {
     Map<int, Map<String, dynamic>> flags =
         await folder.fetch(["FLAGS"], messageIds: [number]);
+    print(flags.values.last.values.last);
     return (flags.values.last.values.last);
   }
 
@@ -380,19 +462,24 @@ class MailClient {
     int size = folder.mailCount;
     List<Mail> liste = new List();
 
-    for (int i = size - 7; i > size - 20; i--) {
+    for (int i = size; i > size - 5; i--) {
       int mailNumber;
-      String from, objet, date;
+      String from, objet;
+      DateTime date;
       bool pj;
       Mail mail;
-
+      List flags = new List();
+      flags = await getFlags(folder, i);
       pj = await hasPJ(folder, i);
 
       from = await getFrom(folder, i);
+      debug(from);
       objet = await getObjet(folder, i);
+      debug(objet);
       date = await getDate(folder, i);
+      debug(objet);
 
-      mail = new Mail(from, objet, date, pj);
+      mail = new Mail(from, objet, date, pj, flags);
       liste.add(mail);
     }
     return liste;
@@ -415,5 +502,9 @@ class MailClient {
       default:
         return false;
     }
+  }
+
+  void debug(String txt) {
+    if (txt == null) print("null");
   }
 }

@@ -58,7 +58,12 @@ class AppTheme {
 
   //Thème courant et valeurs courantes
   bool isClair;
-  Color backgroundColor, textColor, iconColor, topBarColor, iconSelectedColor;
+  Color backgroundColor,
+      textColor,
+      iconColor,
+      topBarColor,
+      iconSelectedColor,
+      mailBackgroundColor;
   String etat = "Clair";
 
   factory AppTheme() {
@@ -82,6 +87,7 @@ class AppTheme {
       textColor = Color(0xFFFFFFFF);
       iconColor = Color(0xFF36393F);
       iconSelectedColor = Color(0xFF3E6DE7);
+      mailBackgroundColor = Color(0xFF000000);
     } else {
       etat = "Clair";
       topBarColor = Color(0xFF42AFEC);
@@ -89,6 +95,7 @@ class AppTheme {
       textColor = Color(0xFF3D3D3D);
       iconColor = Color(0xFFC4C4C4);
       iconSelectedColor = Color(0xFF14A4F5);
+      mailBackgroundColor = Color(0xFFC4C4C4);
     }
   }
 /*
