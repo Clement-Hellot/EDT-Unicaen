@@ -115,6 +115,8 @@ class _Mail extends State<MailContent> {
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Flexible(
                                         child: Text(
@@ -195,7 +197,6 @@ Future<List> exec() async {
 
   if (connected) {
     List<Mail> mails = await client.getMail('inbox');
-    print(mails);
 
     String from = mails[1].getEmailFrom();
     String objet = mails[1].getObjet();
@@ -223,6 +224,7 @@ class Mail {
   Mail(String from, String objet, DateTime date, bool pj, List flags) {
     setNom(from);
     setEmailFrom(from);
+    if (objet.length == 0) objet = "<Sans Objet>";
     this.objet = objet;
     this.date = date;
     this.pj = pj;
@@ -243,6 +245,8 @@ class Mail {
   void setNom(String from) {
     if (from.contains("<") && from.indexOf("<") != 1) {
       nomFrom = from.split("<")[0];
+    } else {
+      nomFrom = from;
     }
   }
 
@@ -285,7 +289,9 @@ class Mail {
   }
 
   void aff() {
-    print(nomFrom + emailFrom + objet);
+    print(nomFrom);
+    print(objet);
+    print(date.toString());
     print("-----------------------------------");
   }
 }
@@ -324,28 +330,62 @@ class MailClient {
   }
 
   String quoPriToUtf(String txt) {
+    String mode = "";
     if (txt.contains("=?UTF-8?Q?")) {
       txt = txt.replaceAll("=?UTF-8?Q?", "");
+      mode = "Q";
+    } else if (txt.contains("=?ISO-8859-1?Q?")) {
+      txt = txt.replaceAll("=?ISO-8859-1?Q?", "");
+      mode = "Q";
+    } else if (txt.contains("=?UTF-8?B?")) {
+      txt = txt.replaceAll("=?UTF-8?B?", "");
+      mode = "B";
+    } else if (txt.contains("=?utf-8?B?")) {
+      txt = txt.replaceAll("=?utf-8?B?", "");
+      mode = "B";
     } else {
       txt = txt.replaceAll("=?utf-8?Q?", "");
+      mode = "Q";
     }
+
     txt = txt.replaceAll("?=", "");
     if (txt.contains("_")) {
       txt = txt.replaceAll("_", " ");
     }
 
-    while (txt.contains("=")) {
-      int i = txt.indexOf("=");
-      String search = txt[i + 1] + txt[i + 2];
-      int hexa = hex.decode(search).first;
-      if (i + 5 < txt.length && txt[i + 3] == "=") {
-        String search2 = txt[i + 4] + txt[i + 5];
-        int hexa2 = hex.decode(search2).first;
-        txt = txt.replaceAll(
-            "=" + search + "=" + search2, utf8.decode([hexa, hexa2]));
-      } else {
-        txt = txt.replaceAll("=" + search, String.fromCharCode(hexa));
+    if (mode == "Q") {
+      while (txt.contains("=")) {
+        int i = txt.indexOf("=");
+        String search = txt[i + 1] + txt[i + 2];
+        int hexa = hex.decode(search).first;
+        if (i + 5 < txt.length && txt[i + 3] == "=") {
+          String search2 = txt[i + 4] + txt[i + 5];
+          int hexa2 = hex.decode(search2).first;
+          txt = txt.replaceAll(
+              "=" + search + "=" + search2, utf8.decode([hexa, hexa2]));
+        } else {
+          txt = txt.replaceAll("=" + search, String.fromCharCode(hexa));
+        }
       }
+    } else {
+      //TODO fix encoding b64
+      // List liste = txt.split(" ");
+      // List b64;
+      // txt = "";
+      // liste.forEach((element) {
+      //   if (element.contains("<")) {
+      //     element = element.split("<")[0];
+      //   }
+      //   element = element.trim();
+      //   b64 = base64.decode(element);
+      //   print(b64.length);
+      //   for (int i = 0; i < b64.length; i += 2) {
+      //     print(i);
+      //     print(i + 1);
+      //     print('------------');
+      //     txt += utf8.decode([b64[i], b64[i + 1]]);
+      //   }
+      // });
     }
 
     return txt;
@@ -380,15 +420,34 @@ class MailClient {
     }
   }
 
+  String formateString(String res) {
+    if (res.contains("'")) {
+      res = res.replaceAll("'", "");
+    }
+    if (res.contains('"')) {
+      res = res.replaceAll('"', '');
+    }
+    res = res.trim();
+
+    if (res.contains("=?utf-8?Q?") ||
+        res.contains("=?UTF-8?Q?") ||
+        res.contains("=?ISO-8859-1?Q?") ||
+        res.contains("=?UTF-8?B?") ||
+        res.contains("=?utf-8?B?")) {
+      res = quoPriToUtf(res);
+    }
+
+    return res;
+  }
+
   Future<String> getFrom(ImapFolder folder, int number) async {
     String res;
     Map<int, Map<String, dynamic>> from = await folder
         .fetch(["BODY.PEEK[HEADER.FIELDS (FROM)]"], messageIds: [number]);
     res = from.values.last.values.last;
     res = res.split(":")[1];
-    if (res.contains("=?utf-8?Q?")) {
-      res = quoPriToUtf(res);
-    }
+    res = formateString(res);
+
     return res;
   }
 
@@ -401,10 +460,7 @@ class MailClient {
     liste = res.split(":");
     liste.removeAt(0);
     res = liste.join(":");
-
-    if (res.contains("=?UTF-8?Q?")) {
-      res = quoPriToUtf(res);
-    }
+    res = formateString(res);
 
     return res;
   }
@@ -453,7 +509,6 @@ class MailClient {
   Future<List> getFlags(ImapFolder folder, int number) async {
     Map<int, Map<String, dynamic>> flags =
         await folder.fetch(["FLAGS"], messageIds: [number]);
-    print(flags.values.last.values.last);
     return (flags.values.last.values.last);
   }
 
@@ -462,7 +517,7 @@ class MailClient {
     int size = folder.mailCount;
     List<Mail> liste = new List();
 
-    for (int i = size; i > size - 5; i--) {
+    for (int i = size; i > size - 10; i--) {
       int mailNumber;
       String from, objet;
       DateTime date;
