@@ -46,35 +46,35 @@ class Controle {
   }
 
   String dateComplete() {
-    return this.nomJour() +" "+ this.debut.date.day.toString() +" "+  this.getMonthName();
+    return this.nomJour().substring(0,1).toUpperCase()+this.nomJour().substring(1) +" "+ this.debut.date.day.toString() +" "+  this.getMonthName();
   }
 
   String getMonthName(){
     switch(this.debut.date.month) {
       case 1:
-        return "Janvier";
+        return "janvier";
       case 2:
-        return "Fevrier";
+        return "fevrier";
       case 3:
-        return "Avril";
+        return "avril";
       case 4:
-        return "Mars";
+        return "mars";
       case 5:
-        return "Mai";
+        return "mai";
       case 6:
-        return "Juin";
+        return "juin";
       case 7:
-        return "Juillet";
+        return "juillet";
       case 8:
-        return "Aout";
+        return "aout";
       case 9:
-        return "Septembre";
+        return "septembre";
       case 10:
-        return "Octobre";
+        return "octobre";
       case 11:
-        return "Novembre";
+        return "novembre";
       case 12:
-        return "Decembre";
+        return "decembre";
 
     }
   }
