@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'CalendrierJours.dart';
 import 'pageEdt.dart';
-import 'pageMails.dart';
+import 'pageMails/pageMails.dart';
 import 'pageSalles.dart';
 import 'pageControle/pageControles.dart';
 import 'pageOption/pageOptions.dart';
@@ -106,7 +106,8 @@ class _PagePrincipaleState extends State<PagePrincipale> {
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today, color: AppTheme().iconColor),
-              activeIcon: Icon(Icons.calendar_today, color: AppTheme().iconSelectedColor),
+              activeIcon: Icon(Icons.calendar_today,
+                  color: AppTheme().iconSelectedColor),
               // Un peu sale mais apparemment il faut un title
               // Ce qui est assez bizarre parce que title est sensé
               // être déprécié pour utiliser label à la place
@@ -115,23 +116,32 @@ class _PagePrincipaleState extends State<PagePrincipale> {
               label: "",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.mail_outline, color: AppTheme().iconColor,),
-              activeIcon: Icon(Icons.mail_outline, color: AppTheme().iconSelectedColor,),
+              icon: Icon(
+                Icons.mail_outline,
+                color: AppTheme().iconColor,
+              ),
+              activeIcon: Icon(
+                Icons.mail_outline,
+                color: AppTheme().iconSelectedColor,
+              ),
               label: "",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.desktop_windows, color: AppTheme().iconColor),
-              activeIcon: Icon(Icons.desktop_windows, color: AppTheme().iconSelectedColor),
+              activeIcon: Icon(Icons.desktop_windows,
+                  color: AppTheme().iconSelectedColor),
               label: "",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.assignment, color: AppTheme().iconColor),
-              activeIcon: Icon(Icons.assignment, color: AppTheme().iconSelectedColor),
+              activeIcon:
+                  Icon(Icons.assignment, color: AppTheme().iconSelectedColor),
               label: "",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.more_horiz, color: AppTheme().iconColor),
-              activeIcon: Icon(Icons.more_horiz, color: AppTheme().iconSelectedColor),
+              activeIcon:
+                  Icon(Icons.more_horiz, color: AppTheme().iconSelectedColor),
               label: "",
             ),
           ],
@@ -140,7 +150,7 @@ class _PagePrincipaleState extends State<PagePrincipale> {
           // backgroundColor: Colors.lightBlue[500],
           type: BottomNavigationBarType.fixed,
           backgroundColor: AppTheme().backgroundColor,
-              //Theme.of(context).bottomNavigationBarTheme.backgroundColor, //Remplacé par le contenu de AppTheme pour avoir un mode sombre - Arthur
+          //Theme.of(context).bottomNavigationBarTheme.backgroundColor, //Remplacé par le contenu de AppTheme pour avoir un mode sombre - Arthur
           iconSize: 30,
           //selectedItemColor: Theme.of(context).accentColor, //Remplacé par ActiveIcon: Icon(...); pour pouvoir définir les couleurs des icones non séléctionnées à la main - Arthur
         ),

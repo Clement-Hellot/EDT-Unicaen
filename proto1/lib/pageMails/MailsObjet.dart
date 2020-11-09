@@ -1,219 +1,28 @@
 import 'dart:convert';
-import 'dart:ui';
-
-import 'package:flutter/material.dart';
 import 'package:imap_client/imap_client.dart';
 import 'package:convert/convert.dart';
-import 'pageOption/theme.dart';
+import 'package:flutter/material.dart';
 
-class PageMails extends StatefulWidget {
-  @override
-  _PageMailsState createState() => _PageMailsState();
-}
+class JourneeMail {
+  DateTime date;
+  List<Mail> mails;
 
-class _PageMailsState extends State<PageMails> {
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.center,
-      child: Column(
-        children: <Widget>[
-          Container(
-            color: Colors.lightBlue,
-            height: 104.5,
-            alignment: Alignment.center,
-            child: Text(
-              'Mail',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 45,
-                fontWeight: FontWeight.w400,
-                height: 2.1,
-              ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.search),
-                tooltip: 'Search',
-                color: AppTheme().iconColor,
-                onPressed: abc,
-              ),
-              IconButton(
-                icon: Icon(Icons.refresh),
-                tooltip: 'Refresh',
-                color: AppTheme().iconColor,
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.settings),
-                tooltip: 'Refresh',
-                color: AppTheme().iconColor,
-                onPressed: () {},
-              ),
-            ],
-          ),
-          Expanded(child: MailContent()),
-        ],
-      ),
-    );
+  JourneeMail(DateTime date) {
+    this.date = date;
+    mails = new List();
   }
-}
 
-class MailContent extends StatefulWidget {
-  @override
-  _Mail createState() => _Mail();
-}
-
-class _Mail extends State<MailContent> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 10),
-      child: FutureBuilder(
-        future: exec(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            List<Mail> mail = snapshot.data;
-            return ListView.builder(
-                itemBuilder: (_, index) => Container(
-                      margin: EdgeInsets.only(
-                        left: 25,
-                        top: 5,
-                        right: 25,
-                        bottom: 5,
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          if (!mail[index].isSeen())
-                            Flexible(
-                              flex: null,
-                              child: Icon(
-                                Icons.circle,
-                                color: Colors.lightBlue[500],
-                                size: 10,
-                              ),
-                            ),
-                          Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(
-                                left: 10,
-                              ),
-                              padding: EdgeInsets.only(
-                                left: 5,
-                                right: 5,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppTheme().mailBackgroundColor,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(4)),
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: Text(
-                                          mail[index].getObjet(),
-                                          style: TextStyle(
-                                            color: AppTheme().textColor,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          mail[index].getTime(),
-                                          style: TextStyle(
-                                            color: AppTheme().textColor,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          textAlign: TextAlign.right,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: Text(
-                                          mail[index].getNomFrom(),
-                                          style: TextStyle(
-                                            color: AppTheme().textColor,
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ),
-                                      if (mail[index].hasPJ())
-                                        Flexible(
-                                          child: Icon(
-                                            Icons.attachment,
-                                            color: Colors.grey[600],
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                itemCount: snapshot.data.length);
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
-    );
+  void addMail(Mail mail) {
+    this.mails.add(mail);
   }
-}
 
-void abc() async {
-  MailClient client = new MailClient();
-  bool connected = await client.connect();
-
-  if (connected) {
-    List<Mail> mails = await client.getMail('inbox');
-  }
-}
-
-Future<List> exec() async {
-  MailClient client = new MailClient();
-  bool connected = await client.connect();
-
-  if (connected) {
-    List<Mail> mails = await client.getMail('inbox');
-
-    String from = mails[1].getEmailFrom();
-    String objet = mails[1].getObjet();
-    String date = mails[1].getDate();
-
-    return mails;
-
-    /*mails.forEach((element){    
-    String from = element(1).getFrom;
-    print(from);
-  });*/
-  } else {
-    return List<Mail>();
+  List<Mail> getDailyMail() {
+    return this.mails;
   }
 }
 
 class Mail {
+  int id;
   String nomFrom;
   String emailFrom;
   String objet;
@@ -221,14 +30,11 @@ class Mail {
   bool pj;
   List flags;
 
-  Mail(String from, String objet, DateTime date, bool pj, List flags) {
+  Mail(this.id, String from, String objet, this.date, this.pj, this.flags) {
     setNom(from);
     setEmailFrom(from);
     if (objet.length == 0) objet = "<Sans Objet>";
     this.objet = objet;
-    this.date = date;
-    this.pj = pj;
-    this.flags = flags;
   }
 
   bool hasPJ() {
@@ -512,30 +318,43 @@ class MailClient {
     return (flags.values.last.values.last);
   }
 
-  Future<List> getMail(String folderName) async {
+  Future<List<JourneeMail>> getMail(String folderName) async {
     ImapFolder folder = await imapClient.getFolder(folderName);
     int size = folder.mailCount;
-    List<Mail> liste = new List();
+    List<JourneeMail> liste = new List();
+    DateTime lastDate;
 
-    for (int i = size - 1; i > size - 11; i--) {
-      int mailNumber;
+    for (int i = size - 1; i > size - 12; i--) {
+      int mailNumber = i;
       String from, objet;
       DateTime date;
       bool pj;
       Mail mail;
       List flags = new List();
+      JourneeMail journee;
+
       flags = await getFlags(folder, i);
       pj = await hasPJ(folder, i);
-
       from = await getFrom(folder, i);
-      debug(from);
       objet = await getObjet(folder, i);
-      debug(objet);
       date = await getDate(folder, i);
-      debug(objet);
 
-      mail = new Mail(from, objet, date, pj, flags);
-      liste.add(mail);
+      mail = new Mail(mailNumber, from, objet, date, pj, flags);
+
+      if (lastDate == null) {
+        lastDate = date;
+        journee = new JourneeMail(lastDate);
+        journee.addMail(mail);
+        liste.add(journee);
+      } else if (lastDate.difference(date).inDays > 0) {
+        journee = new JourneeMail(date);
+        journee.addMail(mail);
+        liste.add(journee);
+      } else {
+        journee = liste.last;
+        journee.addMail(mail);
+        liste.add(journee);
+      }
     }
     return liste;
   }
