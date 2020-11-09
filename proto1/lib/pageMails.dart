@@ -368,24 +368,24 @@ class MailClient {
         }
       }
     } else {
-      //TODO fix encoding b64
-      // List liste = txt.split(" ");
-      // List b64;
-      // txt = "";
-      // liste.forEach((element) {
-      //   if (element.contains("<")) {
-      //     element = element.split("<")[0];
-      //   }
-      //   element = element.trim();
-      //   b64 = base64.decode(element);
-      //   print(b64.length);
-      //   for (int i = 0; i < b64.length; i += 2) {
-      //     print(i);
-      //     print(i + 1);
-      //     print('------------');
-      //     txt += utf8.decode([b64[i], b64[i + 1]]);
-      //   }
-      // });
+      List liste = txt.split(" ");
+      List b64;
+      txt = "";
+      liste.forEach((element) {
+        if (element.contains("<")) {
+          element = element.split("<")[0];
+        }
+        element = element.trim();
+        b64 = base64.decode(element);
+
+        for (int i = 0; i < b64.length; i++) {
+          if (b64[i] == 195) {
+            txt += utf8.decode([b64[i], b64[i + 1]]);
+            i++;
+          } else
+            txt += String.fromCharCode(b64[i]);
+        }
+      });
     }
 
     return txt;
@@ -517,7 +517,7 @@ class MailClient {
     int size = folder.mailCount;
     List<Mail> liste = new List();
 
-    for (int i = size; i > size - 10; i--) {
+    for (int i = size - 1; i > size - 11; i--) {
       int mailNumber;
       String from, objet;
       DateTime date;
