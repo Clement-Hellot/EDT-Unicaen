@@ -19,6 +19,24 @@ class JourneeMail {
   List<Mail> getDailyMail() {
     return this.mails;
   }
+
+  String getDate() {
+    DateTime today = new DateTime.now();
+    int difference = today.difference(date).inDays;
+    switch (difference) {
+      case 0:
+        return "Aujourd'hui";
+        break;
+      case 1:
+        return "Hier";
+      default:
+        return date.day.toString() +
+            "/" +
+            date.month.toString() +
+            "/" +
+            date.year.toString();
+    }
+  }
 }
 
 class Mail {
@@ -324,7 +342,7 @@ class MailClient {
     List<JourneeMail> liste = new List();
     DateTime lastDate;
 
-    for (int i = size - 1; i > size - 12; i--) {
+    for (int i = size; i > size - 12; i--) {
       int mailNumber = i;
       String from, objet;
       DateTime date;

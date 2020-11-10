@@ -53,7 +53,7 @@ class _PageMailsState extends State<PageMails> {
               ),
             ],
           ),
-          Expanded(child: DailyMail()),
+          SingleChildScrollView(child: DailyMail()),
         ],
       ),
     );
@@ -76,16 +76,21 @@ class _DailyMailState extends State<DailyMail> {
           if (snapshot.hasData) {
             List<JourneeMail> mail = snapshot.data;
             return ListView.builder(
-                itemBuilder: (_, index) => Container(
-                      child: Column(
-                        children: <Widget>[
-                          Flexible(child: Text(mail[index].date.toString())),
-                          Expanded(
-                              child: MailWidget(mail[index].getDailyMail())),
-                        ],
-                      ),
+              physics: AlwaysScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: snapshot.data.length,
+              itemBuilder: (_, index) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "  " + mail[index].getDate(),
+                      style: TextStyle(
+                          color: Colors.lightBlue[600],
+                          fontWeight: FontWeight.bold),
                     ),
-                itemCount: snapshot.data.length);
+                    MailWidget(mail[index].getDailyMail())
+                  ]),
+            );
           } else {
             return Center(
               child: CircularProgressIndicator(),
@@ -114,7 +119,7 @@ class _MailWidgetState extends State<MailWidget> {
       liste.add(MailContent(mail));
     }
 
-    return Row(
+    return Column(
       children: liste,
     );
   }
@@ -132,7 +137,7 @@ class MailContent extends StatefulWidget {
 class _Mail extends State<MailContent> {
   @override
   Widget build(BuildContext context) {
-    return Flexible(
+    return Container(
       child: Dismissible(
         key: ValueKey("value"),
         child: Container(

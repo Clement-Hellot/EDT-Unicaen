@@ -87,7 +87,7 @@ class AppTheme {
       textColor = Color(0xFFFFFFFF);
       iconColor = Color(0xFF36393F);
       iconSelectedColor = Color(0xFF3E6DE7);
-      mailBackgroundColor = Color(0xFF000000);
+      mailBackgroundColor = Color(0xFF4B4B4B);
     } else {
       etat = "Clair";
       topBarColor = Color(0xFF42AFEC);
