@@ -434,13 +434,14 @@ class _PopupControleUIState extends State<PopupControleUI> {
                 ),
               ),
             ),
+
             Container(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(
-                top: 40,
+                top: 80,
                 right:20,
                 left:20,
-                bottom:0,
+                bottom:20,
               ),
               width: double.infinity,
               decoration: new BoxDecoration(
@@ -456,7 +457,7 @@ class _PopupControleUIState extends State<PopupControleUI> {
               ),
             ),
 
-
+            /*
             Align(
               alignment: Alignment.center,
               child: InkWell(
@@ -482,7 +483,7 @@ class _PopupControleUIState extends State<PopupControleUI> {
                   child: Icon(Icons.clear,color:  Colors.black),
                 ),
               ),
-            ),
+            ),*/
           ],
         ),
       ),
