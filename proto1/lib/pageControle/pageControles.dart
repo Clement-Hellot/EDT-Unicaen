@@ -243,16 +243,8 @@ class _ControleUIState extends State<ControleUI> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-        onTap: () {//display the popup window with more information about the cc
-          showDialog(
-            context: context,
-            builder: (BuildContext context) => PopupControleUI(widget.cc),
-          );
-        },
-        child: Container(
+    return  Container(
           margin: EdgeInsets.only(bottom: 5, right: 10, left: 10),
-          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           width: double.infinity,
           height: PageControles.taileCc,
           decoration: BoxDecoration(
@@ -261,58 +253,69 @@ class _ControleUIState extends State<ControleUI> {
             widget.cc.matiere.couleur().withOpacity(PageControles.opaciteCours),
             //color:Colors.grey[400]
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.cc.matiere.shortVersion(),
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w700,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(10),
+            onTap: () {//display the popup window with more information about the cc
+              showDialog(
+                context: context,
+                builder: (BuildContext context) => PopupControleUI(widget.cc),
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.cc.matiere.shortVersion(),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                  Text(
-                    widget.cc.lieu,
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.black,
+                    Text(
+                      widget.cc.lieu,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    widget.cc.nomJour(),
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      widget.cc.nomJour(),
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  Text(
-                    widget.cc.debut.toString() + " - " + widget.cc.fin.toString(),
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
+                    Text(
+                      widget.cc.debut.toString() + " - " + widget.cc.fin.toString(),
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  ],
+                ),
+              ],
+            ),
+        ),
         ),
     );
   }
