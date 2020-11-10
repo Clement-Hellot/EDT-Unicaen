@@ -364,15 +364,17 @@ class MailClient {
         journee = new JourneeMail(lastDate);
         journee.addMail(mail);
         liste.add(journee);
-      } else if (lastDate.difference(date).inDays > 0) {
+      } else if (lastDate.year != date.year ||
+          lastDate.month != date.month ||
+          lastDate.day != date.day) {
         journee = new JourneeMail(date);
         journee.addMail(mail);
         liste.add(journee);
       } else {
         journee = liste.last;
         journee.addMail(mail);
-        liste.add(journee);
       }
+      lastDate = date;
     }
     return liste;
   }

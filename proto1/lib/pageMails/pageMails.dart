@@ -53,7 +53,7 @@ class _PageMailsState extends State<PageMails> {
               ),
             ],
           ),
-          SingleChildScrollView(child: DailyMail()),
+          Expanded(child: DailyMail()),
         ],
       ),
     );
@@ -76,7 +76,7 @@ class _DailyMailState extends State<DailyMail> {
           if (snapshot.hasData) {
             List<JourneeMail> mail = snapshot.data;
             return ListView.builder(
-              physics: AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: snapshot.data.length,
               itemBuilder: (_, index) => Column(
