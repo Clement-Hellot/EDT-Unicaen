@@ -47,12 +47,18 @@ class Mail {
   DateTime date;
   bool pj;
   List flags;
+  String html;
 
-  Mail(this.id, String from, String objet, this.date, this.pj, this.flags) {
+  Mail(this.id, String from, String objet, this.date, this.pj, this.flags,
+      this.html) {
     setNom(from);
     setEmailFrom(from);
     if (objet.length == 0) objet = "<Sans Objet>";
     this.objet = objet;
+  }
+
+  String getText() {
+    return this.html;
   }
 
   bool hasPJ() {
@@ -177,21 +183,7 @@ class MailClient {
       txt = txt.replaceAll("_", " ");
     }
 
-    if (mode == "Q") {
-      while (txt.contains("=")) {
-        int i = txt.indexOf("=");
-        String search = txt[i + 1] + txt[i + 2];
-        int hexa = hex.decode(search).first;
-        if (i + 5 < txt.length && txt[i + 3] == "=") {
-          String search2 = txt[i + 4] + txt[i + 5];
-          int hexa2 = hex.decode(search2).first;
-          txt = txt.replaceAll(
-              "=" + search + "=" + search2, utf8.decode([hexa, hexa2]));
-        } else {
-          txt = txt.replaceAll("=" + search, String.fromCharCode(hexa));
-        }
-      }
-    } else {
+    if (mode == "B") {
       List liste = txt.split(" ");
       List b64;
       txt = "";
@@ -210,6 +202,26 @@ class MailClient {
             txt += String.fromCharCode(b64[i]);
         }
       });
+    } else {
+      while (txt.contains("=")) {
+        int i = txt.indexOf("=");
+        int hexa = 0x00;
+        String search = txt[i + 1] + txt[i + 2];
+        if (txt[i + 1].codeUnits.first != 13) {
+          hexa = hex.decode(search).first;
+        } else
+          txt = txt.replaceRange(i, i, "");
+
+        if (i + 5 < txt.length && txt[i + 3] == "=") {
+          String search2 = txt[i + 4] + txt[i + 5];
+          int hexa2 = hex.decode(search2).first;
+
+          txt = txt.replaceAll(
+              "=" + search + "=" + search2, utf8.decode([hexa, hexa2]));
+        } else {
+          txt = txt.replaceAll("=" + search, String.fromCharCode(hexa));
+        }
+      }
     }
 
     return txt;
@@ -336,15 +348,26 @@ class MailClient {
     return (flags.values.last.values.last);
   }
 
+  Future<String> getText(ImapFolder folder, int number) async {
+    String out;
+    Map<int, Map<String, dynamic>> txt =
+        await folder.fetch(["BODY[2]"], messageIds: [number]);
+
+    String res = txt.values.last.values.last;
+    if (res is! String) print(res);
+
+    return res;
+  }
+
   Future<List<JourneeMail>> getMail(String folderName) async {
     ImapFolder folder = await imapClient.getFolder(folderName);
     int size = folder.mailCount;
     List<JourneeMail> liste = new List();
     DateTime lastDate;
 
-    for (int i = size; i > size - 12; i--) {
+    for (int i = size; i > size - 10; i--) {
       int mailNumber = i;
-      String from, objet;
+      String from, objet, html;
       DateTime date;
       bool pj;
       Mail mail;
@@ -356,8 +379,9 @@ class MailClient {
       from = await getFrom(folder, i);
       objet = await getObjet(folder, i);
       date = await getDate(folder, i);
+      html = await getText(folder, i);
 
-      mail = new Mail(mailNumber, from, objet, date, pj, flags);
+      mail = new Mail(mailNumber, from, objet, date, pj, flags, html);
 
       if (lastDate == null) {
         lastDate = date;

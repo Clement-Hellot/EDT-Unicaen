@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import './MailsObjet.dart';
 import '../pageOption/theme.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class PageMails extends StatefulWidget {
   @override
@@ -137,113 +138,162 @@ class MailContent extends StatefulWidget {
 class _Mail extends State<MailContent> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Dismissible(
-        key: ValueKey("value"),
-        child: Container(
-          margin: EdgeInsets.only(
-            left: 10,
-            top: 5,
-            right: 10,
-            bottom: 5,
-          ),
-          child: Row(
-            children: <Widget>[
-              if (!widget.mail.isSeen())
-                Flexible(
-                  flex: null,
-                  child: Icon(
-                    Icons.circle,
-                    color: Colors.lightBlue[500],
-                    size: 10,
+    return InkWell(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => ReadMailWidget(widget.mail),
+        );
+      },
+      child: Container(
+        child: Dismissible(
+          key: ValueKey("value"),
+          child: Container(
+            margin: EdgeInsets.only(
+              left: 10,
+              top: 5,
+              right: 10,
+              bottom: 5,
+            ),
+            child: Row(
+              children: <Widget>[
+                if (!widget.mail.isSeen())
+                  Flexible(
+                    flex: null,
+                    child: Icon(
+                      Icons.circle,
+                      color: Colors.lightBlue[500],
+                      size: 10,
+                    ),
                   ),
-                ),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(
-                    left: 10,
-                  ),
-                  padding: EdgeInsets.only(
-                    left: 5,
-                    right: 5,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppTheme().mailBackgroundColor,
-                    borderRadius: BorderRadius.all(Radius.circular(4)),
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Flexible(
-                            child: Text(
-                              widget.mail.getObjet(),
-                              style: TextStyle(
-                                color: AppTheme().textColor,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            child: Text(
-                              widget.mail.getTime(),
-                              style: TextStyle(
-                                color: AppTheme().textColor,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.right,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Flexible(
-                            child: Text(
-                              widget.mail.getNomFrom(),
-                              style: TextStyle(
-                                color: AppTheme().textColor,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                          if (widget.mail.hasPJ())
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      left: 10,
+                    ),
+                    padding: EdgeInsets.only(
+                      left: 5,
+                      right: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppTheme().mailBackgroundColor,
+                      borderRadius: BorderRadius.all(Radius.circular(4)),
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
                             Flexible(
-                              child: Icon(
-                                Icons.attachment,
-                                color: Colors.grey[600],
+                              child: Text(
+                                widget.mail.getObjet(),
+                                style: TextStyle(
+                                  color: AppTheme().textColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                        ],
-                      ),
-                    ],
+                            Flexible(
+                              child: Text(
+                                widget.mail.getTime(),
+                                style: TextStyle(
+                                  color: AppTheme().textColor,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Flexible(
+                              child: Text(
+                                widget.mail.getNomFrom(),
+                                style: TextStyle(
+                                  color: AppTheme().textColor,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                            if (widget.mail.hasPJ())
+                              Flexible(
+                                child: Icon(
+                                  Icons.attachment,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
+          ),
+          background: Container(
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(
+              left: 10,
+            ),
+            color: Colors.green,
+            child: Icon(Icons.check),
+          ),
+          secondaryBackground: Container(
+            alignment: Alignment.centerRight,
+            padding: EdgeInsets.only(
+              right: 10,
+            ),
+            color: Colors.red,
+            child: Icon(Icons.delete),
           ),
         ),
-        background: Container(
-          alignment: Alignment.centerLeft,
-          padding: EdgeInsets.only(
-            left: 10,
-          ),
-          color: Colors.green,
-          child: Icon(Icons.check),
-        ),
-        secondaryBackground: Container(
-          alignment: Alignment.centerRight,
-          padding: EdgeInsets.only(
-            right: 10,
-          ),
-          color: Colors.red,
-          child: Icon(Icons.delete),
-        ),
+      ),
+    );
+  }
+}
+
+class ReadMailWidget extends StatefulWidget {
+  @override
+  _ReadMailWidgetState createState() => _ReadMailWidgetState();
+
+  ReadMailWidget(this.mail);
+
+  final Mail mail;
+}
+
+class _ReadMailWidgetState extends State<ReadMailWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      child: Column(
+        children: <Widget>[
+          Container(
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Colors.black, style: BorderStyle.solid, width: 1)),
+              child: Column(
+                children: [
+                  Text(widget.mail.getNomFrom()),
+                  Text(widget.mail.getEmailFrom()),
+                ],
+              )),
+          Container(
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Colors.black, style: BorderStyle.solid, width: 1)),
+              child: Text(widget.mail.getObjet())),
+          Container(
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Colors.black, style: BorderStyle.solid, width: 1)),
+              child: Html(data: widget.mail.getText())),
+        ],
       ),
     );
   }
