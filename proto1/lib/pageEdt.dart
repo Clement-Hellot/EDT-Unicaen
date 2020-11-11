@@ -6,7 +6,6 @@ import 'main.dart';
 import 'Calendrier.dart';
 import 'CalendrierJours.dart';
 import 'objets.dart';
-import 'pageOption/theme.dart';
 
 class PageEDT extends StatefulWidget {
   @override

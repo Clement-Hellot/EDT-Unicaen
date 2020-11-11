@@ -1,8 +1,5 @@
-import 'pageOptions.dart';
-
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
-import '../pageEdt.dart';
 
 /// Le bouton déroulant pour choisir entre clair et sombre
 class BoutonTheme extends StatefulWidget {
@@ -30,9 +27,7 @@ class _BoutonThemeState extends State<StatefulWidget> {
       onChanged: (String newValue) {
         setState(() {
           if (newValue != dropdownValue) {
-            AppTheme().changerTheme(context);
-            dropdownValue = newValue;
-            //TODO refresh la page courante
+            dropdownValue = AppTheme().changerTheme(context);
           }
         });
       },
@@ -51,19 +46,11 @@ class AppTheme {
   //Singleton
   static AppTheme _instance = AppTheme._internal(); //Instancié au lancement
 
-  /*Constance de thème
-  Color _backgroundSombre = Color(0xFF050E25), _backgroundClair = Color(0xFFFCFCFC);
-  Color _textSombre = Color(0xFFFFFFFF), _textClair = Color(0xFF3D3D3D);
-  Color _iconSombre = Color(0xFF20AFFF), _iconClair = Color(0xFFC4C4C4);
-  Color _topBarColorSombre = Color(0xFF050E25), _topBarColorClair = Color(0xFF42AFEC);*/
-
   //Thème courant et valeurs courantes
-  ThemeData theme;
   bool isClair;
   String etat;
 
-  factory AppTheme() {
-    //Constructeur : retourne l'instance du singleton
+  factory AppTheme() { //Constructeur : retourne l'instance du singleton
     return _instance;
   }
 
@@ -73,7 +60,7 @@ class AppTheme {
     etat = "Clair";
   }
 
-  void changerTheme(BuildContext context) {
+  String changerTheme(BuildContext context) {
     //Applique le thème actuellement choisi
     isClair = !isClair;
     if (isClair) {
@@ -83,5 +70,7 @@ class AppTheme {
       etat = "Clair";
       DynamicTheme.of(context).setBrightness(Brightness.light);
     }
+
+    return etat;
   }
 }

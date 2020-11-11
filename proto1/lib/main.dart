@@ -7,7 +7,6 @@ import 'pageMails/pageMails.dart';
 import 'pageSalles.dart';
 import 'pageControle/pageControles.dart';
 import 'pageOption/pageOptions.dart';
-import 'pageOption/theme.dart';
 
 void main() {
   runApp(MyApp());
