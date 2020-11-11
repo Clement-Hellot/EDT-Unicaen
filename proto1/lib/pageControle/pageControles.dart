@@ -89,7 +89,6 @@ class _PageControlesState extends State<PageControles>
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme().textColor,
                   ),
                 ),
               ),

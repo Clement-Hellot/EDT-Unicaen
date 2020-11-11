@@ -1,5 +1,6 @@
 import 'pageOptions.dart';
 
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import '../pageEdt.dart';
 
@@ -29,7 +30,7 @@ class _BoutonThemeState extends State<StatefulWidget> {
       onChanged: (String newValue) {
         setState(() {
           if (newValue != dropdownValue) {
-            AppTheme().changerTheme();
+            AppTheme().changerTheme(context);
             dropdownValue = newValue;
             //TODO refresh la page courante
           }
@@ -57,14 +58,9 @@ class AppTheme {
   Color _topBarColorSombre = Color(0xFF050E25), _topBarColorClair = Color(0xFF42AFEC);*/
 
   //Thème courant et valeurs courantes
+  ThemeData theme;
   bool isClair;
-  Color backgroundColor,
-      textColor,
-      iconColor,
-      topBarColor,
-      iconSelectedColor,
-      mailBackgroundColor;
-  String etat = "Clair";
+  String etat;
 
   factory AppTheme() {
     //Constructeur : retourne l'instance du singleton
@@ -74,34 +70,18 @@ class AppTheme {
   AppTheme._internal() {
     //"Vrai" constructeur (initialise l'appli sur le thème de l'utilisateur
     isClair = true;
-    changerTheme();
+    etat = "Clair";
   }
 
-  void changerTheme() {
+  void changerTheme(BuildContext context) {
     //Applique le thème actuellement choisi
     isClair = !isClair;
     if (isClair) {
       etat = "Sombre";
-      topBarColor = Color(0xFF050E25);
-      backgroundColor = Color(0xFF050E25);
-      textColor = Color(0xFFFFFFFF);
-      iconColor = Color(0xFF36393F);
-      iconSelectedColor = Color(0xFF3E6DE7);
-      mailBackgroundColor = Color(0xFF4B4B4B);
+      DynamicTheme.of(context).setBrightness(Brightness.dark);
     } else {
       etat = "Clair";
-      topBarColor = Color(0xFF42AFEC);
-      backgroundColor = Color(0xFFFCFCFC);
-      textColor = Color(0xFF3D3D3D);
-      iconColor = Color(0xFFC4C4C4);
-      iconSelectedColor = Color(0xFF14A4F5);
-      mailBackgroundColor = Color(0xFFC4C4C4);
+      DynamicTheme.of(context).setBrightness(Brightness.light);
     }
   }
-/*
- TODO Rendre les autres classes dépendantes du singleton
- TODO Optimiser changerTheme et les déclarations des constantes avec un tableau ?
- TODO Stocker le choix de thème dans un fichier à coté
- */
-
 }

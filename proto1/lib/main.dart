@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'CalendrierJours.dart';
 import 'pageEdt.dart';
 import 'pageMails/pageMails.dart';
@@ -16,16 +17,21 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      //color: AppTheme().backgroundColor,
-      title: 'EDT Info',
-      theme: ThemeData(
-        primarySwatch: Colors.lightBlue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: PagePrincipale(),
-      debugShowCheckedModeBanner: false,
-    );
+    return new DynamicTheme(
+        defaultBrightness: Brightness.light,
+        data: (brightness) => new ThemeData(
+              primarySwatch: Colors.lightBlue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+              brightness: brightness,
+            ),
+        themedWidgetBuilder: (context, theme) {
+          return MaterialApp(
+            title: 'EDT Info',
+            home: PagePrincipale(),
+            theme: theme,
+            debugShowCheckedModeBanner: false,
+          );
+        });
   }
 }
 
@@ -79,7 +85,6 @@ class _PagePrincipaleState extends State<PagePrincipale> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme().backgroundColor,
       body: Center(
         child: PageView(
           controller: controller,
@@ -105,43 +110,43 @@ class _PagePrincipaleState extends State<PagePrincipale> {
           selectedFontSize: 0,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today, color: AppTheme().iconColor),
-              activeIcon: Icon(Icons.calendar_today,
-                  color: AppTheme().iconSelectedColor),
+              icon: Icon(
+                Icons.calendar_today,
+              ),
+              activeIcon: Icon(
+                Icons.calendar_today,
+              ),
               // Un peu sale mais apparemment il faut un title
               // Ce qui est assez bizarre parce que title est sensé
               // être déprécié pour utiliser label à la place
 
-              //En mettant selectedFontSize à 0 dans la BottomNavigationBar on peut laisser le label vide
+              //En mettant selectedFontSize à 0 dans la BottomNavigationBar (ligne 185) on peut laisser le label vide
               label: "",
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.mail_outline,
-                color: AppTheme().iconColor,
               ),
               activeIcon: Icon(
                 Icons.mail_outline,
-                color: AppTheme().iconSelectedColor,
               ),
               label: "",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.desktop_windows, color: AppTheme().iconColor),
-              activeIcon: Icon(Icons.desktop_windows,
-                  color: AppTheme().iconSelectedColor),
+              icon: Icon(Icons.desktop_windows),
+              activeIcon: Icon(
+                Icons.desktop_windows,
+              ),
               label: "",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.assignment, color: AppTheme().iconColor),
-              activeIcon:
-                  Icon(Icons.assignment, color: AppTheme().iconSelectedColor),
+              icon: Icon(Icons.assignment),
+              activeIcon: Icon(Icons.assignment),
               label: "",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.more_horiz, color: AppTheme().iconColor),
-              activeIcon:
-                  Icon(Icons.more_horiz, color: AppTheme().iconSelectedColor),
+              icon: Icon(Icons.more_horiz),
+              activeIcon: Icon(Icons.more_horiz),
               label: "",
             ),
           ],
@@ -149,8 +154,9 @@ class _PagePrincipaleState extends State<PagePrincipale> {
           onTap: _onItemTapped,
           // backgroundColor: Colors.lightBlue[500],
           type: BottomNavigationBarType.fixed,
-          backgroundColor: AppTheme().backgroundColor,
-          //Theme.of(context).bottomNavigationBarTheme.backgroundColor, //Remplacé par le contenu de AppTheme pour avoir un mode sombre - Arthur
+          backgroundColor:
+              Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+          //Remplacé par le contenu de AppTheme pour avoir un mode sombre - Arthur
           iconSize: 30,
           //selectedItemColor: Theme.of(context).accentColor, //Remplacé par ActiveIcon: Icon(...); pour pouvoir définir les couleurs des icones non séléctionnées à la main - Arthur
         ),

@@ -29,6 +29,7 @@ dependencies:
   imap_client: ^0.2.9
   convert: ^2.1.1
   flutter_html: ^1.0.0
+  dynamic_theme: ^1.0.1
 
 
   # The following adds the Cupertino Icons font to your application.

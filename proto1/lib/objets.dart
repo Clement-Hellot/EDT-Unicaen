@@ -14,7 +14,6 @@ class Horaire {
       minutes = minutes % 60;
     }
 
-
     if (date == null) {
       DateTime now = DateTime.now();
       date = DateTime(now.year, now.month, now.day);
@@ -23,6 +22,7 @@ class Horaire {
   }
 
   int get totalMinutes => heures * 60 + minutes;
+
   double get totalHeures => heures + (minutes / 60.0);
 
   String get heureStr {
@@ -42,7 +42,7 @@ class Horaire {
 
   @override
   String toString() {
-    if(heures == null && minutes == null)
+    if (heures == null && minutes == null)
       return "NC";
     else
       return heureStr;

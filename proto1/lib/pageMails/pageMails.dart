@@ -37,19 +37,16 @@ class _PageMailsState extends State<PageMails> {
               IconButton(
                 icon: Icon(Icons.search),
                 tooltip: 'Search',
-                color: AppTheme().iconColor,
                 onPressed: abc,
               ),
               IconButton(
                 icon: Icon(Icons.refresh),
                 tooltip: 'Refresh',
-                color: AppTheme().iconColor,
                 onPressed: () {},
               ),
               IconButton(
                 icon: Icon(Icons.settings),
                 tooltip: 'Refresh',
-                color: AppTheme().iconColor,
                 onPressed: () {},
               ),
             ],
@@ -176,7 +173,6 @@ class _Mail extends State<MailContent> {
                       right: 5,
                     ),
                     decoration: BoxDecoration(
-                      color: AppTheme().mailBackgroundColor,
                       borderRadius: BorderRadius.all(Radius.circular(4)),
                     ),
                     child: Column(
@@ -189,7 +185,6 @@ class _Mail extends State<MailContent> {
                               child: Text(
                                 widget.mail.getObjet(),
                                 style: TextStyle(
-                                  color: AppTheme().textColor,
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -199,7 +194,6 @@ class _Mail extends State<MailContent> {
                               child: Text(
                                 widget.mail.getTime(),
                                 style: TextStyle(
-                                  color: AppTheme().textColor,
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -215,7 +209,6 @@ class _Mail extends State<MailContent> {
                               child: Text(
                                 widget.mail.getNomFrom(),
                                 style: TextStyle(
-                                  color: AppTheme().textColor,
                                   fontSize: 12,
                                 ),
                               ),

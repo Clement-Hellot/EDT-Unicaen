@@ -196,5 +196,6 @@ extension DetailsSalles on Salles {
   };
 
   String get nom => noms[this];
+
   Color get couleur => Matiere.couleurString(nom);
 }

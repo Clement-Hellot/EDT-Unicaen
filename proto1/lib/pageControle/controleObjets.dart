@@ -9,8 +9,7 @@ class Controle {
   Horaire fin;
   Horaire debut;
 
-  Controle(this.matiere, this.enseignant, this.lieu, this.debut, this.fin){
-  }
+  Controle(this.matiere, this.enseignant, this.lieu, this.debut, this.fin);
 
   @override
   String toString() {
