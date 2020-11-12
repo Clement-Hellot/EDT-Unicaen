@@ -22,7 +22,7 @@ class JourneeMail {
 
   String getDate() {
     DateTime today = new DateTime.now();
-    int difference = today.difference(date).inDays;
+    int difference = today.day - date.day;
     switch (difference) {
       case 0:
         return "Aujourd'hui";
@@ -212,7 +212,7 @@ class MailClient {
         } else
           txt = txt.replaceRange(i, i, "");
 
-        if (i + 5 < txt.length && txt[i + 3] == "=") {
+        if (i + 5 < txt.length && search == "C3") {
           String search2 = txt[i + 4] + txt[i + 5];
           int hexa2 = hex.decode(search2).first;
 
@@ -281,6 +281,9 @@ class MailClient {
     Map<int, Map<String, dynamic>> from = await folder
         .fetch(["BODY.PEEK[HEADER.FIELDS (FROM)]"], messageIds: [number]);
     res = from.values.last.values.last;
+    if (res.split(":")[0] == null) {
+      print(res);
+    }
     res = res.split(":")[1];
     res = formateString(res);
 
@@ -353,10 +356,20 @@ class MailClient {
     Map<int, Map<String, dynamic>> txt =
         await folder.fetch(["BODY[2]"], messageIds: [number]);
 
-    String res = txt.values.last.values.last;
-    if (res is! String) print(res);
+    var res = txt.values.last.values.last;
 
-    return res;
+    if (res == null) {
+      out = "";
+    } else if (res is! String) {
+      print(res);
+      print(res.runtimeType);
+      out = res[0];
+    } else {
+      out = res;
+    }
+    ;
+
+    return out;
   }
 
   Future<List<JourneeMail>> getMail(String folderName) async {
