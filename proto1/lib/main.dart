@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:flutter/scheduler.dart';
 import 'CalendrierJours.dart';
 import 'pageEdt.dart';
 import 'pageMails/pageMails.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new DynamicTheme(
-        defaultBrightness: Brightness.light,
+        defaultBrightness: SchedulerBinding.instance.window.platformBrightness,
         data: (brightness) => new ThemeData(
               primarySwatch: Colors.lightBlue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
