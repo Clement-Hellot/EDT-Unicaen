@@ -17,16 +17,28 @@ void main() {
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
 
-  var bright = SchedulerBinding.instance.window.platformBrightness;
+  Brightness bright;
 
   @override
   Widget build(BuildContext context) {
+
     switch(AppTheme().getCurrentTheme()) {
-      case 'Dark':
+      case 'Sombre':
+        AppTheme().changerTheme(context);
+        bright = Brightness.dark;
+        break;
+      case 'Clair':
+        bright = Brightness.light;
+        break;
+      default:
+        bright = SchedulerBinding.instance.window.platformBrightness;
+        break;
     }
 
+    print('Thème : ' + bright.toString());
+
     return new DynamicTheme(
-        defaultBrightness: ,
+        defaultBrightness: bright,
         data: (brightness) => AppTheme().themeCourant,
         themedWidgetBuilder: (context, theme) {
           return MaterialApp(

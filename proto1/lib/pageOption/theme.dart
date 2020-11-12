@@ -63,25 +63,21 @@ class AppTheme {
   AppTheme._internal() {
     //"Vrai" constructeur (initialise l'appli sur le thème de l'utilisateur
     etatTheme = EtatTheme.CLAIR;
-
-    tClair = ThemeData(
-      primarySwatch: Colors.lightBlue,
-      textTheme: TextTheme(
-      )
-    );
   }
-
-  ThemeData get getTClair => tClair;
 
   String changerTheme(BuildContext context) {
     //Applique le thème actuellement choisi
     switch (etatTheme) {
       case EtatTheme.CLAIR:
+        print('Clair');
+        themeCourant = tSombre;
         etatTheme = EtatTheme.SOMBRE;
         DynamicTheme.of(context).setBrightness(Brightness.dark);
         return "Sombre";
 
       case EtatTheme.SOMBRE:
+        print('Sombre');
+        themeCourant = tClair;
         etatTheme = EtatTheme.CLAIR;
         DynamicTheme.of(context).setBrightness(Brightness.light);
         return 'Clair';
