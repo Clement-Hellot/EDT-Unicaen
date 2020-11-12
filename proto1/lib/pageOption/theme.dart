@@ -10,7 +10,7 @@ class BoutonTheme extends StatefulWidget {
 }
 
 class _BoutonThemeState extends State<StatefulWidget> {
-  String dropdownValue = AppTheme().etat;
+  String dropdownValue = AppTheme().getNomEtat();
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +46,8 @@ class AppTheme {
   //Singleton
   static AppTheme _instance = AppTheme._internal(); //Instancié au lancement
 
-  //Thème courant et valeurs courantes
-  bool isClair;
-  String etat;
+  //Thème courant
+  EtatTheme etatTheme;
 
   factory AppTheme() { //Constructeur : retourne l'instance du singleton
     return _instance;
@@ -56,21 +55,43 @@ class AppTheme {
 
   AppTheme._internal() {
     //"Vrai" constructeur (initialise l'appli sur le thème de l'utilisateur
-    isClair = true;
-    etat = "Clair";
+    etatTheme = EtatTheme.CLAIR;
   }
 
   String changerTheme(BuildContext context) {
     //Applique le thème actuellement choisi
-    isClair = !isClair;
-    if (isClair) {
-      etat = "Sombre";
-      DynamicTheme.of(context).setBrightness(Brightness.dark);
-    } else {
-      etat = "Clair";
-      DynamicTheme.of(context).setBrightness(Brightness.light);
-    }
+    print("je suis dans le changement du theme");
+    switch(etatTheme) {
+      case EtatTheme.CLAIR:
+        etatTheme = EtatTheme.SOMBRE;
+        print("go sur le sombre");
+        DynamicTheme.of(context).setBrightness(Brightness.dark);
+        return "Sombre";
 
-    return etat;
+      case EtatTheme.SOMBRE:
+        etatTheme = EtatTheme.CLAIR;
+        print("go sur le clair");
+        DynamicTheme.of(context).setBrightness(Brightness.light);
+        return 'Clair';
+
+    }
   }
+
+
+  String getNomEtat() {
+    switch(etatTheme) {
+      case EtatTheme.CLAIR:
+        return "Clair";
+
+      case EtatTheme.SOMBRE:
+        return 'Sombre';
+
+    }
+  }
+}
+
+
+enum EtatTheme{
+  CLAIR,
+  SOMBRE
 }
