@@ -1,3 +1,4 @@
+import 'package:edt_mobile/pageOption/theme.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dynamic_theme/dynamic_theme.dart';
@@ -15,15 +16,18 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
+  var bright = SchedulerBinding.instance.window.platformBrightness;
+
   @override
   Widget build(BuildContext context) {
+    switch(AppTheme().getCurrentTheme()) {
+      case 'Dark':
+    }
+
     return new DynamicTheme(
-        defaultBrightness: SchedulerBinding.instance.window.platformBrightness,
-        data: (brightness) => new ThemeData(
-              primarySwatch: Colors.lightBlue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-              brightness: brightness,
-            ),
+        defaultBrightness: ,
+        data: (brightness) => AppTheme().themeCourant,
         themedWidgetBuilder: (context, theme) {
           return MaterialApp(
             title: 'EDT Info',
