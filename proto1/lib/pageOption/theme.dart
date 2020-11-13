@@ -69,9 +69,10 @@ class AppTheme {
           color: Colors.black,
         ),
         headline2: TextStyle(
-          color: Colors.white,
+          color: Colors.black,
         ),
       ),
+      cardColor: Colors.grey[400],
       scaffoldBackgroundColor: Colors.white,
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Colors.white,
@@ -99,6 +100,7 @@ class AppTheme {
           color: Color.fromRGBO(50, 50, 55, 1),
         ),
       ),
+      cardColor: Color.fromRGBO(33, 34, 38, 1),
       scaffoldBackgroundColor: Color.fromRGBO(50, 50, 55, 1),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Color.fromRGBO(33, 34, 38, 1),

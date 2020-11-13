@@ -177,7 +177,7 @@ class _SemaineCcUIState extends State<SemaineCcUI> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
+                  color: Theme.of(context).cardColor,
                 ),
                 child: Row(
                   children: [
