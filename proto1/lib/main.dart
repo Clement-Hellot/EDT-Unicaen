@@ -115,11 +115,11 @@ class _PagePrincipaleState extends State<PagePrincipale> {
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           boxShadow: [
-            BoxShadow(
+            /*BoxShadow(
               color: Colors.grey.withOpacity(0.6),
               spreadRadius: 2,
               blurRadius: 11,
-            ),
+            ),*/
           ],
         ),
         child: BottomNavigationBar(

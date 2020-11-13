@@ -63,6 +63,76 @@ class AppTheme {
   AppTheme._internal() {
     //"Vrai" constructeur (initialise l'appli sur le thème de l'utilisateur
     etatTheme = EtatTheme.CLAIR;
+    tClair = new ThemeData(
+      textTheme: TextTheme(
+        headline1: TextStyle(
+          color: Colors.black,
+        ),
+        headline2: TextStyle(
+          color: Colors.white,
+        ),
+      ),
+      colorScheme: ColorScheme(
+          primary: null,
+          primaryVariant: null,
+          secondary: null,
+          secondaryVariant: null,
+          surface: null,
+          background: null,
+          error: null,
+          onPrimary: null,
+          onSecondary: null,
+          onSurface: null,
+          onBackground: null,
+          onError: null,
+          brightness: null
+      ),
+      scaffoldBackgroundColor: Colors.white,
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: Colors.white,
+        selectedIconTheme: IconThemeData(
+            color: Color.fromRGBO(19, 164, 245, 1)
+        ),
+        unselectedIconTheme: IconThemeData(
+            color: Color.fromRGBO(196, 196, 196, 1),
+        ),
+        //unselectedItemColor: Color.fromRGBO(55, 60, 65, 1)
+      ),
+      dialogTheme: DialogTheme(
+        backgroundColor: Color.fromRGBO(50, 50, 55, 1),
+        titleTextStyle: TextStyle(
+          color: Color.fromRGBO(203, 214, 218, 1),
+        ),
+      ),
+    );
+
+    tSombre = new ThemeData(
+      textTheme: TextTheme(
+        headline1: TextStyle(
+          color: Color.fromRGBO(203, 214, 218, 1),
+        ),
+        headline2: TextStyle(
+          color: Color.fromRGBO(50, 50, 55, 1),
+        ),
+      ),
+      scaffoldBackgroundColor: Color.fromRGBO(50, 50, 55, 1),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        backgroundColor: Color.fromRGBO(33, 34, 38, 1),
+        selectedIconTheme: IconThemeData(
+          color: Color.fromRGBO(63, 109, 231, 1)
+        ),
+          unselectedIconTheme: IconThemeData(
+            color: Color.fromRGBO(54, 57, 64, 1)
+          ),
+        //unselectedItemColor: Color.fromRGBO(55, 60, 65, 1)
+      ),
+      dialogTheme: DialogTheme(
+        backgroundColor: Color.fromRGBO(50, 50, 55, 1),
+        titleTextStyle: TextStyle(
+          color: Color.fromRGBO(203, 214, 218, 1),
+        ),
+      ),
+    );
   }
 
   String changerTheme(BuildContext context) {

@@ -71,6 +71,7 @@ class _PageControlesState extends State<PageControles>
   // ignore: must_call_super
   Widget build(BuildContext context) {
     return RefreshIndicator(
+      color: Theme.of(context).backgroundColor,
       key: _refreshIndicatorKey,
       onRefresh: _handleRefresh,
       child: SingleChildScrollView(
@@ -88,7 +89,8 @@ class _PageControlesState extends State<PageControles>
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w600,
-                  ),
+                    color: Theme.of(context).textTheme.headline1.color,
+                  )
                 ),
               ),
               Container(
@@ -175,16 +177,22 @@ class _SemaineCcUIState extends State<SemaineCcUI> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  color: Colors.grey[300],
+                  color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
                 ),
                 child: Row(
                   children: [
                     AnimatedCrossFade(
                       duration: const Duration(milliseconds: 100),
-                      firstChild: Icon(Icons.keyboard_arrow_right),
+                      firstChild: Icon(
+                          Icons.keyboard_arrow_right,
+                          color: Theme.of(context).textTheme.headline1.color,
+                      ),
                       secondChild: Transform.rotate(
                         angle: 90 * pi / 180,
-                        child: Icon(Icons.keyboard_arrow_right),
+                        child: Icon(
+                          Icons.keyboard_arrow_right,
+                          color: Theme.of(context).textTheme.headline1.color,
+                        ),
                       ),
                       crossFadeState: _droppedDown == true
                           ? CrossFadeState.showSecond
@@ -195,7 +203,7 @@ class _SemaineCcUIState extends State<SemaineCcUI> {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 19,
-                        color: Colors.black,
+                        color: Theme.of(context).textTheme.headline1.color,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -247,8 +255,8 @@ class _ControleUIState extends State<ControleUI> {
           height: PageControles.taileCc,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            color:
-            widget.cc.matiere.couleur().withOpacity(PageControles.opaciteCours),
+            color: widget.cc.matiere.couleur().withOpacity(PageControles.opaciteCours),
+
             //color:Colors.grey[400]
           ),
           child: InkWell(
@@ -273,7 +281,7 @@ class _ControleUIState extends State<ControleUI> {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 18,
-                        color: Colors.black,
+                        color: Theme.of(context).textTheme.headline2.color,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -282,7 +290,7 @@ class _ControleUIState extends State<ControleUI> {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 15,
-                        color: Colors.black,
+                        color: Theme.of(context).textTheme.headline2.color,
                       ),
                     ),
                   ],
@@ -295,7 +303,7 @@ class _ControleUIState extends State<ControleUI> {
                       widget.cc.nomJour(),
                       textAlign: TextAlign.left,
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Theme.of(context).textTheme.headline2.color,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -304,7 +312,7 @@ class _ControleUIState extends State<ControleUI> {
                       widget.cc.debut.toString() + " - " + widget.cc.fin.toString(),
                       textAlign: TextAlign.right,
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Theme.of(context).textTheme.headline2.color,
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                       ),
@@ -348,7 +356,7 @@ class _PopupControleUIState extends State<PopupControleUI> {
         margin: EdgeInsets.symmetric(vertical: 0,horizontal: 0),
         padding: EdgeInsets.all(00),
         decoration: new BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).dialogTheme.backgroundColor,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
@@ -379,6 +387,7 @@ class _PopupControleUIState extends State<PopupControleUI> {
                 style: TextStyle(
                   fontSize: 23.0,
                   fontWeight: FontWeight.w700,
+                  color: widget.cc.matiere.couleur(),
                 ),
               ),
             ),
@@ -392,14 +401,14 @@ class _PopupControleUIState extends State<PopupControleUI> {
               ),
               width: double.infinity,
               decoration: new BoxDecoration(
-
               ),
               child: Text(
                 widget.cc.dateComplete(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20.0,
-                  fontWeight: FontWeight.w500
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).textTheme.headline1.color,
                 ),
               ),
             ),
@@ -408,14 +417,13 @@ class _PopupControleUIState extends State<PopupControleUI> {
               padding: EdgeInsets.symmetric(vertical: 2,horizontal: 20),
               width: double.infinity,
               decoration: new BoxDecoration(
-
               ),
               child: Text(
                 widget.cc.lieu.toString(),
                 style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black45
+                    color: Theme.of(context).textTheme.headline1.color,
                 ),
               ),
             ),
@@ -424,15 +432,14 @@ class _PopupControleUIState extends State<PopupControleUI> {
               padding: EdgeInsets.symmetric(vertical: 2,horizontal: 20),
               width: double.infinity,
               decoration: new BoxDecoration(
-
               ),
               child: Text(
                 widget.cc.debut.toString() + " - " + widget.cc.fin.toString(),
                 textAlign: TextAlign.right,
                 style: TextStyle(
-                  color: Colors.black,
+                color: Theme.of(context).textTheme.headline1.color,
                   fontSize: 15,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w600
                 ),
               ),
             ),
@@ -447,14 +454,14 @@ class _PopupControleUIState extends State<PopupControleUI> {
               ),
               width: double.infinity,
               decoration: new BoxDecoration(
-
               ),
               child: Text(
                 widget.cc.enseignant.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16.0,
-                  fontWeight: FontWeight.w700
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).textTheme.headline1.color,
                 ),
               ),
             ),
