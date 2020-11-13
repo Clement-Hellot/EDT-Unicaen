@@ -72,21 +72,6 @@ class AppTheme {
           color: Colors.white,
         ),
       ),
-      colorScheme: ColorScheme(
-          primary: null,
-          primaryVariant: null,
-          secondary: null,
-          secondaryVariant: null,
-          surface: null,
-          background: null,
-          error: null,
-          onPrimary: null,
-          onSecondary: null,
-          onSurface: null,
-          onBackground: null,
-          onError: null,
-          brightness: null
-      ),
       scaffoldBackgroundColor: Colors.white,
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Colors.white,
@@ -96,7 +81,6 @@ class AppTheme {
         unselectedIconTheme: IconThemeData(
             color: Color.fromRGBO(196, 196, 196, 1),
         ),
-        //unselectedItemColor: Color.fromRGBO(55, 60, 65, 1)
       ),
       dialogTheme: DialogTheme(
         backgroundColor: Color.fromRGBO(50, 50, 55, 1),
@@ -121,10 +105,9 @@ class AppTheme {
         selectedIconTheme: IconThemeData(
           color: Color.fromRGBO(63, 109, 231, 1)
         ),
-          unselectedIconTheme: IconThemeData(
+        unselectedIconTheme: IconThemeData(
             color: Color.fromRGBO(54, 57, 64, 1)
           ),
-        //unselectedItemColor: Color.fromRGBO(55, 60, 65, 1)
       ),
       dialogTheme: DialogTheme(
         backgroundColor: Color.fromRGBO(50, 50, 55, 1),
