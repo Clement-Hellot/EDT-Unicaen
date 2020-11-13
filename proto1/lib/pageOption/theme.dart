@@ -59,7 +59,7 @@ class AppTheme {
     //Constructeur : retourne l'instance du singleton
     return _instance;
   }
-
+ 
   AppTheme._internal() {
     //"Vrai" constructeur (initialise l'appli sur le thème de l'utilisateur
     etatTheme = EtatTheme.CLAIR;
