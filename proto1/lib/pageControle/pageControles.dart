@@ -346,9 +346,9 @@ class _PopupControleUIState extends State<PopupControleUI> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
 
-        borderRadius: BorderRadius.circular(30),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
       ),
       backgroundColor: Colors.transparent,
       child: Container(
@@ -423,7 +423,7 @@ class _PopupControleUIState extends State<PopupControleUI> {
                 style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w500,
-                    color: Theme.of(context).textTheme.headline1.color,
+                    color: Theme.of(context).textTheme.headline2.color,
                 ),
               ),
             ),

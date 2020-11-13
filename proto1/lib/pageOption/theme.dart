@@ -59,7 +59,7 @@ class AppTheme {
     //Constructeur : retourne l'instance du singleton
     return _instance;
   }
- 
+
   AppTheme._internal() {
     //"Vrai" constructeur (initialise l'appli sur le thème de l'utilisateur
     etatTheme = EtatTheme.CLAIR;
@@ -84,9 +84,9 @@ class AppTheme {
         ),
       ),
       dialogTheme: DialogTheme(
-        backgroundColor: Color.fromRGBO(50, 50, 55, 1),
+        backgroundColor: Colors.white,
         titleTextStyle: TextStyle(
-          color: Color.fromRGBO(203, 214, 218, 1),
+          color: Color.fromRGBO(50, 50, 55, 1),
         ),
       ),
     );

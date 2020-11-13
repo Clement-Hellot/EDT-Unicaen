@@ -165,6 +165,7 @@ class _JourneeUIState extends State<JourneeUI> {
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w400,
+            color: Theme.of(context).textTheme.headline1.color,
           ),
           textAlign: TextAlign.center,
         ),
