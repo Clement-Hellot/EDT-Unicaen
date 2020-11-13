@@ -124,18 +124,29 @@ class AppTheme {
     //Applique le thème actuellement choisi
     switch (etatTheme) {
       case EtatTheme.CLAIR:
-        print('Clair');
+        print('Sombre');
         themeCourant = tSombre;
         etatTheme = EtatTheme.SOMBRE;
         DynamicTheme.of(context).setBrightness(Brightness.dark);
-        return "Sombre";
+        return 'Sombre';
 
       case EtatTheme.SOMBRE:
-        print('Sombre');
+        print('Clair');
         themeCourant = tClair;
         etatTheme = EtatTheme.CLAIR;
         DynamicTheme.of(context).setBrightness(Brightness.light);
         return 'Clair';
+    }
+  }
+
+  void updateTheme(Brightness brightness) {
+    if(brightness == Brightness.light) {
+      themeCourant = tClair;
+      etatTheme = EtatTheme.CLAIR;
+    }
+    else {
+      themeCourant = tSombre;
+      etatTheme = EtatTheme.SOMBRE;
     }
   }
 

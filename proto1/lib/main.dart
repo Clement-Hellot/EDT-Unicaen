@@ -35,6 +35,8 @@ class MyApp extends StatelessWidget {
         break;
     }
 
+    AppTheme().updateTheme(bright);
+
     print('Thème : ' + bright.toString());
 
     return new DynamicTheme(
