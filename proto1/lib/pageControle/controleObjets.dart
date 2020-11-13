@@ -17,7 +17,7 @@ class Controle {
   }
 
   String nomJour() {
-    if(this.debut.date.year == 2000) {
+    if(this.debut.heures==0) {//pas de jour, cc venant du wiki
       return "";
     }
     switch (this.debut.date.weekday) {
@@ -77,6 +77,42 @@ class Controle {
 
     }
   }
+
+  String duree() {
+    int minutes = this.debut.date.difference(this.fin.date).inMinutes.abs();
+    int heures = ((minutes - minutes%60)/60).round();
+    minutes = (minutes%60);
+    String retour = "";
+    if(heures!=0) {
+      if(minutes==0)
+        retour += heures.toString()+"H";
+      else
+        retour += heures.toString()+"H "+minutes.toString();
+    } else {
+      retour += minutes.toString()+" min";
+    }
+    return retour;
+  }
+
+  String getStringDuree(){
+    if(this.debut.heures!=0)
+      return "durée: " + this.duree();
+    else
+      return "";
+  }
+  String getStringPlageHoraire(){
+    if(this.debut.heures!=0)
+      return this.debut.toString() + " - " + this.fin.toString();
+    else
+      return "";
+  }
+  String getStringInfoTemps(){
+    if(this.debut.heures!=0)
+      return this.debut.toString() + " (" + this.duree()+")";
+    else
+      return "";
+  }
+
 }
 
 class SemaineCc {
@@ -113,6 +149,16 @@ class SemaineCc {
       this.cours.add(c);
     }
     */
+  }
+
+  int estAvant(SemaineCc semaine) {
+    if(this.semaineDate.end.isBefore(semaine.semaineDate.end))
+      return 1;
+    else if(this.semaineDate.end.isAfter(semaine.semaineDate.end)) {
+      return -1;
+    } else {
+      return 0;
+    }
   }
 
   String nom() {
@@ -166,7 +212,7 @@ class SemaineCc {
 
   @override
   String toString() {
-    String retour = "semaine :\n";
+    String retour = "semaine du "+this.nom()+":\n";
     for (Controle cc in this.controles) {
       retour += cc.toString() + "\n";
     }
