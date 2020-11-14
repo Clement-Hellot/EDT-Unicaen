@@ -127,14 +127,23 @@ class Mail {
 }
 
 class MailClient {
+  static MailClient client;
   String username = '21905584';
   String password = '!Clement76440!';
   ImapClient imapClient;
   String imapHost = "imap.unicaen.fr";
   int port = 993;
 
-  MailClient() {
-    imapClient = new ImapClient();
+  MailClient._() {
+    this.imapClient = new ImapClient();
+  }
+
+  static MailClient getMailClient() {
+    if (client != null) {
+      return client;
+    } else {
+      return MailClient._();
+    }
   }
 
   Future<bool> connect() async {
@@ -146,7 +155,7 @@ class MailClient {
       return true;
   }
 
-  Future<List> getFolderList() async {
+  Future<List<String>> getFolderList() async {
     List<ImapListResponse> folder = await imapClient.list('*');
     List liste = [];
     folder.forEach((element) {
@@ -354,7 +363,7 @@ class MailClient {
   Future<String> getText(ImapFolder folder, int number) async {
     String out;
     Map<int, Map<String, dynamic>> txt =
-        await folder.fetch(["BODY[2]"], messageIds: [number]);
+        await folder.fetch(["BODY[1]"], messageIds: [number]);
 
     var res = txt.values.last.values.last;
 
@@ -367,9 +376,13 @@ class MailClient {
     } else {
       out = res;
     }
-    ;
+    // convertB64(res);
 
     return out;
+  }
+
+  void convertB64(String txt) {
+    print(txt);
   }
 
   Future<List<JourneeMail>> getMail(String folderName) async {
@@ -378,7 +391,7 @@ class MailClient {
     List<JourneeMail> liste = new List();
     DateTime lastDate;
 
-    for (int i = size; i > size - 10; i--) {
+    for (int i = size - 15; i > size - 16; i--) {
       int mailNumber = i;
       String from, objet, html;
       DateTime date;

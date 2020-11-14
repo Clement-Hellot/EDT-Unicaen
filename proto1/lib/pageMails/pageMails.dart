@@ -1,8 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import './MailsObjet.dart';
 import 'package:flutter_html/flutter_html.dart';
+
+import './MailsObjet.dart';
 
 class PageMails extends StatefulWidget {
   @override
@@ -30,6 +31,13 @@ class _PageMailsState extends State<PageMails> {
               ),
             ),
           ),
+          IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {
+                build(context) {
+                  ListMailbox();
+                }
+              }),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
@@ -280,34 +288,78 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
                   border: Border.all(
                       color: Colors.black, style: BorderStyle.solid, width: 1)),
               child: Text(widget.mail.getObjet())),
-          Container(
+          Flexible(
+              child: SingleChildScrollView(
+            child: Container(
               decoration: BoxDecoration(
                   border: Border.all(
                       color: Colors.black, style: BorderStyle.solid, width: 1)),
-              child: Html(data: widget.mail.getText())),
+              child: Html(
+                data: widget.mail.getText(),
+              ),
+            ),
+          ))
         ],
       ),
     );
   }
 }
 
-void abc() async {
-  MailClient client = new MailClient();
-  bool connected = await client.connect();
+class ListMailbox extends StatefulWidget {
+  @override
+  _ListMailboxState createState() => _ListMailboxState();
+}
 
-  if (connected) {
-    List<JourneeMail> mails = await client.getMail('inbox');
+class _ListMailboxState extends State<ListMailbox> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: FutureBuilder(
+            future: getMailbox(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                List<String> mailbox = snapshot.data;
+                return ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (_, index) => Column(
+                    children: <Widget>[
+                      Text(mailbox[index]),
+                    ],
+                  ),
+                );
+              }
+            }));
   }
 }
 
+void abc() async {
+  MailClient client = await connect();
+  List<JourneeMail> mails = await client.getMail('inbox');
+}
+
 Future<List> exec() async {
-  MailClient client = new MailClient();
+  MailClient client = await connect();
+
+  List<JourneeMail> mails = await client.getMail('inbox');
+  return mails;
+}
+
+Future<MailClient> connect() async {
+  MailClient client = MailClient.getMailClient();
   bool connected = await client.connect();
 
   if (connected) {
-    List<JourneeMail> mails = await client.getMail('inbox');
-    return mails;
+    return client;
   } else {
-    return List<JourneeMail>();
+    throw new ErrorDescription("Login Failed");
   }
+}
+
+Future<List> getMailbox() async {
+  MailClient client = await connect();
+
+  List<String> mailbox = await client.getFolderList();
+  return mailbox;
 }
