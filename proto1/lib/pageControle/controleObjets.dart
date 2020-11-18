@@ -45,7 +45,15 @@ class Controle {
   }
 
   String dateComplete() {
-    return this.nomJour().substring(0,1).toUpperCase()+this.nomJour().substring(1) +" "+ this.debut.date.day.toString() +" "+  this.getMonthName();
+    if(debut.date.hour==0)
+      return "";
+
+    String retour = this.nomJour().substring(0,1).toUpperCase();
+    retour += this.nomJour().substring(1) +" ";
+    retour += this.debut.date.day.toString() +" ";
+    retour += this.getMonthName();
+
+    return retour;
   }
 
   String getMonthName(){
