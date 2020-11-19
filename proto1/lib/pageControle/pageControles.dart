@@ -586,7 +586,7 @@ List<SemaineCc> sortData(var code, List<SemaineCc> semaineCc) {
     String duree;
 
     var col = item.children;
-    if (col.length > 1 &&
+    if (col.length >= 4 &&
         col[1].innerHtml.length > 3 &&
         col[1].innerHtml.contains("-")) {
       semaine = col[0].innerHtml;
@@ -603,6 +603,8 @@ List<SemaineCc> sortData(var code, List<SemaineCc> semaineCc) {
           int.parse(semaine.substring(12, 14)));
 
       finSemaine = finSemaine.add(Duration(days:7-finSemaine.weekday));
+      if(finSemaine.isBefore(DateTime.now()))
+        continue;//semaine passé donc pas besoin de l'ajouter à la liste
 
       if(debutSemaine.weekday!=1) {//si ce n'est pas un dimanche
         throw Exception("mauvais jour de debut de semaine ("+debutSemaine.weekday.toString()+" au lieu de 1");
@@ -614,18 +616,41 @@ List<SemaineCc> sortData(var code, List<SemaineCc> semaineCc) {
         throw Exception("mauvaise longueur de semaine ("+finSemaine.difference(debutSemaine).inDays.toString()+" au lieu de 6 (decalage de 1 car 7-1)");
       }
 
+      if(col.length!=4){
+
+      }
+
       var tabInfo = col[1].innerHtml.split("<br>");
       var tabLieu = col[2].innerHtml.split("<br>");
       var tabDuree = col[3].innerHtml.split("<br>");
 
       for (int i = 0; i < tabInfo.length; i++) {
         var info = tabInfo[i].split("-");
-        lieu = removeColorDecoration(tabLieu[i].toString().trim());
-        duree = removeColorDecoration(tabDuree[i].toString().trim());
 
-        matiere = removeColorDecoration(info[1]).trim();
-        enseignant = removeColorDecoration(info[2].trim());
-        epreuve = removeColorDecoration(info[3].trim());
+        if(i>=tabDuree.length)
+          lieu = removeColorDecoration(tabLieu[tabLieu.length-1].toString().trim());
+        else
+          lieu = removeColorDecoration(tabLieu[i].toString().trim());
+
+        if(i>=tabDuree.length)
+          duree = removeColorDecoration(tabDuree[tabDuree.length-1].toString().trim());
+        else
+          duree = removeColorDecoration(tabDuree[i].toString().trim());
+
+        if(info.length>=1)
+          matiere = removeColorDecoration(info[1]).trim();
+        else
+          matiere = "NC";
+
+        if(info.length>=2)
+          enseignant = removeColorDecoration(info[2].trim());
+        else
+          enseignant = "NC";
+
+        if(info.length>=3)
+          epreuve = removeColorDecoration(info[3].trim());
+        else
+          epreuve = "NC";
 
         if (duree.contains("-")) {
           DateTime dureeDateTime = null;
