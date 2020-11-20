@@ -168,24 +168,12 @@ class MailClient {
     return this.imapClient;
   }
 
-  String quoPriToUtf(String txt) {
-    String mode = "";
-    if (txt.contains("=?UTF-8?Q?")) {
-      txt = txt.replaceAll("=?UTF-8?Q?", "");
-      mode = "Q";
-    } else if (txt.contains("=?ISO-8859-1?Q?")) {
-      txt = txt.replaceAll("=?ISO-8859-1?Q?", "");
-      mode = "Q";
-    } else if (txt.contains("=?UTF-8?B?")) {
-      txt = txt.replaceAll("=?UTF-8?B?", "");
-      mode = "B";
-    } else if (txt.contains("=?utf-8?B?")) {
-      txt = txt.replaceAll("=?utf-8?B?", "");
-      mode = "B";
-    } else {
-      txt = txt.replaceAll("=?utf-8?Q?", "");
-      mode = "Q";
-    }
+  String quoPriToUtf(String txt, String mode) {
+    txt = txt.replaceAll("=?UTF-8?Q?", "");
+    txt = txt.replaceAll("=?ISO-8859-1?Q?", "");
+    txt = txt.replaceAll("=?UTF-8?B?", "");
+    txt = txt.replaceAll("=?utf-8?B?", "");
+    txt = txt.replaceAll("=?utf-8?Q?", "");
 
     txt = txt.replaceAll("?=", "");
     if (txt.contains("_")) {
@@ -211,24 +199,64 @@ class MailClient {
             txt += String.fromCharCode(b64[i]);
         }
       });
-    } else {
-      while (txt.contains("=")) {
-        int i = txt.indexOf("=");
-        int hexa = 0x00;
-        String search = txt[i + 1] + txt[i + 2];
-        if (txt[i + 1].codeUnits.first != 13) {
-          hexa = hex.decode(search).first;
-        } else
-          txt = txt.replaceRange(i, i, "");
+    } else if (txt != null && mode == 'Q') {
+      int partCount = 0;
+      while (txt.contains('=')) {
+        int index = txt.indexOf('=');
+        //Remplace les = suivi de \n ou \r
+        if (txt.codeUnits[index + 1] == 13 || txt.codeUnits[index + 1] == 10) {
+          txt = txt.replaceRange(index, index + 1, '');
+          //Skip le cas =C3=\n
+        } else if (index + 4 < txt.length &&
+            txt.codeUnits[index + 4] == 13 &&
+            txt[index + 3] == '=') {
+          txt = txt.replaceRange(index + 3, index + 4, '');
 
-        if (i + 5 < txt.length && search == "C3") {
-          String search2 = txt[i + 4] + txt[i + 5];
-          int hexa2 = hex.decode(search2).first;
+          //skip le mauvais decoupage d'un mail content-type ect
+        } else if (txt.codeUnitAt(index - 1) == 45 &&
+            txt.codeUnitAt(index - 2) == 45) {
+          if (partCount != 1) {
+            List a = txt.split('\n');
+            a.removeRange(0, 3);
+            txt = a.join('\n');
+            partCount++;
+          } else {
+            txt = txt.substring(0, index - 1);
+          }
 
+          // gere =C3=A0
+        } else if (index + 3 < txt.length && txt[index + 3] == '=') {
+          String one = txt[index + 1] + txt[index + 2];
+          String two = txt[index + 4] + txt[index + 5];
+
+          int hexOne = hex.decode(one).first;
+          int hexTwo = hex.decode(two).first;
           txt = txt.replaceAll(
-              "=" + search + "=" + search2, utf8.decode([hexa, hexa2]));
+              "=" + one + "=" + two, utf8.decode([hexOne, hexTwo]));
+          //gere
+        } else if (txt[index + 1] + txt[index + 2] == "C3" &&
+            txt.codeUnits[index + 3] == 13) {
+          String one = txt[index + 1] + txt[index + 2];
+          String two = txt[index + 6] + txt[index + 7];
+
+          int hexOne = hex.decode(one).first;
+          int hexTwo = hex.decode(two).first;
+          txt = txt.replaceAll(
+              "=" + one + "\r\n=" + two, utf8.decode([hexOne, hexTwo]));
+          //gere =A9
         } else {
-          txt = txt.replaceAll("=" + search, String.fromCharCode(hexa));
+          String one = txt[index + 1] + txt[index + 2];
+
+          if (one == '0m') {
+            txt = txt.replaceAll("=0A", '');
+            continue;
+          }
+          try {
+            int hexOne = hex.decode(one).first;
+            txt = txt.replaceAll("=" + one, String.fromCharCode(hexOne));
+          } catch (Error) {
+            txt = txt.replaceRange(index, index + 1, '');
+          }
         }
       }
     }
@@ -276,10 +304,10 @@ class MailClient {
 
     if (res.contains("=?utf-8?Q?") ||
         res.contains("=?UTF-8?Q?") ||
-        res.contains("=?ISO-8859-1?Q?") ||
-        res.contains("=?UTF-8?B?") ||
-        res.contains("=?utf-8?B?")) {
-      res = quoPriToUtf(res);
+        res.contains("=?ISO-8859-1?Q?")) {
+      res = quoPriToUtf(res, 'Q');
+    } else if (res.contains("=?UTF-8?B?") || res.contains("=?utf-8?B?")) {
+      res = quoPriToUtf(res, 'B');
     }
 
     return res;
@@ -362,23 +390,47 @@ class MailClient {
 
   Future<String> getText(ImapFolder folder, int number) async {
     String out;
+    var res;
     Map<int, Map<String, dynamic>> txt =
         await folder.fetch(["BODY[1]"], messageIds: [number]);
 
-    var res = txt.values.last.values.last;
+    Map<int, Map<String, dynamic>> html =
+        await folder.fetch(["BODY[2]"], messageIds: [number]);
+
+    if (html.values.last.values.last.contains('<html>') ||
+        html.values.last.values.last.contains('<p>')) {
+      res = html.values.last.values.last;
+
+      res = quoPriHtml(res);
+    } else {
+      res = txt.values.last.values.last;
+      if (res is String) res = quoPriToUtf(res, 'Q');
+    }
 
     if (res == null) {
       out = "";
     } else if (res is! String) {
-      print(res);
-      print(res.runtimeType);
       out = res[0];
     } else {
       out = res;
     }
+    // out = quoPriToUtf(out, 'Q');
     // convertB64(res);
 
     return out;
+  }
+
+  String quoPriHtml(String txt) {
+    List<String> liste = txt.split('<html>');
+    liste.removeAt(0);
+    txt = liste.join('<html>');
+    liste = txt.split('>');
+    for (int i = 0; i < liste.length; i++) {
+      List<String> content = liste[i].split('<');
+      content[0] = quoPriToUtf(content[0], 'Q');
+      liste[i] = content.join('<');
+    }
+    return liste.join('>');
   }
 
   void convertB64(String txt) {
@@ -391,7 +443,7 @@ class MailClient {
     List<JourneeMail> liste = new List();
     DateTime lastDate;
 
-    for (int i = size - 15; i > size - 16; i--) {
+    for (int i = size; i - 2 > size - 7; i--) {
       int mailNumber = i;
       String from, objet, html;
       DateTime date;
