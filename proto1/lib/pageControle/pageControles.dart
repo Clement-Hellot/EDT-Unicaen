@@ -80,31 +80,35 @@ class _PageControlesState extends State<PageControles>
       color: Theme.of(context).backgroundColor,
       key: _refreshIndicatorKey,
       onRefresh: _handleRefresh,
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Align(
-          alignment: Alignment.center,
-          child: Column(
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 50, bottom: 30),
-                width: double.infinity,
-                child: Text(
-                  'Contrôles',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w600,
-                    color: Theme.of(context).textTheme.headline1.color,
-                  )
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+
+          child: Align(
+            alignment: Alignment.center,
+            child: Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 50, bottom: 30),
+                  width: double.infinity,
+                  child: Text(
+                      'Contrôles',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).textTheme.headline1.color,
+                      )
+                  ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.all(5),
-                width: double.infinity,
-                child: _semaineCcWrapper,
-              ),
-            ],
+                Container(
+                  margin: EdgeInsets.all(5),
+                  width: double.infinity,
+                  child: _semaineCcWrapper,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -180,7 +184,7 @@ class _SemaineCcUIState extends State<SemaineCcUI> {
             child: InkWell(
               borderRadius: BorderRadius.all(Radius.circular(5)),
               child: Ink(
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.all(7),
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -209,7 +213,7 @@ class _SemaineCcUIState extends State<SemaineCcUI> {
                       widget.semaineCc.nom(),
                       textAlign: TextAlign.left,
                       style: TextStyle(
-                        fontSize: 19,
+                        fontSize: 20,
                         color: Theme.of(context).textTheme.headline1.color,
                         fontWeight: FontWeight.w500,
                       ),
@@ -346,9 +350,10 @@ class PopupControleUI extends StatefulWidget {
 
 //un controle
 class _PopupControleUIState extends State<PopupControleUI> {
-
+  Container _popupWindow;
   void initState() {
-    //super.initState(); si on le met ça enlève un warning
+    super.initState(); //si on le met ça enlève un warning
+
   }
   @override
   Widget build(BuildContext context) {
@@ -410,10 +415,10 @@ class _PopupControleUIState extends State<PopupControleUI> {
               decoration: new BoxDecoration(
               ),
               child: Text(
-                widget.cc.dateComplete(),
-                textAlign: TextAlign.center,
+                widget.cc.popupInfos(),
+                textAlign: TextAlign.left,
                 style: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 18.0,
                   fontWeight: FontWeight.w500,
                   color: Theme.of(context).textTheme.headline1.color,
                 ),
@@ -421,61 +426,8 @@ class _PopupControleUIState extends State<PopupControleUI> {
             ),
             Container(
               alignment: Alignment.centerLeft,
-              padding: EdgeInsets.symmetric(vertical: 2,horizontal: 20),
-              width: double.infinity,
-              decoration: new BoxDecoration(
-              ),
-              child: Text(
-                widget.cc.lieu.toString(),
-                style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).textTheme.headline1.color,
-                ),
-              ),
-            ),
-            Container(
-              alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(
-                top: 30,
-                right:20,
-                left: 20,
-                bottom: 2,
-              ),
-              width: double.infinity,
-              decoration: new BoxDecoration(
-              ),
-              child: Text(
-
-                widget.cc.getStringPlageHoraire(),
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                color: Theme.of(context).textTheme.headline1.color,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600
-                ),
-              ),
-            ),
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.symmetric(vertical: 2,horizontal: 20),
-              width: double.infinity,
-              decoration: new BoxDecoration(
-              ),
-              child: Text(
-                widget.cc.getStringDuree(),
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                    color: Theme.of(context).textTheme.headline1.color,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600
-                ),
-              ),
-            ),
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.only(
-                top: 60,
+                top: 10,
                 right:20,
                 left:20,
                 bottom:20,
@@ -494,7 +446,16 @@ class _PopupControleUIState extends State<PopupControleUI> {
               ),
             ),
 
-            /*
+
+          ],
+        ),
+      ),
+    );
+
+  }
+}
+
+/*
             Align(
               alignment: Alignment.center,
               child: InkWell(
@@ -521,15 +482,6 @@ class _PopupControleUIState extends State<PopupControleUI> {
                 ),
               ),
             ),*/
-          ],
-        ),
-      ),
-    );
-
-  }
-}
-
-
 
 
 
@@ -743,6 +695,7 @@ String cleanUp(String str) {
 }
 
 String removeColorDecoration(String chaine) {
+  /*
   RegExp regExp1 = new RegExp(
     r"^<",
     caseSensitive: false,
@@ -759,7 +712,14 @@ String removeColorDecoration(String chaine) {
   if (regExp2.hasMatch(chaine)) {
     chaine = chaine.substring(0, chaine.indexOf("<"));
   }
-  return chaine;
+  return chaine;*/
+  RegExp exp = RegExp(
+      r"<[^>]*>",
+      multiLine: true,
+      caseSensitive: true
+  );
+
+  return chaine.replaceAll(exp, '');
 }
 
 

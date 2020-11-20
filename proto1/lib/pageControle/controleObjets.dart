@@ -40,6 +40,19 @@ class Controle {
     }
   }
 
+  String popupInfos(){
+    String retour = "";
+    if(dateComplete()!="")
+      retour += dateComplete()+"\n";
+    if(lieu.toString()!="")
+      retour += lieu.toString()+"\n\n";
+    if(getStringPlageHoraire()!="")
+      retour += getStringPlageHoraire()+"\n";
+    if(getStringDuree()!="")
+      retour += getStringDuree()+"\n\n";
+    return retour;
+  }
+
   void display() {
     print(this.toString());
   }
@@ -172,15 +185,14 @@ class SemaineCc {
   String nom() {
     if (this.semaineDate.start.isBefore(DateTime.now()) &&
         this.semaineDate.end.isAfter(DateTime.now())) return "cette semaine";
-    /*
-    print("difference :"+this.semaineDate.end.difference(DateTime.now()).inDays.toString());
 
-    //if(this.semaineDate.start.isBefore(DateTime.now()) && this.semaineDate.end.difference(DateTime.now()).inDays.toString()))
+    //print("difference :"+this.semaineDate.end.difference(DateTime.now()).inDays.toString());
+
+    if(this.semaineDate.end.difference(DateTime.now()).inDays > 7 && this.semaineDate.end.difference(DateTime.now()).inDays < 15 && this.semaineDate.end.isAfter(DateTime.now()))
       return "semaine prochaine";
+    else if(this.semaineDate.end.difference(DateTime.now()).inDays > 14 && this.semaineDate.end.difference(DateTime.now()).inDays < 22 && this.semaineDate.end.isAfter(DateTime.now()))
+      return "dans 2 semaines";
 
-    if(this.semaineDate.start.isBefore(DateTime.now()) && DateTime.now().day - this.semaineDate.end.day > 7)
-      return "dans 15 jours";
-      */
 
     return "du " +
         this.semaineDate.start.day.toString() +" "+ getMonthName(this.semaineDate.start.month.toInt()).substring(0,3) +
