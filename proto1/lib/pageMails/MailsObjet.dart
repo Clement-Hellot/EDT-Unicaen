@@ -213,7 +213,8 @@ class MailClient {
           txt = txt.replaceRange(index + 3, index + 4, '');
 
           //skip le mauvais decoupage d'un mail content-type ect
-        } else if (txt.codeUnitAt(index - 1) == 45 &&
+        } else if (index - 2 > 0 &&
+            txt.codeUnitAt(index - 1) == 45 &&
             txt.codeUnitAt(index - 2) == 45) {
           if (partCount != 1) {
             List a = txt.split('\n');
@@ -315,13 +316,16 @@ class MailClient {
 
   Future<String> getFrom(ImapFolder folder, int number) async {
     String res;
+    List liste = new List();
     Map<int, Map<String, dynamic>> from = await folder
         .fetch(["BODY.PEEK[HEADER.FIELDS (FROM)]"], messageIds: [number]);
     res = from.values.last.values.last;
     if (res.split(":")[0] == null) {
       print(res);
     }
-    res = res.split(":")[1];
+    liste = res.split(":");
+    liste.removeAt(0);
+    res = liste.join(":");
     res = formateString(res);
 
     return res;
@@ -443,7 +447,7 @@ class MailClient {
     List<JourneeMail> liste = new List();
     DateTime lastDate;
 
-    for (int i = size; i - 2 > size - 7; i--) {
+    for (int i = size; i > size - 10; i--) {
       int mailNumber = i;
       String from, objet, html;
       DateTime date;
