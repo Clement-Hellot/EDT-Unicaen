@@ -41,10 +41,15 @@ class Controle {
   }
 
   String popupInfos(){
-    String retour = dateComplete()+"\n";
-    retour += lieu.toString()+"\n\n";
-    retour += getStringPlageHoraire()+"\n";
-    retour += getStringDuree();
+    String retour = "";
+    if(dateComplete()!="")
+      retour += dateComplete()+"\n";
+    if(lieu.toString()!="")
+      retour += lieu.toString()+"\n\n";
+    if(getStringPlageHoraire()!="")
+      retour += getStringPlageHoraire()+"\n";
+    if(getStringDuree()!="")
+      retour += getStringDuree()+"\n\n";
     return retour;
   }
 

@@ -414,7 +414,7 @@ class _PopupControleUIState extends State<PopupControleUI> {
                 widget.cc.popupInfos(),
                 textAlign: TextAlign.left,
                 style: TextStyle(
-                  fontSize: 16.0,
+                  fontSize: 18.0,
                   fontWeight: FontWeight.w500,
                   color: Theme.of(context).textTheme.headline1.color,
                 ),
@@ -423,7 +423,7 @@ class _PopupControleUIState extends State<PopupControleUI> {
             Container(
               alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(
-                top: 40,
+                top: 10,
                 right:20,
                 left:20,
                 bottom:20,
