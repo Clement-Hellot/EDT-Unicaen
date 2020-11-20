@@ -40,6 +40,14 @@ class Controle {
     }
   }
 
+  String popupInfos(){
+    String retour = dateComplete()+"\n";
+    retour += lieu.toString()+"\n\n";
+    retour += getStringPlageHoraire()+"\n";
+    retour += getStringDuree();
+    return retour;
+  }
+
   void display() {
     print(this.toString());
   }

@@ -346,9 +346,10 @@ class PopupControleUI extends StatefulWidget {
 
 //un controle
 class _PopupControleUIState extends State<PopupControleUI> {
-
+  Container _popupWindow;
   void initState() {
-    //super.initState(); si on le met ça enlève un warning
+    super.initState(); //si on le met ça enlève un warning
+
   }
   @override
   Widget build(BuildContext context) {
@@ -410,10 +411,10 @@ class _PopupControleUIState extends State<PopupControleUI> {
               decoration: new BoxDecoration(
               ),
               child: Text(
-                widget.cc.dateComplete(),
-                textAlign: TextAlign.center,
+                widget.cc.popupInfos(),
+                textAlign: TextAlign.left,
                 style: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                   color: Theme.of(context).textTheme.headline1.color,
                 ),
@@ -421,61 +422,8 @@ class _PopupControleUIState extends State<PopupControleUI> {
             ),
             Container(
               alignment: Alignment.centerLeft,
-              padding: EdgeInsets.symmetric(vertical: 2,horizontal: 20),
-              width: double.infinity,
-              decoration: new BoxDecoration(
-              ),
-              child: Text(
-                widget.cc.lieu.toString(),
-                style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).textTheme.headline1.color,
-                ),
-              ),
-            ),
-            Container(
-              alignment: Alignment.centerLeft,
               padding: EdgeInsets.only(
-                top: 30,
-                right:20,
-                left: 20,
-                bottom: 2,
-              ),
-              width: double.infinity,
-              decoration: new BoxDecoration(
-              ),
-              child: Text(
-
-                widget.cc.getStringPlageHoraire(),
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                color: Theme.of(context).textTheme.headline1.color,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600
-                ),
-              ),
-            ),
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.symmetric(vertical: 2,horizontal: 20),
-              width: double.infinity,
-              decoration: new BoxDecoration(
-              ),
-              child: Text(
-                widget.cc.getStringDuree(),
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                    color: Theme.of(context).textTheme.headline1.color,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600
-                ),
-              ),
-            ),
-            Container(
-              alignment: Alignment.centerLeft,
-              padding: EdgeInsets.only(
-                top: 60,
+                top: 40,
                 right:20,
                 left:20,
                 bottom:20,
@@ -494,7 +442,16 @@ class _PopupControleUIState extends State<PopupControleUI> {
               ),
             ),
 
-            /*
+
+          ],
+        ),
+      ),
+    );
+
+  }
+}
+
+/*
             Align(
               alignment: Alignment.center,
               child: InkWell(
@@ -521,15 +478,6 @@ class _PopupControleUIState extends State<PopupControleUI> {
                 ),
               ),
             ),*/
-          ],
-        ),
-      ),
-    );
-
-  }
-}
-
-
 
 
 
