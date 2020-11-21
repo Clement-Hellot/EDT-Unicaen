@@ -118,6 +118,47 @@ class Mail {
     return time;
   }
 
+  String getDatetime() {
+    String month = getMonthName().substring(0, 3);
+    month = month.replaceRange(0, 1, month.substring(0, 1).toUpperCase());
+    return date.day.toString() +
+        ' ' +
+        month +
+        ' ' +
+        date.year.toString() +
+        '\n' +
+        getTime();
+  }
+
+  String getMonthName() {
+    switch (this.date.month) {
+      case 1:
+        return "janvier";
+      case 2:
+        return "fevrier";
+      case 3:
+        return "avril";
+      case 4:
+        return "mars";
+      case 5:
+        return "mai";
+      case 6:
+        return "juin";
+      case 7:
+        return "juillet";
+      case 8:
+        return "aout";
+      case 9:
+        return "septembre";
+      case 10:
+        return "octobre";
+      case 11:
+        return "novembre";
+      case 12:
+        return "decembre";
+    }
+  }
+
   void aff() {
     print(nomFrom);
     print(objet);
@@ -155,13 +196,10 @@ class MailClient {
       return true;
   }
 
-  Future<List<String>> getFolderList() async {
+  Future<List> getFolderList() async {
     List<ImapListResponse> folder = await imapClient.list('*');
-    List liste = [];
-    folder.forEach((element) {
-      liste.add(element.name);
-    });
-    return liste;
+
+    return folder;
   }
 
   ImapClient getClient() {
@@ -175,7 +213,15 @@ class MailClient {
     txt = txt.replaceAll("=?utf-8?B?", "");
     txt = txt.replaceAll("=?utf-8?Q?", "");
 
-    txt = txt.replaceAll("?=", "");
+    while (txt.contains("?=")) {
+      int index = txt.indexOf('?=');
+      if (index + 2 < txt.length) {
+        txt = txt.replaceRange(index, index + 5, '');
+      } else {
+        txt = txt.replaceAll("?=", "");
+      }
+    }
+
     if (txt.contains("_")) {
       txt = txt.replaceAll("_", " ");
     }
@@ -447,7 +493,7 @@ class MailClient {
     List<JourneeMail> liste = new List();
     DateTime lastDate;
 
-    for (int i = size; i > size - 10; i--) {
+    for (int i = size; i > size - 2; i--) {
       int mailNumber = i;
       String from, objet, html;
       DateTime date;
