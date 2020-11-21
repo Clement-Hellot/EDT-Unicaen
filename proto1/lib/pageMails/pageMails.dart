@@ -22,7 +22,19 @@ class _PageMailsState extends State<PageMails> {
               return Scaffold(
                 drawer: ListMailbox(snapshot.data),
                 appBar: AppBar(
-                  title: Text("Mail"),
+                  iconTheme: IconThemeData(color: Colors.black),
+                  centerTitle: true,
+                  title: Text(
+                    "Mail",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 45,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  backgroundColor: Colors.white,
+                  elevation: 0,
                 ),
                 body: Column(
                   children: <Widget>[
@@ -32,7 +44,7 @@ class _PageMailsState extends State<PageMails> {
                         IconButton(
                           icon: Icon(Icons.search),
                           tooltip: 'Search',
-                          onPressed: abc,
+                          onPressed: () {},
                         ),
                         IconButton(
                           icon: Icon(Icons.refresh),
@@ -359,26 +371,28 @@ class _ListMailboxState extends State<ListMailbox> {
   Widget build(BuildContext context) {
     print(widget.mailbox);
     return Drawer(
-      child: ListView(
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.lightBlue[600],
-            ),
-            padding: EdgeInsets.all(5),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.account_circle,
-                ),
-                Text(
-                  '21905584',
-                  style: TextStyle(fontSize: 25),
-                ),
-              ],
-            ),
+        child: Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.lightBlue[600],
           ),
-          ListView.builder(
+          padding: EdgeInsets.only(top: 40, left: 5, bottom: 20),
+          margin: EdgeInsets.zero,
+          child: Row(
+            children: [
+              Icon(
+                Icons.account_circle,
+              ),
+              Text(
+                ' 21905584',
+                style: TextStyle(fontSize: 25),
+              ),
+            ],
+          ),
+        ),
+        Flexible(
+          child: ListView.builder(
             shrinkWrap: true,
             itemCount: widget.mailbox.length,
             itemBuilder: (_, index) => Column(
@@ -388,32 +402,12 @@ class _ListMailboxState extends State<ListMailbox> {
                     leading: Icon(Icons.mail),
                     title: Text(widget.mailbox[index]),
                   ),
-                  ListTile(
-                    leading: Icon(Icons.settings),
-                    title: Text('Settings'),
-                    onTap: () => {Navigator.of(context).pop()},
-                  ),
                 ]),
           ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Settings'),
-            onTap: () => {Navigator.of(context).pop()},
-          ),
-          ListTile(
-            leading: Icon(Icons.exit_to_app),
-            title: Text('Logout'),
-            onTap: () => {Navigator.of(context).pop()},
-          ),
-        ],
-      ),
-    );
+        )
+      ],
+    ));
   }
-}
-
-void abc() async {
-  MailClient client = await connect();
-  List<JourneeMail> mails = await client.getMail('inbox');
 }
 
 Future<List> exec() async {
@@ -440,8 +434,28 @@ Future<List> getMailbox() async {
   List folders = await client.getFolderList();
   List<String> mailbox = new List();
   folders.forEach((element) {
-    mailbox.add(element.name);
-  });
+    String name = element.name.toLowerCase();
+    name = name.replaceRange(0, 1, name.substring(0, 1).toUpperCase());
 
+    switch (name.toLowerCase()) {
+      case 'inbox':
+        name = 'Boite de reception';
+        break;
+      case 'send':
+        name = 'Envoyé';
+        break;
+      case 'junk':
+        name = 'Spam';
+        break;
+      case 'drafts':
+        name = 'Brouillons';
+        break;
+      case 'trash':
+        name = 'Corbeille';
+        break;
+    }
+    mailbox.add(name);
+  });
+  mailbox.sort((a, b) => a.codeUnitAt(0) - b.codeUnitAt(0));
   return mailbox;
 }
