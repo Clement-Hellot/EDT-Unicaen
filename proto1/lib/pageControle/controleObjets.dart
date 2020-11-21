@@ -186,11 +186,11 @@ class SemaineCc {
     if (this.semaineDate.start.isBefore(DateTime.now()) &&
         this.semaineDate.end.isAfter(DateTime.now())) return "cette semaine";
 
-    //print("difference :"+this.semaineDate.end.difference(DateTime.now()).inDays.toString());
+    print("difference :"+this.semaineDate.end.difference(DateTime.now()).inDays.toString());
 
-    if(this.semaineDate.end.difference(DateTime.now()).inDays > 7 && this.semaineDate.end.difference(DateTime.now()).inDays < 15 && this.semaineDate.end.isAfter(DateTime.now()))
+    if(this.semaineDate.end.difference(DateTime.now()).inDays >= 6 && this.semaineDate.end.difference(DateTime.now()).inDays < 13 && this.semaineDate.end.isAfter(DateTime.now()))
       return "semaine prochaine";
-    else if(this.semaineDate.end.difference(DateTime.now()).inDays > 14 && this.semaineDate.end.difference(DateTime.now()).inDays < 22 && this.semaineDate.end.isAfter(DateTime.now()))
+    else if(this.semaineDate.end.difference(DateTime.now()).inDays >= 13 && this.semaineDate.end.difference(DateTime.now()).inDays < 20 && this.semaineDate.end.isAfter(DateTime.now()))
       return "dans 2 semaines";
 
 
