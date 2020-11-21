@@ -15,37 +15,51 @@ class _PageMailsState extends State<PageMails> {
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.center,
-      child: Scaffold(
-        drawer: ListMailbox(),
-        appBar: AppBar(
-          title: Text("Mail"),
-        ),
-        body: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.search),
-                  tooltip: 'Search',
-                  onPressed: abc,
+      child: FutureBuilder(
+          future: getMailbox(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Scaffold(
+                drawer: ListMailbox(snapshot.data),
+                appBar: AppBar(
+                  title: Text("Mail"),
                 ),
-                IconButton(
-                  icon: Icon(Icons.refresh),
-                  tooltip: 'Refresh',
-                  onPressed: () {},
+                body: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.search),
+                          tooltip: 'Search',
+                          onPressed: abc,
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.refresh),
+                          tooltip: 'Refresh',
+                          onPressed: () {},
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.settings),
+                          tooltip: 'Settings',
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                    Expanded(child: DailyMail()),
+                  ],
                 ),
-                IconButton(
-                  icon: Icon(Icons.settings),
-                  tooltip: 'Settings',
-                  onPressed: () {},
+                floatingActionButton: FloatingActionButton(
+                  onPressed: null,
+                  child: Icon(Icons.create),
                 ),
-              ],
-            ),
-            Expanded(child: DailyMail()),
-          ],
-        ),
-      ),
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
     );
   }
 }
@@ -335,42 +349,52 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
 class ListMailbox extends StatefulWidget {
   @override
   _ListMailboxState createState() => _ListMailboxState();
+
+  ListMailbox(this.mailbox);
+  final List<String> mailbox;
 }
 
 class _ListMailboxState extends State<ListMailbox> {
   @override
   Widget build(BuildContext context) {
+    print(widget.mailbox);
     return Drawer(
       child: ListView(
-        padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
-            child: Text(
-              'Side menu',
-              style: TextStyle(color: Colors.white, fontSize: 25),
-            ),
+          Container(
             decoration: BoxDecoration(
-              color: Colors.green,
+              color: Colors.lightBlue[600],
+            ),
+            padding: EdgeInsets.all(5),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.account_circle,
+                ),
+                Text(
+                  '21905584',
+                  style: TextStyle(fontSize: 25),
+                ),
+              ],
             ),
           ),
-          FutureBuilder(
-              future: getMailbox(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  List<String> mailbox = snapshot.data;
-                  return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (_, index) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          ListTile(
-                            leading: Icon(Icons.mail),
-                            title: Text(mailbox[index]),
-                          )
-                        ]),
-                  );
-                }
-              }),
+          ListView.builder(
+            shrinkWrap: true,
+            itemCount: widget.mailbox.length,
+            itemBuilder: (_, index) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  ListTile(
+                    leading: Icon(Icons.mail),
+                    title: Text(widget.mailbox[index]),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.settings),
+                    title: Text('Settings'),
+                    onTap: () => {Navigator.of(context).pop()},
+                  ),
+                ]),
+          ),
           ListTile(
             leading: Icon(Icons.settings),
             title: Text('Settings'),
