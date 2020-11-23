@@ -62,7 +62,13 @@ class _PageMailsState extends State<PageMails> {
                   ],
                 ),
                 floatingActionButton: FloatingActionButton(
-                  onPressed: null,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => WriteMail("", "", "")),
+                    );
+                  },
                   child: Icon(Icons.create),
                 ),
               );
@@ -349,6 +355,112 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
                 child: Html(
                   data: widget.mail.getText(),
                 ),
+              ),
+            ))
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WriteMail extends StatefulWidget {
+  @override
+  _WriteMailState createState() => _WriteMailState();
+
+  WriteMail(this.username, this.sujet, this.body);
+
+  String username = "";
+  String sujet = "";
+  String body = "";
+}
+
+class _WriteMailState extends State<WriteMail> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Mail"),
+        actions: [
+          Icon(Icons.send),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Colors.black,
+                        style: BorderStyle.solid,
+                        width: 1)),
+                child: Row(
+                  children: [
+                    Text("A :"),
+                    Expanded(
+                      child: TextField(
+                        controller:
+                            TextEditingController(text: widget.username),
+                      ),
+                    ),
+                  ],
+                )),
+            Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Colors.black,
+                        style: BorderStyle.solid,
+                        width: 1)),
+                child: Row(
+                  children: [
+                    Text("CC :"),
+                    Expanded(
+                      child: TextField(),
+                    ),
+                  ],
+                )),
+            Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Colors.black,
+                        style: BorderStyle.solid,
+                        width: 1)),
+                child: Row(
+                  children: [
+                    Text("Sujet :"),
+                    Expanded(
+                      child: TextField(
+                        controller: TextEditingController(text: widget.sujet),
+                      ),
+                    ),
+                  ],
+                )),
+            Container(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                    border: Border.all(
+                        color: Colors.black,
+                        style: BorderStyle.solid,
+                        width: 1)),
+                child: Row(
+                  children: [
+                    Text("Pieces jointes"),
+                    Expanded(
+                      child: TextField(),
+                    ),
+                  ],
+                )),
+            Expanded(
+                child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              child: TextField(
+                expands: true,
+                maxLines: null,
+                minLines: null,
+                controller: TextEditingController(text: widget.body),
               ),
             ))
           ],

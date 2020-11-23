@@ -493,7 +493,7 @@ class MailClient {
     List<JourneeMail> liste = new List();
     DateTime lastDate;
 
-    for (int i = size; i > size - 2; i--) {
+    for (int i = size; i > size - 1; i--) {
       int mailNumber = i;
       String from, objet, html;
       DateTime date;
