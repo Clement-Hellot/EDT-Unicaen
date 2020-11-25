@@ -551,7 +551,6 @@ Future<List> getMailbox() async {
 
   List folders = await client.getFolderList();
   List<String> mailbox = new List();
-  print(folders);
   folders.forEach((element) {
     String name = element.name.toLowerCase();
     name = name.replaceRange(0, 1, name.substring(0, 1).toUpperCase());

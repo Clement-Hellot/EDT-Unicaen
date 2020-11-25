@@ -83,8 +83,7 @@ class Mail {
   void setEmailFrom(String from) {
     if (from.contains("<") && from.indexOf("<") != 1) {
       emailFrom = from.split("<")[1];
-      emailFrom = emailFrom.replaceRange(
-          emailFrom.length - 2, emailFrom.length - 1, "");
+      emailFrom = '<' + emailFrom;
     } else {
       emailFrom = from;
     }
@@ -251,7 +250,7 @@ class MailClient {
         int index = txt.indexOf('=');
         //Remplace les = suivi de \n ou \r
         if (txt.codeUnits[index + 1] == 13 || txt.codeUnits[index + 1] == 10) {
-          txt = txt.replaceRange(index, index + 1, '');
+          txt = txt.replaceRange(index, index + 3, '');
           //Skip le cas =C3=\n
         } else if (index + 4 < txt.length &&
             txt.codeUnits[index + 4] == 13 &&
@@ -373,7 +372,6 @@ class MailClient {
     liste.removeAt(0);
     res = liste.join(":");
     res = formateString(res);
-
     return res;
   }
 
