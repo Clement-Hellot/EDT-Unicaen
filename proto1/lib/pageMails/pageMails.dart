@@ -5,79 +5,134 @@ import 'package:flutter_html/flutter_html.dart';
 
 import './MailsObjet.dart';
 
+String currentMailbox = "inbox";
+
 class PageMails extends StatefulWidget {
   @override
   _PageMailsState createState() => _PageMailsState();
 }
 
 class _PageMailsState extends State<PageMails> {
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.center,
-      child: FutureBuilder(
-          future: getMailbox(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Scaffold(
-                drawer: ListMailbox(snapshot.data),
-                appBar: AppBar(
-                  iconTheme: IconThemeData(color: Colors.black),
-                  centerTitle: true,
-                  title: Text(
-                    "Mail",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 45,
-                      fontWeight: FontWeight.w400,
+      child: RefreshIndicator(
+        child: FutureBuilder(
+            future: getMailbox(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Scaffold(
+                  key: _scaffoldKey,
+                  drawer: Drawer(
+                      child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.lightBlue[600],
+                        ),
+                        padding: EdgeInsets.only(top: 40, left: 5, bottom: 20),
+                        margin: EdgeInsets.zero,
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.account_circle,
+                            ),
+                            Text(
+                              ' 21905584',
+                              style: TextStyle(fontSize: 25),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Flexible(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (_, index) => Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                ListTile(
+                                  leading: Icon(Icons.mail),
+                                  title: Text(snapshot.data[index]),
+                                  onTap: () {
+                                    setState(() {
+                                      currentMailbox =
+                                          getMailboxName(snapshot.data[index]);
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ]),
+                        ),
+                      )
+                    ],
+                  )),
+                  appBar: AppBar(
+                    iconTheme: IconThemeData(color: Colors.black),
+                    centerTitle: true,
+                    title: Text(
+                      "Mail",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 45,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
+                    backgroundColor: Colors.white,
+                    elevation: 0,
                   ),
-                  backgroundColor: Colors.white,
-                  elevation: 0,
-                ),
-                body: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        IconButton(
-                          icon: Icon(Icons.search),
-                          tooltip: 'Search',
-                          onPressed: () {},
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.refresh),
-                          tooltip: 'Refresh',
-                          onPressed: () {},
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.settings),
-                          tooltip: 'Settings',
-                          onPressed: () {},
-                        ),
-                      ],
-                    ),
-                    Expanded(child: DailyMail()),
-                  ],
-                ),
-                floatingActionButton: FloatingActionButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => WriteMail("", "", "")),
-                    );
-                  },
-                  child: Icon(Icons.create),
-                ),
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }),
+                  body: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          //Text(currentMailbox),
+                          IconButton(
+                            icon: Icon(Icons.search),
+                            tooltip: 'Search',
+                            onPressed: () {},
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.settings),
+                            tooltip: 'Settings',
+                            onPressed: () {
+                              setState(() {
+                                currentMailbox = 'inbox';
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      Expanded(child: DailyMail(currentMailbox)),
+                    ],
+                  ),
+                  floatingActionButton: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WriteMail("", "", "")),
+                      );
+                    },
+                    child: Icon(Icons.create),
+                  ),
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }),
+        onRefresh: () {
+          setState(() {
+            currentMailbox = currentMailbox;
+          });
+          return Future.delayed(Duration(seconds: 2));
+        },
+      ),
     );
   }
 }
@@ -85,6 +140,8 @@ class _PageMailsState extends State<PageMails> {
 class DailyMail extends StatefulWidget {
   @override
   _DailyMailState createState() => _DailyMailState();
+  DailyMail(this.mailbox);
+  String mailbox;
 }
 
 class _DailyMailState extends State<DailyMail> {
@@ -93,7 +150,7 @@ class _DailyMailState extends State<DailyMail> {
     return Container(
       padding: EdgeInsets.only(top: 10),
       child: FutureBuilder(
-        future: exec(),
+        future: exec(widget.mailbox),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<JourneeMail> mail = snapshot.data;
@@ -470,62 +527,11 @@ class _WriteMailState extends State<WriteMail> {
   }
 }
 
-class ListMailbox extends StatefulWidget {
-  @override
-  _ListMailboxState createState() => _ListMailboxState();
-
-  ListMailbox(this.mailbox);
-  final List<String> mailbox;
-}
-
-class _ListMailboxState extends State<ListMailbox> {
-  @override
-  Widget build(BuildContext context) {
-    print(widget.mailbox);
-    return Drawer(
-        child: Column(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.lightBlue[600],
-          ),
-          padding: EdgeInsets.only(top: 40, left: 5, bottom: 20),
-          margin: EdgeInsets.zero,
-          child: Row(
-            children: [
-              Icon(
-                Icons.account_circle,
-              ),
-              Text(
-                ' 21905584',
-                style: TextStyle(fontSize: 25),
-              ),
-            ],
-          ),
-        ),
-        Flexible(
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: widget.mailbox.length,
-            itemBuilder: (_, index) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  ListTile(
-                    leading: Icon(Icons.mail),
-                    title: Text(widget.mailbox[index]),
-                  ),
-                ]),
-          ),
-        )
-      ],
-    ));
-  }
-}
-
-Future<List> exec() async {
+Future<List> exec(String mailbox) async {
   MailClient client = await connect();
+  print(mailbox);
 
-  List<JourneeMail> mails = await client.getMail('inbox');
+  List<JourneeMail> mails = await client.getMail(mailbox);
   return mails;
 }
 
@@ -545,6 +551,7 @@ Future<List> getMailbox() async {
 
   List folders = await client.getFolderList();
   List<String> mailbox = new List();
+  print(folders);
   folders.forEach((element) {
     String name = element.name.toLowerCase();
     name = name.replaceRange(0, 1, name.substring(0, 1).toUpperCase());
@@ -553,7 +560,7 @@ Future<List> getMailbox() async {
       case 'inbox':
         name = 'Boite de reception';
         break;
-      case 'send':
+      case 'sent':
         name = 'Envoyé';
         break;
       case 'junk':
@@ -563,11 +570,41 @@ Future<List> getMailbox() async {
         name = 'Brouillons';
         break;
       case 'trash':
-        name = 'Corbeille';
+        name = 'Corbeille PAS TOUCHER FAIT CRASH';
+        break;
+      case 'e-campus':
+        name = "PAS TOUCHER B64";
+        break;
+      case 'information':
+        name = "PAS TOUCHER UTF8";
+        break;
+      case 'projet':
+        name = "PAS TOUCHER B64";
         break;
     }
     mailbox.add(name);
   });
   mailbox.sort((a, b) => a.codeUnitAt(0) - b.codeUnitAt(0));
   return mailbox;
+}
+
+String getMailboxName(String name) {
+  switch (name) {
+    case 'Boite de reception':
+      name = 'inbox';
+      break;
+    case 'Envoyé':
+      name = 'sent';
+      break;
+    case 'Spam':
+      name = 'junk';
+      break;
+    case 'Brouillons':
+      name = 'drafts';
+      break;
+    case 'Corbeille PAS TOUCHER FAIT CRASH':
+      name = 'trash';
+      break;
+  }
+  return name;
 }

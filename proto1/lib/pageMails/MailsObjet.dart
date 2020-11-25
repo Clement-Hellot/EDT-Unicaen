@@ -447,8 +447,9 @@ class MailClient {
     Map<int, Map<String, dynamic>> html =
         await folder.fetch(["BODY[2]"], messageIds: [number]);
 
-    if (html.values.last.values.last.contains('<html>') ||
-        html.values.last.values.last.contains('<p>')) {
+    if (html.values.last.values.last != null &&
+        (html.values.last.values.last.contains('<html>') ||
+            html.values.last.values.last.contains('<p>'))) {
       res = html.values.last.values.last;
 
       res = quoPriHtml(res);
@@ -493,40 +494,42 @@ class MailClient {
     List<JourneeMail> liste = new List();
     DateTime lastDate;
 
-    for (int i = size; i > size - 1; i--) {
-      int mailNumber = i;
-      String from, objet, html;
-      DateTime date;
-      bool pj;
-      Mail mail;
-      List flags = new List();
-      JourneeMail journee;
+    if (size > 0) {
+      for (int i = size; i > size - 1; i--) {
+        int mailNumber = i;
+        String from, objet, html;
+        DateTime date;
+        bool pj;
+        Mail mail;
+        List flags = new List();
+        JourneeMail journee;
 
-      flags = await getFlags(folder, i);
-      pj = await hasPJ(folder, i);
-      from = await getFrom(folder, i);
-      objet = await getObjet(folder, i);
-      date = await getDate(folder, i);
-      html = await getText(folder, i);
+        flags = await getFlags(folder, i);
+        pj = await hasPJ(folder, i);
+        from = await getFrom(folder, i);
+        objet = await getObjet(folder, i);
+        date = await getDate(folder, i);
+        html = await getText(folder, i);
 
-      mail = new Mail(mailNumber, from, objet, date, pj, flags, html);
+        mail = new Mail(mailNumber, from, objet, date, pj, flags, html);
 
-      if (lastDate == null) {
+        if (lastDate == null) {
+          lastDate = date;
+          journee = new JourneeMail(lastDate);
+          journee.addMail(mail);
+          liste.add(journee);
+        } else if (lastDate.year != date.year ||
+            lastDate.month != date.month ||
+            lastDate.day != date.day) {
+          journee = new JourneeMail(date);
+          journee.addMail(mail);
+          liste.add(journee);
+        } else {
+          journee = liste.last;
+          journee.addMail(mail);
+        }
         lastDate = date;
-        journee = new JourneeMail(lastDate);
-        journee.addMail(mail);
-        liste.add(journee);
-      } else if (lastDate.year != date.year ||
-          lastDate.month != date.month ||
-          lastDate.day != date.day) {
-        journee = new JourneeMail(date);
-        journee.addMail(mail);
-        liste.add(journee);
-      } else {
-        journee = liste.last;
-        journee.addMail(mail);
       }
-      lastDate = date;
     }
     return liste;
   }
