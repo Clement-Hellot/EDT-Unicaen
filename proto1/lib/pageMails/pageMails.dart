@@ -53,16 +53,34 @@ class _PageMailsState extends State<PageMails> {
                           itemBuilder: (_, index) => Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                ListTile(
-                                  leading: Icon(Icons.mail),
-                                  title: Text(snapshot.data[index]),
-                                  onTap: () {
-                                    setState(() {
-                                      currentMailbox =
-                                          getMailboxName(snapshot.data[index]);
-                                    });
-                                    Navigator.pop(context);
-                                  },
+                                Container(
+                                  decoration: (() {
+                                    if (getMailboxName(snapshot.data[index]) ==
+                                        currentMailbox) {
+                                      return BoxDecoration(boxShadow: [
+                                        const BoxShadow(
+                                          color: Colors.black,
+                                        ),
+                                        const BoxShadow(
+                                          color: Colors.white,
+                                          spreadRadius: 0.0,
+                                          blurRadius: 0.1,
+                                        ),
+                                      ]);
+                                    }
+                                    ;
+                                  })(),
+                                  child: ListTile(
+                                    leading: Icon(Icons.mail),
+                                    title: Text(snapshot.data[index]),
+                                    onTap: () {
+                                      setState(() {
+                                        currentMailbox = getMailboxName(
+                                            snapshot.data[index]);
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                  ),
                                 ),
                               ]),
                         ),
@@ -152,7 +170,7 @@ class _DailyMailState extends State<DailyMail> {
       child: FutureBuilder(
         future: exec(widget.mailbox),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.hasData && snapshot.data.length != 0) {
             List<JourneeMail> mail = snapshot.data;
             return ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -169,6 +187,15 @@ class _DailyMailState extends State<DailyMail> {
                     ),
                     MailWidget(mail[index].getDailyMail())
                   ]),
+            );
+          } else if (snapshot.data.length == 0) {
+            return Container(
+              child: Column(
+                children: [
+                  Icon(Icons.mail_outlined),
+                  Text("Aucun mail dans ce dossier")
+                ],
+              ),
             );
           } else {
             return Center(
@@ -529,7 +556,6 @@ class _WriteMailState extends State<WriteMail> {
 
 Future<List> exec(String mailbox) async {
   MailClient client = await connect();
-  print(mailbox);
 
   List<JourneeMail> mails = await client.getMail(mailbox);
   return mails;
@@ -569,7 +595,7 @@ Future<List> getMailbox() async {
         name = 'Brouillons';
         break;
       case 'trash':
-        name = 'Corbeille PAS TOUCHER FAIT CRASH';
+        name = 'Corbeille';
         break;
       case 'e-campus':
         name = "PAS TOUCHER B64";
@@ -601,7 +627,7 @@ String getMailboxName(String name) {
     case 'Brouillons':
       name = 'drafts';
       break;
-    case 'Corbeille PAS TOUCHER FAIT CRASH':
+    case 'Corbeille':
       name = 'trash';
       break;
   }
