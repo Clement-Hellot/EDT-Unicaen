@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:imap_client/imap_client.dart';
 import 'package:convert/convert.dart';
 import 'package:flutter/material.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 
 class JourneeMail {
   DateTime date;
@@ -168,14 +170,22 @@ class Mail {
 
 class MailClient {
   static MailClient client;
+
   String username = '21905584';
   String password = '!Clement76440!';
+
   ImapClient imapClient;
   String imapHost = "imap.unicaen.fr";
-  int port = 993;
+  int imapPort = 993;
+
+  SmtpServer smtpClient;
+  String smtpHost = "smtp.unicaen.fr";
+  int smtpPort = 465;
 
   MailClient._() {
     this.imapClient = new ImapClient();
+    this.smtpClient = new SmtpServer(smtpHost,
+        port: smtpPort, ssl: true, username: username, password: password);
   }
 
   static MailClient getMailClient() {
@@ -187,12 +197,32 @@ class MailClient {
   }
 
   Future<bool> connect() async {
-    await imapClient.connect(imapHost, port, true);
+    await imapClient.connect(imapHost, imapPort, true);
     ImapTaggedResponse response = await imapClient.login(username, password);
     if (!getError(response))
       throw new ErrorDescription("Echec Connexion");
     else
       return true;
+  }
+
+  Future<void> sendMail(
+      String to, List<String> cc, String objet, String text) async {
+    Message msg = Message()
+      ..from = username + '@etu.unicaen.fr'
+      ..recipients.add(to)
+      ..ccRecipients.addAll(cc)
+      ..subject = objet
+      ..text = text;
+
+    try {
+      final sendReport = await send(msg, smtpClient);
+      print('Message sent: ' + sendReport.toString());
+    } on MailerException catch (e) {
+      print('Message not sent.');
+      for (var p in e.problems) {
+        print('Problem: ${p.code}: ${p.msg}');
+      }
+    }
   }
 
   Future<List> getFolderList() async {

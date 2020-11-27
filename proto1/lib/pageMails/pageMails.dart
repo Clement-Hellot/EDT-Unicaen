@@ -386,8 +386,31 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
         title: Text("Mail"),
         actions: [
           Icon(Icons.reply_all),
-          Icon(Icons.reply),
-          Icon(Icons.forward)
+          IconButton(
+              icon: Icon(Icons.reply),
+              iconSize: 40.0,
+              onPressed: () {
+                print('re');
+                String objet = "RE :" + widget.mail.getObjet();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => WriteMail(
+                          widget.mail.emailFrom, objet, widget.mail.getText())),
+                );
+              }),
+          IconButton(
+              icon: Icon(Icons.forward),
+              iconSize: 40.0,
+              onPressed: () {
+                String objet = "FWD :" + widget.mail.getObjet();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          WriteMail("", objet, widget.mail.getText())),
+                );
+              }),
         ],
       ),
       body: Center(
@@ -466,7 +489,13 @@ class _WriteMailState extends State<WriteMail> {
       appBar: AppBar(
         title: Text("Mail"),
         actions: [
-          Icon(Icons.send),
+          IconButton(
+            icon: Icon(Icons.send),
+            onPressed: () {
+              sendMsg(
+                  '21905584@etu.unicaen.fr', new List(), '123465', 'hey you');
+            },
+          ),
         ],
       ),
       body: Center(
@@ -570,6 +599,11 @@ Future<MailClient> connect() async {
   } else {
     throw new ErrorDescription("Login Failed");
   }
+}
+
+void sendMsg(String to, List<String> cc, String objet, String text) async {
+  MailClient client = await connect();
+  await client.sendMail(to, cc, objet, text);
 }
 
 Future<List> getMailbox() async {
