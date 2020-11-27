@@ -188,7 +188,7 @@ class _DailyMailState extends State<DailyMail> {
                     MailWidget(mail[index].getDailyMail())
                   ]),
             );
-          } else if (snapshot.data.length == 0) {
+          } else if (snapshot.hasData && snapshot.data.length == 0) {
             return Container(
               child: Column(
                 children: [
