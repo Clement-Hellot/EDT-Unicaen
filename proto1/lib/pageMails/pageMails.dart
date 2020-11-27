@@ -32,17 +32,24 @@ class _PageMailsState extends State<PageMails> {
                         decoration: BoxDecoration(
                           color: Colors.lightBlue[600],
                         ),
-                        padding: EdgeInsets.only(top: 40, left: 5, bottom: 20),
+                        padding: EdgeInsets.only(
+                            top: 40, left: 5, right: 5, bottom: 20),
                         margin: EdgeInsets.zero,
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(
-                              Icons.account_circle,
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.account_circle,
+                                ),
+                                Text(
+                                  ' 21905584',
+                                  style: TextStyle(fontSize: 25),
+                                ),
+                              ],
                             ),
-                            Text(
-                              ' 21905584',
-                              style: TextStyle(fontSize: 25),
-                            ),
+                            Icon(Icons.logout),
                           ],
                         ),
                       ),
@@ -107,11 +114,16 @@ class _PageMailsState extends State<PageMails> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          //Text(currentMailbox),
                           IconButton(
                             icon: Icon(Icons.search),
                             tooltip: 'Search',
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SearchPage()),
+                              );
+                            },
                           ),
                           IconButton(
                             icon: Icon(Icons.settings),
@@ -580,6 +592,51 @@ class _WriteMailState extends State<WriteMail> {
         ),
       ),
     );
+  }
+}
+
+class SearchPage extends StatefulWidget {
+  @override
+  _SearchPageState createState() => _SearchPageState();
+  String searchKeyword = "";
+  TextEditingController inputSearchController = new TextEditingController();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.grey[600],
+          elevation: 0,
+          title: TextField(
+              controller: widget.inputSearchController,
+              decoration: InputDecoration(
+                hintText: "Rechercher",
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.black,
+                ),
+              ),
+              onChanged: (text) {
+                setState(() {
+                  widget.searchKeyword = text;
+                });
+              }),
+        ),
+        body: SizedBox.expand(
+          child: Container(
+              decoration: BoxDecoration(color: Colors.grey[600]),
+              child: Column(
+                children: [
+                  if (widget.searchKeyword != "")
+                    FlatButton(
+                        onPressed: () {},
+                        child: Text(
+                            "Rechercher \"${widget.searchKeyword}\" dans les mails"))
+                ],
+              )),
+        ));
   }
 }
 
