@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:imap_client/imap_client.dart';
 import 'package:convert/convert.dart';
 import 'package:flutter/material.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 
 class JourneeMail {
   DateTime date;
@@ -83,8 +85,7 @@ class Mail {
   void setEmailFrom(String from) {
     if (from.contains("<") && from.indexOf("<") != 1) {
       emailFrom = from.split("<")[1];
-      emailFrom = emailFrom.replaceRange(
-          emailFrom.length - 2, emailFrom.length - 1, "");
+      emailFrom = '<' + emailFrom;
     } else {
       emailFrom = from;
     }
@@ -169,14 +170,22 @@ class Mail {
 
 class MailClient {
   static MailClient client;
+
   String username = '21905584';
   String password = '!Clement76440!';
+
   ImapClient imapClient;
   String imapHost = "imap.unicaen.fr";
-  int port = 993;
+  int imapPort = 993;
+
+  SmtpServer smtpClient;
+  String smtpHost = "smtp.unicaen.fr";
+  int smtpPort = 465;
 
   MailClient._() {
     this.imapClient = new ImapClient();
+    this.smtpClient = new SmtpServer(smtpHost,
+        port: smtpPort, ssl: true, username: username, password: password);
   }
 
   static MailClient getMailClient() {
@@ -188,12 +197,32 @@ class MailClient {
   }
 
   Future<bool> connect() async {
-    await imapClient.connect(imapHost, port, true);
+    await imapClient.connect(imapHost, imapPort, true);
     ImapTaggedResponse response = await imapClient.login(username, password);
     if (!getError(response))
       throw new ErrorDescription("Echec Connexion");
     else
       return true;
+  }
+
+  Future<void> sendMail(
+      String to, List<String> cc, String objet, String text) async {
+    Message msg = Message()
+      ..from = username + '@etu.unicaen.fr'
+      ..recipients.add(to)
+      ..ccRecipients.addAll(cc)
+      ..subject = objet
+      ..text = text;
+
+    try {
+      final sendReport = await send(msg, smtpClient);
+      print('Message sent: ' + sendReport.toString());
+    } on MailerException catch (e) {
+      print('Message not sent.');
+      for (var p in e.problems) {
+        print('Problem: ${p.code}: ${p.msg}');
+      }
+    }
   }
 
   Future<List> getFolderList() async {
@@ -251,7 +280,7 @@ class MailClient {
         int index = txt.indexOf('=');
         //Remplace les = suivi de \n ou \r
         if (txt.codeUnits[index + 1] == 13 || txt.codeUnits[index + 1] == 10) {
-          txt = txt.replaceRange(index, index + 1, '');
+          txt = txt.replaceRange(index, index + 3, '');
           //Skip le cas =C3=\n
         } else if (index + 4 < txt.length &&
             txt.codeUnits[index + 4] == 13 &&
@@ -373,7 +402,6 @@ class MailClient {
     liste.removeAt(0);
     res = liste.join(":");
     res = formateString(res);
-
     return res;
   }
 
@@ -447,8 +475,9 @@ class MailClient {
     Map<int, Map<String, dynamic>> html =
         await folder.fetch(["BODY[2]"], messageIds: [number]);
 
-    if (html.values.last.values.last.contains('<html>') ||
-        html.values.last.values.last.contains('<p>')) {
+    if (html.values.last.values.last != null &&
+        (html.values.last.values.last.contains('<html>') ||
+            html.values.last.values.last.contains('<p>'))) {
       res = html.values.last.values.last;
 
       res = quoPriHtml(res);
@@ -493,40 +522,42 @@ class MailClient {
     List<JourneeMail> liste = new List();
     DateTime lastDate;
 
-    for (int i = size; i > size - 1; i--) {
-      int mailNumber = i;
-      String from, objet, html;
-      DateTime date;
-      bool pj;
-      Mail mail;
-      List flags = new List();
-      JourneeMail journee;
+    if (size > 0) {
+      for (int i = size; i > size - 1; i--) {
+        int mailNumber = i;
+        String from, objet, html;
+        DateTime date;
+        bool pj;
+        Mail mail;
+        List flags = new List();
+        JourneeMail journee;
 
-      flags = await getFlags(folder, i);
-      pj = await hasPJ(folder, i);
-      from = await getFrom(folder, i);
-      objet = await getObjet(folder, i);
-      date = await getDate(folder, i);
-      html = await getText(folder, i);
+        flags = await getFlags(folder, i);
+        pj = await hasPJ(folder, i);
+        from = await getFrom(folder, i);
+        objet = await getObjet(folder, i);
+        date = await getDate(folder, i);
+        html = await getText(folder, i);
 
-      mail = new Mail(mailNumber, from, objet, date, pj, flags, html);
+        mail = new Mail(mailNumber, from, objet, date, pj, flags, html);
 
-      if (lastDate == null) {
+        if (lastDate == null) {
+          lastDate = date;
+          journee = new JourneeMail(lastDate);
+          journee.addMail(mail);
+          liste.add(journee);
+        } else if (lastDate.year != date.year ||
+            lastDate.month != date.month ||
+            lastDate.day != date.day) {
+          journee = new JourneeMail(date);
+          journee.addMail(mail);
+          liste.add(journee);
+        } else {
+          journee = liste.last;
+          journee.addMail(mail);
+        }
         lastDate = date;
-        journee = new JourneeMail(lastDate);
-        journee.addMail(mail);
-        liste.add(journee);
-      } else if (lastDate.year != date.year ||
-          lastDate.month != date.month ||
-          lastDate.day != date.day) {
-        journee = new JourneeMail(date);
-        journee.addMail(mail);
-        liste.add(journee);
-      } else {
-        journee = liste.last;
-        journee.addMail(mail);
       }
-      lastDate = date;
     }
     return liste;
   }

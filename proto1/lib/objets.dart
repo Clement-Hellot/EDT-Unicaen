@@ -48,6 +48,13 @@ class Horaire {
       return heureStr;
   }
 
+  @override
+  bool operator ==(Object other) {
+    return other is Horaire &&
+        other.heures == heures &&
+        other.minutes == minutes;
+  }
+
   static Horaire fromCalendar(String debut) {
     return Horaire.fromDate(DateTime.parse(debut).toLocal());
   }
