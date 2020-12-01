@@ -1,0 +1,6 @@
+https://ade.unicaen.fr/jsp/custom/modules/plannings/anonymous_cal.jsp?resources=1200&projectId=4&calType=ical&nbWeeks=2
+
+https://edtapi.maner.fr/v2/1
+
+TP 2.1 : 1204
+TP 2.2 : 1205
