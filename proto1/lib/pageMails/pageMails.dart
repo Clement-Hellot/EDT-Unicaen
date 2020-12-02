@@ -394,12 +394,17 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-       
+        backgroundColor: Colors.lightBlue,
         actions: [
-          Icon(Icons.reply_all),
+          IconButton(
+            icon: Icon(Icons.reply_all),
+            iconSize: 40.0,
+            color: Colors.white,
+          ),
           IconButton(
               icon: Icon(Icons.reply),
               iconSize: 40.0,
+              color: Colors.white,
               onPressed: () {
                 print('re');
                 String objet = "RE :" + widget.mail.getObjet();
@@ -413,6 +418,7 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
           IconButton(
               icon: Icon(Icons.forward),
               iconSize: 40.0,
+              color: Colors.white,
               onPressed: () {
                 String objet = "FWD :" + widget.mail.getObjet();
                 Navigator.push(
@@ -427,11 +433,13 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
       body: Center(
         child: Column(
           children: <Widget>[
-            Container(
-                decoration: BoxDecoration(
+            Container(      
+              padding: EdgeInsets.all(10.0),        
+                decoration: BoxDecoration(                 
                     border: Border.all(
                         color: Colors.black,
                         style: BorderStyle.solid,
+                        
                         width: 1)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -450,15 +458,16 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
                     ),
                   ],
                 )),
-            Container(
+            Container(  
+                
+                padding: EdgeInsets.all(2.0),                        
                 decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Colors.black,
-                        style: BorderStyle.solid,
-                        width: 1)),
+                  //borderRadius: BorderRadius.all(Radius.circular(4)),
+                  color: Colors.grey[300],  
+                ),
                 child: Row(
                   children: [
-                    Text(widget.mail.getNomFrom()),
+                    Text( widget.mail.getNomFrom()),
                     Text(widget.mail.getEmailFrom()),
                   ],
                 )),
