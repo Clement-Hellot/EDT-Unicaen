@@ -97,45 +97,40 @@ class _PageMailsState extends State<PageMails> {
                   appBar: AppBar(
                     iconTheme: IconThemeData(color: Colors.black),
                     centerTitle: true,
-                    title: Text(
-                      "Mail",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 45,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
                     backgroundColor: Colors.white,
                     elevation: 0,
+                    actions: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.search),
+                        tooltip: 'Search',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SearchPage()),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.settings),
+                        tooltip: 'Settings',
+                        onPressed: () {
+                          setState(() {
+                            currentMailbox = 'inbox';
+                          });
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.more_horiz), 
+                        color: Colors.black,   
+                        tooltip: 'Plus',
+
+
+                      ),
+                    ],
                   ),
                   body: Column(
                     children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(Icons.search),
-                            tooltip: 'Search',
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SearchPage()),
-                              );
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.settings),
-                            tooltip: 'Settings',
-                            onPressed: () {
-                              setState(() {
-                                currentMailbox = 'inbox';
-                              });
-                            },
-                          ),
-                        ],
-                      ),
                       Expanded(child: DailyMail(currentMailbox)),
                     ],
                   ),
@@ -266,6 +261,10 @@ class _Mail extends State<MailContent> {
         child: Dismissible(
           key: ValueKey(this),
           child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5.0),
+              color: Colors.grey[200],
+            ),
             margin: EdgeInsets.only(
               left: 10,
               top: 5,
@@ -395,7 +394,7 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Mail"),
+       
         actions: [
           Icon(Icons.reply_all),
           IconButton(
@@ -607,7 +606,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.grey[600],
+          backgroundColor: Colors.grey[400],
           elevation: 0,
           title: TextField(
               controller: widget.inputSearchController,
@@ -626,7 +625,7 @@ class _SearchPageState extends State<SearchPage> {
         ),
         body: SizedBox.expand(
           child: Container(
-              decoration: BoxDecoration(color: Colors.grey[600]),
+              decoration: BoxDecoration(color: Colors.white),
               child: Column(
                 children: [
                   if (widget.searchKeyword != "")
