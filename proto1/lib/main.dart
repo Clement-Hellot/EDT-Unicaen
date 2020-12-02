@@ -21,8 +21,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    switch(AppTheme().getCurrentTheme()) {
+    switch (AppTheme().getCurrentTheme()) {
       case 'Sombre':
         AppTheme().changerTheme(context);
         bright = Brightness.dark;
@@ -117,11 +116,11 @@ class _PagePrincipaleState extends State<PagePrincipale> {
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           boxShadow: [
-            /*BoxShadow(
-              color: Colors.grey.withOpacity(0.6),
-              spreadRadius: 2,
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 1.75,
               blurRadius: 11,
-            ),*/
+            ),
           ],
         ),
         child: BottomNavigationBar(
