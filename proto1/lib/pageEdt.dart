@@ -245,6 +245,22 @@ class _CoursUIState extends State<CoursUI> {
                   width: double.infinity,
                   child: Text(
                     shortString(
+                      widget.cours.module,
+                      longueur:
+                          (PageEDT.salleLongMax * widget.cours.duree).floor(),
+                    ),
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: const Color(0xff404040),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 3),
+                  width: double.infinity,
+                  child: Text(
+                    shortString(
                       widget.cours.salle,
                       longueur:
                           (PageEDT.salleLongMax * widget.cours.duree).floor(),

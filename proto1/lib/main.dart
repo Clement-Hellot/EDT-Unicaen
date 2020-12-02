@@ -133,11 +133,6 @@ class _PagePrincipaleState extends State<PagePrincipale> {
               activeIcon: Icon(
                 Icons.calendar_today,
               ),
-              // Un peu sale mais apparemment il faut un title
-              // Ce qui est assez bizarre parce que title est sensé
-              // être déprécié pour utiliser label à la place
-
-              //En mettant selectedFontSize à 0 dans la BottomNavigationBar (ligne 185) on peut laisser le label vide
               label: "",
             ),
             BottomNavigationBarItem(

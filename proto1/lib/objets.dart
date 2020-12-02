@@ -162,15 +162,22 @@ abstract class HeureCours {
 
 class Cours extends HeureCours {
   final Matiere matiere;
+  final String module;
   final String prof;
   final String salle;
 
-  Cours({this.matiere, this.prof, this.salle, Horaire debut, Horaire fin})
+  Cours(
+      {this.matiere,
+      this.module,
+      this.prof,
+      this.salle,
+      Horaire debut,
+      Horaire fin})
       : super(debut, fin);
 
   @override
   String toString() {
-    return "Cours de $matiere avec $prof en $salle de $debut à $fin";
+    return "Cours de $matiere ($module) avec $prof en $salle de $debut à $fin";
   }
 }
 

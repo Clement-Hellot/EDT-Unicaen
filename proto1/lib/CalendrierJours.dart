@@ -31,12 +31,15 @@ class CalendrierJours extends Calendrier {
   @override
   creerCours(String calEvent) {
     String matiere = "";
+    String module = "";
     String prof = "";
     String salle = "";
     String debut = "";
     String fin = "";
 
-    bool takeNext = false;
+    // Répare les lignes qui sont découpées parce qu'elles sont trop longues
+    // On les retrouve parce qu'elles commencent par un espace
+    calEvent = calEvent.replaceAll(RegExp("(\r\n )"), "");
 
     for (String prop in LineSplitter.split(calEvent)) {
       if (prop.contains("DTSTART")) {
@@ -54,13 +57,8 @@ class CalendrierJours extends Calendrier {
         List<String> morceaux = prop.split("\\n");
         if (morceaux.length > 4) {
           prof = morceaux[4];
-          if (morceaux.length <= 5) {
-            takeNext = true;
-          }
+          module = trimModule(morceaux[2]);
         }
-      } else if (takeNext && prop[0] == ' ' && !prop.contains("UID")) {
-        takeNext = false;
-        prof += prop.split("\\n")[0].substring(1);
       }
     }
 
@@ -69,6 +67,7 @@ class CalendrierJours extends Calendrier {
 
     cours.add(Cours(
       matiere: Matiere(matiere),
+      module: module,
       prof: prof,
       salle: salle,
       debut: Horaire.fromCalendar(debut),
@@ -116,6 +115,13 @@ class CalendrierJours extends Calendrier {
       return mat.substring(0, mat.length - 4);
     else
       return mat;
+  }
+
+  String trimModule(String str) {
+    return str
+        .replaceFirst(RegExp(r".*GRP[^ ]* "), '')
+        .replaceFirst(RegExp(r":.*"), '')
+        .trim();
   }
 
   String trimProf(String prof) {
