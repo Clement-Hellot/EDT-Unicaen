@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:theme_provider/theme_provider.dart';
 
 import 'main.dart';
 import 'Calendrier.dart';
@@ -165,11 +166,11 @@ class _JourneeUIState extends State<JourneeUI> {
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w400,
-            color: Theme.of(context).textTheme.headline1.color,
+            color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
           ),
           textAlign: TextAlign.center,
         ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: ThemeProvider.themeOf(context).data.scaffoldBackgroundColor,
         elevation: 0.0,
         toolbarHeight: 70.0,
         centerTitle: true,

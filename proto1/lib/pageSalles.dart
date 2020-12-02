@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:edt_mobile/Calendrier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:theme_provider/theme_provider.dart';
 import 'objets.dart';
 
 class PageSalles extends StatefulWidget {
@@ -26,6 +27,7 @@ class _PageSallesState extends State<PageSalles> {
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w700,
+                  color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
                 ),
               ),
             ),

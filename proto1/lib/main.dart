@@ -1,7 +1,6 @@
 import 'package:edt_mobile/pageOption/theme.dart';
 import 'package:flutter/material.dart';
 
-import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/scheduler.dart';
 import 'CalendrierJours.dart';
 import 'pageEdt.dart';
@@ -9,50 +8,58 @@ import 'pageMails/pageMails.dart';
 import 'pageSalles.dart';
 import 'pageControle/pageControles.dart';
 import 'pageOption/pageOptions.dart';
+import 'package:theme_provider/theme_provider.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-
-  Brightness bright;
-
   @override
   Widget build(BuildContext context) {
-    switch (AppTheme().getCurrentTheme()) {
-      case 'Sombre':
-        AppTheme().changerTheme(context);
-        bright = Brightness.dark;
-        break;
-      case 'Clair':
-        bright = Brightness.light;
-        break;
-      default:
-        bright = SchedulerBinding.instance.window.platformBrightness;
-        break;
-    }
-
-    AppTheme().updateTheme(bright);
-
-    print('Thème : ' + bright.toString());
-
-    return new DynamicTheme(
-        defaultBrightness: bright,
-        data: (brightness) => AppTheme().themeCourant,
-        themedWidgetBuilder: (context, theme) {
-          return MaterialApp(
-            title: 'EDT Info',
-            home: PagePrincipale(),
-            theme: theme,
-            debugShowCheckedModeBanner: false,
-          );
-        });
+    return ThemeProvider(
+      saveThemesOnChange: true,
+      loadThemeOnInit: false,
+      onInitCallback: (controller, previouslySavedThemeFuture) async {
+        String savedTheme = await previouslySavedThemeFuture;
+        if (savedTheme != null) {
+          controller.setTheme(savedTheme);
+        } else {
+          Brightness platformBrightness =
+              SchedulerBinding.instance.window.platformBrightness;
+          if (platformBrightness == Brightness.dark) {
+            controller.setTheme('dark');
+          } else {
+            controller.setTheme('light');
+          }
+          controller.forgetSavedTheme();
+        }
+      },
+      themes: <AppTheme>[
+        AppTheme(id: 'light',
+            data: ThemeApp().tClair,
+            description: "Un thème clair"),
+        AppTheme(id: 'dark',
+            data: ThemeApp().tSombre,
+            description: "Un thème sombre"),
+      ],
+      child: ThemeConsumer(
+        child: Builder(
+          builder: (themeContext) =>
+              MaterialApp(
+                theme: ThemeProvider
+                    .themeOf(themeContext)
+                    .data,
+                title: 'Material App',
+                home: PagePrincipale(),
+              ),
+        ),
+      ),
+    );
   }
 }
 
 class PagePrincipale extends StatefulWidget {
+
   PagePrincipale({Key key}) : super(key: key);
 
   static CalendrierJours calendrier;
@@ -98,6 +105,7 @@ class _PagePrincipaleState extends State<PagePrincipale> {
       );
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -164,13 +172,10 @@ class _PagePrincipaleState extends State<PagePrincipale> {
           ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
-          // backgroundColor: Colors.lightBlue[500],
           type: BottomNavigationBarType.fixed,
           backgroundColor:
-              Theme.of(context).bottomNavigationBarTheme.backgroundColor,
-          //Remplacé par le contenu de AppTheme pour avoir un mode sombre - Arthur
+          ThemeProvider.themeOf(context).data.bottomNavigationBarTheme.backgroundColor,
           iconSize: 30,
-          //selectedItemColor: Theme.of(context).accentColor, //Remplacé par ActiveIcon: Icon(...); pour pouvoir définir les couleurs des icones non séléctionnées à la main - Arthur
         ),
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:theme_provider/theme_provider.dart';
 import 'aPropos.dart';
 import 'theme.dart';
 
@@ -13,6 +14,7 @@ class _PageOptionsState extends State<PageOptions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ThemeProvider.controllerOf(context).theme.data.scaffoldBackgroundColor,
       body: Column(
         children: [
           Container(
@@ -31,6 +33,7 @@ class _PageOptionsState extends State<PageOptions> {
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w600,
+                  color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
                 ),
               ),
             ),
@@ -50,6 +53,7 @@ class _PageOptionsState extends State<PageOptions> {
               child: Text(
                 "Theme :",
                 style: TextStyle(
+                  color: ThemeProvider.controllerOf(context).theme.data.textTheme.headline1.color,
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                 ),

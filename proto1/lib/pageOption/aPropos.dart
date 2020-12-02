@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'package:theme_provider/theme_provider.dart';
 
 class BoutonAPropos extends StatelessWidget {
   BoutonAPropos({Key key}) : super(key: key);
@@ -45,23 +46,41 @@ class _popupAProposState extends State<popupAPropos> {
   @override
   Widget build(BuildContext context) {
     return new AlertDialog(
-      title: const Text('A propos'),
+      title: Text('A propos',
+        style: TextStyle(
+            color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+        ),
+      ),
       content: new Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(children: [
-              Text("Nom : "),
-              Text(_packageInfo.appName),
+              Text(
+                "Nom : ",
+                style: TextStyle(
+                  color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+                ),
+              ),
+              Text(_packageInfo.appName,
+                style: TextStyle(
+                  color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+                ),),
               Expanded(
                   child: Divider(
                 thickness: 2,
-                color: Colors.black,
+                color: ThemeProvider.themeOf(context).data.textTheme.headline6.color,
                 indent: 30,
                 endIndent: 30,
               )),
-              Text("Version : "),
-              Text(_packageInfo.version)
+              Text("Version : ",
+                style: TextStyle(
+                  color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+                ),),
+              Text(_packageInfo.version,
+                style: TextStyle(
+                  color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+                ),)
             ])
           ]),
       actions: <Widget>[
@@ -69,8 +88,13 @@ class _popupAProposState extends State<popupAPropos> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          textColor: Theme.of(context).primaryColor,
-          child: const Text('Fermer'),
+          textColor: ThemeProvider.themeOf(context).data.primaryColor,
+          child: Text(
+            'Fermer',
+            style: TextStyle(
+              color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+            ),
+          ),
         ),
       ],
     );

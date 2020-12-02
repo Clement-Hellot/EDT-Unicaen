@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
+import 'package:theme_provider/theme_provider.dart';
 import '../objets.dart';
 import 'controleObjets.dart';
 import '../PageEDT.dart';
@@ -77,7 +78,7 @@ class _PageControlesState extends State<PageControles>
   // ignore: must_call_super
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      color: Theme.of(context).backgroundColor,
+      color: ThemeProvider.themeOf(context).data.backgroundColor,
       key: _refreshIndicatorKey,
       onRefresh: _handleRefresh,
       child: Container(
@@ -98,7 +99,7 @@ class _PageControlesState extends State<PageControles>
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.w600,
-                        color: Theme.of(context).textTheme.headline1.color,
+                        color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
                       )
                   ),
                 ),
@@ -188,7 +189,6 @@ class _SemaineCcUIState extends State<SemaineCcUI> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  color: Theme.of(context).cardColor,
                 ),
                 child: Row(
                   children: [
@@ -196,13 +196,13 @@ class _SemaineCcUIState extends State<SemaineCcUI> {
                       duration: const Duration(milliseconds: 100),
                       firstChild: Icon(
                           Icons.keyboard_arrow_right,
-                          color: Theme.of(context).textTheme.headline1.color,
+                          color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
                       ),
                       secondChild: Transform.rotate(
                         angle: 90 * pi / 180,
                         child: Icon(
                           Icons.keyboard_arrow_right,
-                          color: Theme.of(context).textTheme.headline1.color,
+                          color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
                         ),
                       ),
                       crossFadeState: _droppedDown == true
@@ -214,7 +214,7 @@ class _SemaineCcUIState extends State<SemaineCcUI> {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 20,
-                        color: Theme.of(context).textTheme.headline1.color,
+                        color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -292,7 +292,7 @@ class _ControleUIState extends State<ControleUI> {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 18,
-                        color: Theme.of(context).textTheme.headline2.color,
+                        color: ThemeProvider.themeOf(context).data.textTheme.headline2.color,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -301,7 +301,7 @@ class _ControleUIState extends State<ControleUI> {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 15,
-                        color: Theme.of(context).textTheme.headline2.color,
+                        color: ThemeProvider.themeOf(context).data.textTheme.headline2.color,
                       ),
                     ),
                   ],
@@ -314,7 +314,7 @@ class _ControleUIState extends State<ControleUI> {
                       widget.cc.nomJour(),
                       textAlign: TextAlign.left,
                       style: TextStyle(
-                        color: Theme.of(context).textTheme.headline2.color,
+                        color: ThemeProvider.themeOf(context).data.textTheme.headline2.color,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -323,7 +323,7 @@ class _ControleUIState extends State<ControleUI> {
                       widget.cc.getStringInfoTemps(),
                       textAlign: TextAlign.right,
                       style: TextStyle(
-                        color: Theme.of(context).textTheme.headline2.color,
+                        color: ThemeProvider.themeOf(context).data.textTheme.headline2.color,
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                       ),
@@ -368,7 +368,7 @@ class _PopupControleUIState extends State<PopupControleUI> {
         margin: EdgeInsets.symmetric(vertical: 0,horizontal: 0),
         padding: EdgeInsets.all(00),
         decoration: new BoxDecoration(
-          color: Theme.of(context).dialogTheme.backgroundColor,
+          color: ThemeProvider.themeOf(context).data.dialogTheme.backgroundColor,
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
@@ -420,7 +420,7 @@ class _PopupControleUIState extends State<PopupControleUI> {
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.w500,
-                  color: Theme.of(context).textTheme.headline1.color,
+                  color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
                 ),
               ),
             ),
@@ -441,12 +441,10 @@ class _PopupControleUIState extends State<PopupControleUI> {
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.w700,
-                  color: Theme.of(context).textTheme.headline1.color,
+                  color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
                 ),
               ),
             ),
-
-
           ],
         ),
       ),

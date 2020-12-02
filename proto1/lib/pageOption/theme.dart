@@ -2,6 +2,7 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:theme_provider/theme_provider.dart';
 
 /// Le bouton déroulant pour choisir entre clair et sombre
 class BoutonTheme extends StatefulWidget {
@@ -12,7 +13,7 @@ class BoutonTheme extends StatefulWidget {
 }
 
 class _BoutonThemeState extends State<StatefulWidget> {
-  String dropdownValue = AppTheme().getNomEtat();
+  String dropdownValue = ThemeApp().getNomEtat();
 
   @override
   Widget build(BuildContext context) {
@@ -21,15 +22,14 @@ class _BoutonThemeState extends State<StatefulWidget> {
       icon: Icon(Icons.arrow_downward),
       iconSize: 24,
       elevation: 16,
-      style: TextStyle(color: Colors.deepPurple),
+      dropdownColor: ThemeProvider.themeOf(context).data.cardColor,
       underline: Container(
         height: 2,
-        color: Colors.deepPurpleAccent,
       ),
       onChanged: (String newValue) {
         setState(() {
           if (newValue != dropdownValue) {
-            dropdownValue = AppTheme().changerTheme(context);
+            dropdownValue = ThemeApp().changerTheme(context);
           }
         });
       },
@@ -37,16 +37,20 @@ class _BoutonThemeState extends State<StatefulWidget> {
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value),
+          child: Text(
+              value,
+            style: TextStyle(color: ThemeProvider.themeOf(context).data.textTheme.headline1.color),
+          ),
         );
       }).toList(),
     );
   }
 }
 
-class AppTheme {
+class ThemeApp extends ChangeNotifier{
+
   //Singleton
-  static AppTheme _instance = AppTheme._internal(); //Instancié au lancement
+  static ThemeApp _instance = ThemeApp._internal(); //Instancié au lancement
 
   ThemeData tClair;
   ThemeData tSombre;
@@ -55,34 +59,43 @@ class AppTheme {
   EtatTheme etatTheme;
   ThemeData themeCourant;
 
-  factory AppTheme() {
+  factory ThemeApp() {
     //Constructeur : retourne l'instance du singleton
     return _instance;
   }
 
-  AppTheme._internal() {
-    //"Vrai" constructeur (initialise l'appli sur le thème de l'utilisateur
+  ThemeApp._internal() {
+    //"Vrai" constructeur (initialise l'appli sur le thème de l'utilisateur)
+
     etatTheme = EtatTheme.CLAIR;
+
     tClair = new ThemeData(
-      textTheme: TextTheme(
+      textTheme: TextTheme( //C'est bon
         headline1: TextStyle(
-          color: Colors.black,
+          color: Color(0x4A5255),
         ),
         headline2: TextStyle(
-          color: Colors.black,
+          color: Color(0x707070),
+        ),
+        headline3: TextStyle(
+          color: Color(0x3D3D3D),
+        ),
+        headline4: TextStyle(
+          color: Color(0x757575),
         ),
       ),
-      cardColor: Colors.grey[400],
-      scaffoldBackgroundColor: Colors.white,
+      scaffoldBackgroundColor: Color(0xFCFCFC), //Check
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFFFFFF),
         selectedIconTheme: IconThemeData(
-            color: Color.fromRGBO(19, 164, 245, 1)
+            color: Color(0x14A4F5),
         ),
         unselectedIconTheme: IconThemeData(
-            color: Color.fromRGBO(196, 196, 196, 1),
+            color: Color(0xC4C4C4),
         ),
       ),
+      cardColor: Color(0xC4C4C4),
+
       dialogTheme: DialogTheme(
         backgroundColor: Colors.white,
         titleTextStyle: TextStyle(
@@ -92,25 +105,34 @@ class AppTheme {
     );
 
     tSombre = new ThemeData(
-      textTheme: TextTheme(
+      textTheme: TextTheme( //C'est bon
         headline1: TextStyle(
-          color: Color.fromRGBO(203, 214, 218, 1),
+          color: Color(0xCBD6DA),
         ),
         headline2: TextStyle(
-          color: Color.fromRGBO(50, 50, 55, 1),
+          color: Color(0x898989),
+        ),
+        headline3: TextStyle(
+          color: Color(0x3D3D3D),
+        ),
+        headline4: TextStyle(
+          color: Color(0x757575),
         ),
       ),
-      cardColor: Color.fromRGBO(33, 34, 38, 1),
-      scaffoldBackgroundColor: Color.fromRGBO(50, 50, 55, 1),
+      scaffoldBackgroundColor: Color(0x2F3136), //Check
+
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: Color.fromRGBO(33, 34, 38, 1),
+        backgroundColor: Color(0x202225),
         selectedIconTheme: IconThemeData(
-          color: Color.fromRGBO(63, 109, 231, 1)
+          color: Color(0x3E6DE7),
+          //color: Color.fromRGBO(63, 109, 231, 1)
         ),
         unselectedIconTheme: IconThemeData(
             color: Color.fromRGBO(54, 57, 64, 1)
           ),
       ),
+      cardColor: Color(0x36393F),
+
       dialogTheme: DialogTheme(
         backgroundColor: Color.fromRGBO(50, 50, 55, 1),
         titleTextStyle: TextStyle(
@@ -123,30 +145,18 @@ class AppTheme {
   String changerTheme(BuildContext context) {
     //Applique le thème actuellement choisi
     switch (etatTheme) {
-      case EtatTheme.CLAIR:
-        print('Sombre');
-        themeCourant = tSombre;
-        etatTheme = EtatTheme.SOMBRE;
-        DynamicTheme.of(context).setBrightness(Brightness.dark);
+      case EtatTheme.SOMBRE:
+        ThemeProvider.controllerOf(context).nextTheme();
+        print(ThemeProvider.controllerOf(context).theme.id);
+        etatTheme = EtatTheme.CLAIR;
         return 'Sombre';
 
-      case EtatTheme.SOMBRE:
-        print('Clair');
-        themeCourant = tClair;
-        etatTheme = EtatTheme.CLAIR;
-        DynamicTheme.of(context).setBrightness(Brightness.light);
+      case EtatTheme.CLAIR:
+        ThemeProvider.controllerOf(context).nextTheme();
+        print(ThemeProvider.controllerOf(context).theme.id);
+        print(ThemeProvider.controllerOf(context).allThemes.toString());
+        etatTheme = EtatTheme.SOMBRE;
         return 'Clair';
-    }
-  }
-
-  void updateTheme(Brightness brightness) {
-    if(brightness == Brightness.light) {
-      themeCourant = tClair;
-      etatTheme = EtatTheme.CLAIR;
-    }
-    else {
-      themeCourant = tSombre;
-      etatTheme = EtatTheme.SOMBRE;
     }
   }
 
@@ -159,19 +169,24 @@ class AppTheme {
         return 'Sombre';
     }
   }
-
-  saveCurrentTheme() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('theme', this.getNomEtat());
-  }
-
-  getCurrentTheme() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('theme');
-  }
 }
 
 enum EtatTheme {
   CLAIR,
   SOMBRE,
+}
+
+
+class TheTheme {
+
+  static TheTheme _instance = TheTheme._internal(); //Instancié au lancement
+
+  factory TheTheme() {
+    return _instance;
+  }
+
+  TheTheme._internal() {
+
+
+  }
 }
