@@ -587,17 +587,17 @@ List<SemaineCc> sortData(var code, List<SemaineCc> semaineCc) {
         else
           duree = removeColorDecoration(tabDuree[i].toString().trim());
 
-        if(info.length>=1)
+        if(info.length>=2)
           matiere = removeColorDecoration(info[1]).trim();
         else
           matiere = "NC";
 
-        if(info.length>=2)
+        if(info.length>=3)
           enseignant = removeColorDecoration(info[2].trim());
         else
           enseignant = "NC";
 
-        if(info.length>=3)
+        if(info.length>=4)
           epreuve = removeColorDecoration(info[3].trim());
         else
           epreuve = "NC";
