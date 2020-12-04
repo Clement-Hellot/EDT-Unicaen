@@ -35,12 +35,8 @@ class MyApp extends StatelessWidget {
         }
       },
       themes: <AppTheme>[
-        AppTheme(id: 'light',
-            data: ThemeApp().tClair,
-            description: "Un thème clair"),
-        AppTheme(id: 'dark',
-            data: ThemeApp().tSombre,
-            description: "Un thème sombre"),
+        AppTheme.dark(id: 'dark'),
+        AppTheme.light(id: 'light'),
       ],
       child: ThemeConsumer(
         child: Builder(
