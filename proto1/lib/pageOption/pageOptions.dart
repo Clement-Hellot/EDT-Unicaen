@@ -13,6 +13,7 @@ class _PageOptionsState extends State<PageOptions> {
 
   @override
   Widget build(BuildContext context) {
+    print(ThemeProvider.controllerOf(context).theme.data.scaffoldBackgroundColor);
     return Scaffold(
       backgroundColor: ThemeProvider.controllerOf(context).theme.data.scaffoldBackgroundColor,
       body: Column(

@@ -72,29 +72,29 @@ class ThemeApp extends ChangeNotifier{
     tClair = new ThemeData(
       textTheme: TextTheme( //C'est bon
         headline1: TextStyle(
-          color: Color(0x4A5255),
+          color: Color(0xFF4A5255),
         ),
         headline2: TextStyle(
-          color: Color(0x707070),
+          color: Color(0xFF707070),
         ),
         headline3: TextStyle(
-          color: Color(0x3D3D3D),
+          color: Color(0xFF3D3D3D),
         ),
         headline4: TextStyle(
-          color: Color(0x757575),
+          color: Color(0xFF757575),
         ),
       ),
-      scaffoldBackgroundColor: Color(0xFCFCFC), //Check
+      scaffoldBackgroundColor: Color(0xFFFCFCFC), //Check
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: Color(0xFFFFFF),
+        backgroundColor: Colors.white,
         selectedIconTheme: IconThemeData(
-            color: Color(0x14A4F5),
+            color: Color(0xFF14A4F5),
         ),
         unselectedIconTheme: IconThemeData(
-            color: Color(0xC4C4C4),
+            color: Color(0xFFC4C4C4),
         ),
       ),
-      cardColor: Color(0xC4C4C4),
+      cardColor: Color(0xFFC4C4C4),
 
       dialogTheme: DialogTheme(
         backgroundColor: Colors.white,
@@ -104,34 +104,37 @@ class ThemeApp extends ChangeNotifier{
       ),
     );
 
+
+
+
     tSombre = new ThemeData(
       textTheme: TextTheme( //C'est bon
         headline1: TextStyle(
-          color: Color(0xCBD6DA),
+          color: Color(0xFFCBD6DA),
         ),
         headline2: TextStyle(
-          color: Color(0x898989),
+          color: Color(0xFF898989),
         ),
         headline3: TextStyle(
-          color: Color(0x3D3D3D),
+          color: Color(0xFF3D3D3D),
         ),
         headline4: TextStyle(
-          color: Color(0x757575),
+          color: Color(0xFF757575),
         ),
       ),
-      scaffoldBackgroundColor: Color(0x2F3136), //Check
+      scaffoldBackgroundColor: Color(0xFF2F3136), //Check
 
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: Color(0x202225),
+        backgroundColor: Color(0xFF202225),
         selectedIconTheme: IconThemeData(
-          color: Color(0x3E6DE7),
+          color: Color(0xFF3E6DE7),
           //color: Color.fromRGBO(63, 109, 231, 1)
         ),
         unselectedIconTheme: IconThemeData(
             color: Color.fromRGBO(54, 57, 64, 1)
           ),
       ),
-      cardColor: Color(0x36393F),
+      cardColor: Color(0xFF36393F),
 
       dialogTheme: DialogTheme(
         backgroundColor: Color.fromRGBO(50, 50, 55, 1),
@@ -145,18 +148,18 @@ class ThemeApp extends ChangeNotifier{
   String changerTheme(BuildContext context) {
     //Applique le thème actuellement choisi
     switch (etatTheme) {
-      case EtatTheme.SOMBRE:
-        ThemeProvider.controllerOf(context).nextTheme();
-        print(ThemeProvider.controllerOf(context).theme.id);
-        etatTheme = EtatTheme.CLAIR;
-        return 'Sombre';
-
       case EtatTheme.CLAIR:
         ThemeProvider.controllerOf(context).nextTheme();
         print(ThemeProvider.controllerOf(context).theme.id);
-        print(ThemeProvider.controllerOf(context).allThemes.toString());
         etatTheme = EtatTheme.SOMBRE;
         return 'Clair';
+
+      case EtatTheme.SOMBRE:
+        ThemeProvider.controllerOf(context).nextTheme();
+        print(ThemeProvider.controllerOf(context).theme.id);
+        print(ThemeProvider.controllerOf(context).allThemes.toString());
+        etatTheme = EtatTheme.CLAIR;
+        return 'Sombre';
     }
   }
 

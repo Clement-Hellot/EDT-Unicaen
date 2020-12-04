@@ -35,8 +35,12 @@ class MyApp extends StatelessWidget {
         }
       },
       themes: <AppTheme>[
-        AppTheme.dark(id: 'dark'),
-        AppTheme.light(id: 'light'),
+        AppTheme(id: 'light',
+            data: ThemeApp().tClair,
+            description: "Un thème clair"),
+        AppTheme(id: 'dark',
+            data: ThemeApp().tSombre,
+            description: "Un thème sombre"),
       ],
       child: ThemeConsumer(
         child: Builder(
@@ -105,6 +109,7 @@ class _PagePrincipaleState extends State<PagePrincipale> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Center(
         child: PageView(
@@ -119,6 +124,7 @@ class _PagePrincipaleState extends State<PagePrincipale> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
+          color: ThemeProvider.themeOf(context).data.bottomNavigationBarTheme.backgroundColor,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.2),
