@@ -38,8 +38,13 @@ class _BoutonThemeState extends State<StatefulWidget> {
         return DropdownMenuItem<String>(
           value: value,
           child: Text(
-              value,
-            style: TextStyle(color: ThemeProvider.themeOf(context).data.textTheme.headline1.color),
+            value,
+            style: TextStyle(
+                color: ThemeProvider.themeOf(context)
+                    .data
+                    .textTheme
+                    .headline1
+                    .color),
           ),
         );
       }).toList(),
@@ -47,8 +52,7 @@ class _BoutonThemeState extends State<StatefulWidget> {
   }
 }
 
-class ThemeApp extends ChangeNotifier{
-
+class ThemeApp extends ChangeNotifier {
   //Singleton
   static ThemeApp _instance = ThemeApp._internal(); //Instancié au lancement
 
@@ -70,32 +74,41 @@ class ThemeApp extends ChangeNotifier{
     etatTheme = EtatTheme.CLAIR;
 
     tClair = new ThemeData(
-      textTheme: TextTheme( //C'est bon
-        headline1: TextStyle(
-          color: Color(0xFF4A5255),
-        ),
-        headline2: TextStyle(
-          color: Color(0xFF707070),
-        ),
-        headline3: TextStyle(
-          color: Color(0xFF3D3D3D),
-        ),
-        headline4: TextStyle(
-          color: Color(0xFF757575),
-        ),
-      ),
-      scaffoldBackgroundColor: Color(0xFFFCFCFC), //Check
+      textTheme: TextTheme(
+          headline1: TextStyle(
+            //Titres
+            color: Color(0xFF4A5255),
+          ),
+          headline2: TextStyle(
+            //
+            color: Color(0xFF707070),
+          ),
+          headline3: TextStyle(
+            color: Color(0xFF3D3D3D),
+          ),
+          headline4: TextStyle(
+            color: Color(0xFF404040),
+          ),
+          headline5: TextStyle(
+            color: Color(0xFF757575),
+          ),
+          headline6: TextStyle(
+            //StyleHeure (et je l'utilise pour les noms de matière aussi ça rends bien)
+            color: Color(0xff606060),
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          )),
+      scaffoldBackgroundColor: Color(0xFFFCFCFC),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Colors.white,
         selectedIconTheme: IconThemeData(
-            color: Color(0xFF14A4F5),
+          color: Color(0xFF14A4F5),
         ),
         unselectedIconTheme: IconThemeData(
-            color: Color(0xFFC4C4C4),
+          color: Color(0xFFC4C4C4),
         ),
       ),
       cardColor: Color(0xFFC4C4C4),
-
       dialogTheme: DialogTheme(
         backgroundColor: Colors.white,
         titleTextStyle: TextStyle(
@@ -104,38 +117,39 @@ class ThemeApp extends ChangeNotifier{
       ),
     );
 
-
-
-
     tSombre = new ThemeData(
-      textTheme: TextTheme( //C'est bon
-        headline1: TextStyle(
-          color: Color(0xFFCBD6DA),
-        ),
-        headline2: TextStyle(
-          color: Color(0xFF898989),
-        ),
-        headline3: TextStyle(
-          color: Color(0xFF3D3D3D),
-        ),
-        headline4: TextStyle(
-          color: Color(0xFF757575),
-        ),
-      ),
-      scaffoldBackgroundColor: Color(0xFF2F3136), //Check
-
+      textTheme: TextTheme(
+          headline1: TextStyle(
+            color: Color(0xFFCBD6DA),
+          ),
+          headline2: TextStyle(
+            color: Color(0xFF898989),
+          ),
+          headline3: TextStyle(
+            color: Color(0xFF3D3D3D),
+          ),
+          headline4: TextStyle(
+            color: Color(0xFF101010),
+          ),
+          headline5: TextStyle(
+            color: Color(0xFF303030),
+          ),
+          headline6: TextStyle(
+            //StyleHeure (et je l'utilise pour les noms de matière aussi ça rends bien)
+            color: Color(0xff606060),
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          )),
+      scaffoldBackgroundColor: Color(0xFF2F3136),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Color(0xFF202225),
         selectedIconTheme: IconThemeData(
           color: Color(0xFF3E6DE7),
-          //color: Color.fromRGBO(63, 109, 231, 1)
         ),
-        unselectedIconTheme: IconThemeData(
-            color: Color.fromRGBO(54, 57, 64, 1)
-          ),
+        unselectedIconTheme:
+            IconThemeData(color: Color.fromRGBO(54, 57, 64, 1)),
       ),
       cardColor: Color(0xFF36393F),
-
       dialogTheme: DialogTheme(
         backgroundColor: Color.fromRGBO(50, 50, 55, 1),
         titleTextStyle: TextStyle(
@@ -150,16 +164,13 @@ class ThemeApp extends ChangeNotifier{
     switch (etatTheme) {
       case EtatTheme.CLAIR:
         ThemeProvider.controllerOf(context).nextTheme();
-        print(ThemeProvider.controllerOf(context).theme.id);
         etatTheme = EtatTheme.SOMBRE;
-        return 'Clair';
+        return 'Sombre';
 
       case EtatTheme.SOMBRE:
         ThemeProvider.controllerOf(context).nextTheme();
-        print(ThemeProvider.controllerOf(context).theme.id);
-        print(ThemeProvider.controllerOf(context).allThemes.toString());
         etatTheme = EtatTheme.CLAIR;
-        return 'Sombre';
+        return 'Clair';
     }
   }
 
@@ -179,17 +190,12 @@ enum EtatTheme {
   SOMBRE,
 }
 
-
 class TheTheme {
-
   static TheTheme _instance = TheTheme._internal(); //Instancié au lancement
 
   factory TheTheme() {
     return _instance;
   }
 
-  TheTheme._internal() {
-
-
-  }
+  TheTheme._internal() {}
 }

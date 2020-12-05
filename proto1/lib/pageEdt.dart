@@ -236,7 +236,7 @@ class _CoursUIState extends State<CoursUI> {
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 19,
-                      color: Colors.black,
+                      color: ThemeProvider.themeOf(context).data.textTheme.headline4.color,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -253,7 +253,7 @@ class _CoursUIState extends State<CoursUI> {
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 15,
-                      color: const Color(0xff404040),
+                      color: ThemeProvider.themeOf(context).data.textTheme.headline5.color,
                     ),
                   ),
                 ),
@@ -269,7 +269,7 @@ class _CoursUIState extends State<CoursUI> {
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       fontSize: 15,
-                      color: const Color(0xff606060),
+                      color: ThemeProvider.themeOf(context).data.textTheme.headline5.color,
                     ),
                   ),
                 ),
@@ -288,7 +288,7 @@ class _CoursUIState extends State<CoursUI> {
                     widget.cours.prof,
                     textAlign: TextAlign.right,
                     style: TextStyle(
-                      color: Color(0xff707070),
+                      color: ThemeProvider.themeOf(context).data.textTheme.headline5.color,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -301,7 +301,7 @@ class _CoursUIState extends State<CoursUI> {
                     widget.cours.horaireString,
                     textAlign: TextAlign.right,
                     style: TextStyle(
-                      color: Color(0xff505050),
+                      color: ThemeProvider.themeOf(context).data.textTheme.headline5.color,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -323,12 +323,6 @@ class PauseUI extends StatefulWidget {
   final Pause pause;
 
   PauseUI(this.pause);
-
-  final TextStyle styleHeure = TextStyle(
-    color: Color(0xff606060),
-    fontSize: 16,
-    fontWeight: FontWeight.w500,
-  );
 }
 
 class _PauseUIState extends State<PauseUI> {
@@ -336,17 +330,17 @@ class _PauseUIState extends State<PauseUI> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(widget.pause.debut.heureStr, style: widget.styleHeure),
+        Text(widget.pause.debut.heureStr, style: ThemeProvider.themeOf(context).data.textTheme.headline6),
         Container(
           margin: EdgeInsets.all(10),
           height: (0.5 + widget.pause.duree) * PageEDT.tailleHeure * 0.5,
           child: PauseLigne(
             width: 3,
             dashLength: 9.0,
-            color: widget.styleHeure.color,
+            color: ThemeProvider.themeOf(context).data.textTheme.headline6.color,
           ),
         ),
-        Text(widget.pause.fin.heureStr, style: widget.styleHeure),
+        Text(widget.pause.fin.heureStr, style: ThemeProvider.themeOf(context).data.textTheme.headline6),
       ],
     );
   }
