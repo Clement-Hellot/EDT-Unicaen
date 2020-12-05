@@ -292,7 +292,7 @@ class _ControleUIState extends State<ControleUI> {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 18,
-                        color: ThemeProvider.themeOf(context).data.textTheme.headline2.color,
+                        color: ThemeProvider.themeOf(context).data.textTheme.headline4.color,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -301,7 +301,7 @@ class _ControleUIState extends State<ControleUI> {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 15,
-                        color: ThemeProvider.themeOf(context).data.textTheme.headline2.color,
+                        color: ThemeProvider.themeOf(context).data.textTheme.headline4.color,
                       ),
                     ),
                   ],
@@ -314,7 +314,7 @@ class _ControleUIState extends State<ControleUI> {
                       widget.cc.nomJour(),
                       textAlign: TextAlign.left,
                       style: TextStyle(
-                        color: ThemeProvider.themeOf(context).data.textTheme.headline2.color,
+                        color: ThemeProvider.themeOf(context).data.textTheme.headline4.color,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -323,7 +323,7 @@ class _ControleUIState extends State<ControleUI> {
                       widget.cc.getStringInfoTemps(),
                       textAlign: TextAlign.right,
                       style: TextStyle(
-                        color: ThemeProvider.themeOf(context).data.textTheme.headline2.color,
+                        color: ThemeProvider.themeOf(context).data.textTheme.headline4.color,
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                       ),
@@ -399,7 +399,7 @@ class _PopupControleUIState extends State<PopupControleUI> {
                 style: TextStyle(
                   fontSize: 23.0,
                   fontWeight: FontWeight.w700,
-                  color: widget.cc.matiere.couleur(),
+                  color: ThemeProvider.themeOf(context).data.textTheme.headline4.color,
                 ),
               ),
             ),

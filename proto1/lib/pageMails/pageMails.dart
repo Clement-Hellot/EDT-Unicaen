@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:theme_provider/theme_provider.dart';
 
 import './MailsObjet.dart';
@@ -169,6 +168,12 @@ class _PageMailsState extends State<PageMails> {
                     ],
                   ),
                   floatingActionButton: FloatingActionButton(
+                    backgroundColor: ThemeProvider.themeOf(context).data.bottomNavigationBarTheme.unselectedIconTheme.color,
+                    child: Icon(
+                      Icons.create,
+                      color: ThemeProvider.themeOf(context).data.backgroundColor,
+                    ),
+
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -176,11 +181,6 @@ class _PageMailsState extends State<PageMails> {
                             builder: (context) => WriteMail("", "", "")),
                       );
                     },
-                    child: Icon(
-                      Icons.create,
-                      color:
-                          ThemeProvider.themeOf(context).data.iconTheme.color,
-                    ),
                   ),
                 );
               } else {
@@ -574,16 +574,17 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
                 )),
             Flexible(
                 child: SingleChildScrollView(
-              child: Container(
-                decoration: BoxDecoration(
-                    border: Border.all(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
                         color: Colors.black,
                         style: BorderStyle.solid,
-                        width: 1)),
-                child: Text(
-                  widget.mail.getText(),
-                  style:
-                      ThemeProvider.themeOf(context).data.textTheme.headline1,
+                        width: 1
+                      )
+                    ),
+                    child: Text(
+                      widget.mail.getText(),
+                      style: ThemeProvider.themeOf(context).data.textTheme.headline1,
                 ),
               ),
             ))
@@ -718,7 +719,7 @@ class _WriteMailState extends State<WriteMail> {
             Expanded(
                 child: Container(
               padding: EdgeInsets.symmetric(horizontal: 5),
-              child: TextField(
+                child: TextField(
                 style: ThemeProvider.themeOf(context).data.textTheme.headline2,
                 expands: true,
                 maxLines: null,
