@@ -198,6 +198,8 @@ class ThemeApp extends ChangeNotifier {
         ThemeProvider.controllerOf(context).nextTheme();
         etatTheme = EtatTheme.CLAIR;
         return 'Clair';
+      default:
+        return 'Null';
     }
   }
 
@@ -208,6 +210,8 @@ class ThemeApp extends ChangeNotifier {
 
       case EtatTheme.SOMBRE:
         return 'Sombre';
+      default:
+        return 'Null';
     }
   }
 }
@@ -224,5 +228,5 @@ class TheTheme {
     return _instance;
   }
 
-  TheTheme._internal() {}
+  TheTheme._internal();
 }

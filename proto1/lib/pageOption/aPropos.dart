@@ -6,19 +6,21 @@ class BoutonAPropos extends StatelessWidget {
   BoutonAPropos({Key key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {}
-}
-
-class popupAPropos extends StatefulWidget {
-  popupAPropos({Key key}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() {
-    return _popupAProposState();
+  Widget build(BuildContext context) {
+    return this;
   }
 }
 
-class _popupAProposState extends State<popupAPropos> {
+class PopupAPropos extends StatefulWidget {
+  PopupAPropos({Key key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _PopupAProposState();
+  }
+}
+
+class _PopupAProposState extends State<PopupAPropos> {
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',

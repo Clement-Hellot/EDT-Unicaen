@@ -71,7 +71,7 @@ class _PageOptionsState extends State<PageOptions> {
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (BuildContext context) => popupAPropos(),
+                  builder: (BuildContext context) => PopupAPropos(),
                 );
                 // Perform some action
               },
