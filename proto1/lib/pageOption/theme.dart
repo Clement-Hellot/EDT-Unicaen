@@ -74,6 +74,8 @@ class ThemeApp extends ChangeNotifier {
     etatTheme = EtatTheme.CLAIR;
 
     tClair = new ThemeData(
+      backgroundColor: Color(0xFFFCFCFC),
+
       textTheme: TextTheme(
           headline1: TextStyle(
             //Titres
@@ -98,7 +100,19 @@ class ThemeApp extends ChangeNotifier {
             fontSize: 16,
             fontWeight: FontWeight.w500,
           )),
+
       scaffoldBackgroundColor: Color(0xFFFCFCFC),
+
+      cardColor: Color(0xFFC4C4C4),
+
+      canvasColor: Color(0xFF2F3136),
+
+      primaryColor: Color(0xFFDDDDDD),
+
+      iconTheme: IconThemeData(
+        color: Color(0xFFC4C4C4),
+      ),
+
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Colors.white,
         selectedIconTheme: IconThemeData(
@@ -108,7 +122,7 @@ class ThemeApp extends ChangeNotifier {
           color: Color(0xFFC4C4C4),
         ),
       ),
-      cardColor: Color(0xFFC4C4C4),
+
       dialogTheme: DialogTheme(
         backgroundColor: Colors.white,
         titleTextStyle: TextStyle(
@@ -118,6 +132,8 @@ class ThemeApp extends ChangeNotifier {
     );
 
     tSombre = new ThemeData(
+      backgroundColor: Color(0xFF2F3136),
+
       textTheme: TextTheme(
           headline1: TextStyle(
             color: Color(0xFFCBD6DA),
@@ -140,22 +156,35 @@ class ThemeApp extends ChangeNotifier {
             fontSize: 16,
             fontWeight: FontWeight.w500,
           )),
+
       scaffoldBackgroundColor: Color(0xFF2F3136),
+
+      cardColor: Color(0xFF202225),
+
+      canvasColor: Color(0xFF2F3136),
+
+      primaryColor: Color(0xFF222222),
+
+      iconTheme: IconThemeData(
+        color: Color(0xFF747784),
+      ),
+
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Color(0xFF202225),
         selectedIconTheme: IconThemeData(
           color: Color(0xFF3E6DE7),
         ),
         unselectedIconTheme:
-            IconThemeData(color: Color.fromRGBO(54, 57, 64, 1)),
+            IconThemeData(color: Color(0xFF545764)),
       ),
-      cardColor: Color(0xFF36393F),
+
       dialogTheme: DialogTheme(
         backgroundColor: Color.fromRGBO(50, 50, 55, 1),
         titleTextStyle: TextStyle(
           color: Color.fromRGBO(203, 214, 218, 1),
         ),
       ),
+
     );
   }
 

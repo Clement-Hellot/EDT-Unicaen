@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:theme_provider/theme_provider.dart';
 
 import './MailsObjet.dart';
 
@@ -14,6 +15,7 @@ class PageMails extends StatefulWidget {
 
 class _PageMailsState extends State<PageMails> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -30,7 +32,7 @@ class _PageMailsState extends State<PageMails> {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.lightBlue[600],
+                          color: ThemeProvider.themeOf(context).data.cardColor,
                         ),
                         padding: EdgeInsets.only(
                             top: 40, left: 5, right: 5, bottom: 20),
@@ -45,7 +47,13 @@ class _PageMailsState extends State<PageMails> {
                                 ),
                                 Text(
                                   ' 21905584',
-                                  style: TextStyle(fontSize: 25),
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      color: ThemeProvider.themeOf(context)
+                                          .data
+                                          .textTheme
+                                          .headline1
+                                          .color),
                                 ),
                               ],
                             ),
@@ -79,7 +87,13 @@ class _PageMailsState extends State<PageMails> {
                                   })(),
                                   child: ListTile(
                                     leading: Icon(Icons.mail),
-                                    title: Text(snapshot.data[index]),
+                                    title: Text(
+                                      snapshot.data[index],
+                                      style: ThemeProvider.themeOf(context)
+                                          .data
+                                          .textTheme
+                                          .headline1,
+                                    ),
                                     onTap: () {
                                       setState(() {
                                         currentMailbox = getMailboxName(
@@ -95,13 +109,22 @@ class _PageMailsState extends State<PageMails> {
                     ],
                   )),
                   appBar: AppBar(
-                    iconTheme: IconThemeData(color: Colors.black),
+                    iconTheme: ThemeProvider.themeOf(context)
+                            .data
+                            .iconTheme,
                     centerTitle: true,
-                    backgroundColor: Colors.white,
+                    backgroundColor:
+                        ThemeProvider.themeOf(context).data.backgroundColor,
                     elevation: 0,
                     actions: <Widget>[
                       IconButton(
-                        icon: Icon(Icons.search),
+                        icon: Icon(
+                          Icons.search,
+                          color: ThemeProvider.themeOf(context)
+                              .data
+                              .iconTheme
+                              .color,
+                        ),
                         tooltip: 'Search',
                         onPressed: () {
                           Navigator.push(
@@ -112,7 +135,13 @@ class _PageMailsState extends State<PageMails> {
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.settings),
+                        icon: Icon(
+                          Icons.settings,
+                          color: ThemeProvider.themeOf(context)
+                              .data
+                              .iconTheme
+                              .color,
+                        ),
                         tooltip: 'Settings',
                         onPressed: () {
                           setState(() {
@@ -121,11 +150,16 @@ class _PageMailsState extends State<PageMails> {
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.more_horiz), 
-                        color: Colors.black,   
+                        icon: Icon(
+                          Icons.more_horiz,
+                          color: ThemeProvider.themeOf(context)
+                              .data
+                              .iconTheme
+                              .color,
+                        ),
+                        color:
+                            ThemeProvider.themeOf(context).data.backgroundColor,
                         tooltip: 'Plus',
-
-
                       ),
                     ],
                   ),
@@ -142,7 +176,11 @@ class _PageMailsState extends State<PageMails> {
                             builder: (context) => WriteMail("", "", "")),
                       );
                     },
-                    child: Icon(Icons.create),
+                    child: Icon(
+                      Icons.create,
+                      color:
+                          ThemeProvider.themeOf(context).data.iconTheme.color,
+                    ),
                   ),
                 );
               } else {
@@ -165,7 +203,9 @@ class _PageMailsState extends State<PageMails> {
 class DailyMail extends StatefulWidget {
   @override
   _DailyMailState createState() => _DailyMailState();
+
   DailyMail(this.mailbox);
+
   String mailbox;
 }
 
@@ -189,7 +229,11 @@ class _DailyMailState extends State<DailyMail> {
                     Text(
                       "  " + mail[index].getDate(),
                       style: TextStyle(
-                          color: Colors.lightBlue[600],
+                          color: ThemeProvider.themeOf(context)
+                              .data
+                              .textTheme
+                              .headline1
+                              .color,
                           fontWeight: FontWeight.bold),
                     ),
                     MailWidget(mail[index].getDailyMail())
@@ -200,7 +244,15 @@ class _DailyMailState extends State<DailyMail> {
               child: Column(
                 children: [
                   Icon(Icons.mail_outlined),
-                  Text("Aucun mail dans ce dossier")
+                  Text(
+                    "Aucun mail dans ce dossier",
+                    style: TextStyle(
+                        color: ThemeProvider.themeOf(context)
+                            .data
+                            .textTheme
+                            .headline1
+                            .color),
+                  )
                 ],
               ),
             );
@@ -263,7 +315,7 @@ class _Mail extends State<MailContent> {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5.0),
-              color: Colors.grey[200],
+              color: ThemeProvider.themeOf(context).data.primaryColor,
             ),
             margin: EdgeInsets.only(
               left: 10,
@@ -278,7 +330,8 @@ class _Mail extends State<MailContent> {
                     flex: null,
                     child: Icon(
                       Icons.circle,
-                      color: Colors.lightBlue[500],
+                      color: ThemeProvider.themeOf(context).data.iconTheme.color,
+                      //color: ThemeProvider.themeOf(context).data.bottomNavigationBarTheme.selectedIconTheme.color,
                       size: 10,
                     ),
                   ),
@@ -304,6 +357,11 @@ class _Mail extends State<MailContent> {
                               child: Text(
                                 widget.mail.getObjet(),
                                 style: TextStyle(
+                                  color: ThemeProvider.themeOf(context)
+                                      .data
+                                      .textTheme
+                                      .headline2
+                                      .color,
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -313,6 +371,11 @@ class _Mail extends State<MailContent> {
                               child: Text(
                                 widget.mail.getTime(),
                                 style: TextStyle(
+                                  color: ThemeProvider.themeOf(context)
+                                      .data
+                                      .textTheme
+                                      .headline2
+                                      .color,
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -328,6 +391,11 @@ class _Mail extends State<MailContent> {
                               child: Text(
                                 widget.mail.getNomFrom(),
                                 style: TextStyle(
+                                  color: ThemeProvider.themeOf(context)
+                                      .data
+                                      .textTheme
+                                      .headline2
+                                      .color,
                                   fontSize: 12,
                                 ),
                               ),
@@ -354,7 +422,9 @@ class _Mail extends State<MailContent> {
               left: 10,
             ),
             color: Colors.green,
-            child: Icon(Icons.check),
+            child: Icon(Icons.check,color: ThemeProvider.themeOf(context)
+                .data
+                .iconTheme.color,),
           ),
           secondaryBackground: Container(
             alignment: Alignment.centerRight,
@@ -362,7 +432,9 @@ class _Mail extends State<MailContent> {
               right: 10,
             ),
             color: Colors.red,
-            child: Icon(Icons.delete),
+            child: Icon(Icons.delete,color: ThemeProvider.themeOf(context)
+                .data
+                .iconTheme.color,),
           ),
           onDismissed: (direction) {
             switch (direction) {
@@ -394,17 +466,17 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.lightBlue,
+        backgroundColor: ThemeProvider.themeOf(context).data.backgroundColor,
         actions: [
           IconButton(
-            icon: Icon(Icons.reply_all),
+            icon: Icon(Icons.reply_all,),
             iconSize: 40.0,
-            color: Colors.white,
+            color: ThemeProvider.themeOf(context).data.iconTheme.color,
           ),
           IconButton(
               icon: Icon(Icons.reply),
               iconSize: 40.0,
-              color: Colors.white,
+              color: ThemeProvider.themeOf(context).data.iconTheme.color,
               onPressed: () {
                 print('re');
                 String objet = "RE :" + widget.mail.getObjet();
@@ -418,7 +490,7 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
           IconButton(
               icon: Icon(Icons.forward),
               iconSize: 40.0,
-              color: Colors.white,
+              color: ThemeProvider.themeOf(context).data.iconTheme.color,
               onPressed: () {
                 String objet = "FWD :" + widget.mail.getObjet();
                 Navigator.push(
@@ -433,13 +505,12 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
       body: Center(
         child: Column(
           children: <Widget>[
-            Container(      
-              padding: EdgeInsets.all(10.0),        
-                decoration: BoxDecoration(                 
+            Container(
+                padding: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
                     border: Border.all(
                         color: Colors.black,
                         style: BorderStyle.solid,
-                        
                         width: 1)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -449,26 +520,56 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
                       flex: 1,
                       child: Text(
                         widget.mail.getObjet(),
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                            color: ThemeProvider.themeOf(context)
+                                .data
+                                .textTheme
+                                .headline1
+                                .color,
+                            fontSize: 18),
                       ),
                     ),
                     Text(
                       widget.mail.getDatetime(),
                       textAlign: TextAlign.end,
+                      style: TextStyle(
+                        color: ThemeProvider.themeOf(context)
+                            .data
+                            .textTheme
+                            .headline2
+                            .color,
+                      ),
                     ),
                   ],
                 )),
-            Container(  
-                
-                padding: EdgeInsets.all(2.0),                        
+            Container(
+                padding: EdgeInsets.all(2.0),
                 decoration: BoxDecoration(
                   //borderRadius: BorderRadius.all(Radius.circular(4)),
-                  color: Colors.grey[300],  
+                  color: ThemeProvider.themeOf(context).data.backgroundColor,
                 ),
                 child: Row(
                   children: [
-                    Text( widget.mail.getNomFrom()),
-                    Text(widget.mail.getEmailFrom()),
+                    Text(
+                      widget.mail.getNomFrom(),
+                      style: TextStyle(
+                        color: ThemeProvider.themeOf(context)
+                            .data
+                            .textTheme
+                            .headline2
+                            .color,
+                      ),
+                    ),
+                    Text(
+                      widget.mail.getEmailFrom(),
+                      style: TextStyle(
+                        color: ThemeProvider.themeOf(context)
+                            .data
+                            .textTheme
+                            .headline2
+                            .color,
+                      ),
+                    ),
                   ],
                 )),
             Flexible(
@@ -479,8 +580,10 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
                         color: Colors.black,
                         style: BorderStyle.solid,
                         width: 1)),
-                child: Html(
-                  data: widget.mail.getText(),
+                child: Text(
+                  widget.mail.getText(),
+                  style:
+                      ThemeProvider.themeOf(context).data.textTheme.headline1,
                 ),
               ),
             ))
@@ -510,7 +613,9 @@ class _WriteMailState extends State<WriteMail> {
         title: Text("Mail"),
         actions: [
           IconButton(
-            icon: Icon(Icons.send),
+            icon: Icon(Icons.send,color: ThemeProvider.themeOf(context)
+                .data
+                .iconTheme.color,),
             onPressed: () {
               sendMsg(
                   '21905584@etu.unicaen.fr', new List(), '123465', 'hey you');
@@ -530,7 +635,13 @@ class _WriteMailState extends State<WriteMail> {
                         width: 1)),
                 child: Row(
                   children: [
-                    Text("A :"),
+                    Text(
+                      "A :",
+                      style: ThemeProvider.themeOf(context)
+                          .data
+                          .textTheme
+                          .headline2,
+                    ),
                     Expanded(
                       child: TextField(
                         controller:
@@ -548,7 +659,13 @@ class _WriteMailState extends State<WriteMail> {
                         width: 1)),
                 child: Row(
                   children: [
-                    Text("CC :"),
+                    Text(
+                      "CC :",
+                      style: ThemeProvider.themeOf(context)
+                          .data
+                          .textTheme
+                          .headline2,
+                    ),
                     Expanded(
                       child: TextField(),
                     ),
@@ -563,7 +680,13 @@ class _WriteMailState extends State<WriteMail> {
                         width: 1)),
                 child: Row(
                   children: [
-                    Text("Sujet :"),
+                    Text(
+                      "Sujet :",
+                      style: ThemeProvider.themeOf(context)
+                          .data
+                          .textTheme
+                          .headline2,
+                    ),
                     Expanded(
                       child: TextField(
                         controller: TextEditingController(text: widget.sujet),
@@ -580,7 +703,13 @@ class _WriteMailState extends State<WriteMail> {
                         width: 1)),
                 child: Row(
                   children: [
-                    Text("Pieces jointes"),
+                    Text(
+                      "Pieces jointes",
+                      style: ThemeProvider.themeOf(context)
+                          .data
+                          .textTheme
+                          .headline2,
+                    ),
                     Expanded(
                       child: TextField(),
                     ),
@@ -590,6 +719,7 @@ class _WriteMailState extends State<WriteMail> {
                 child: Container(
               padding: EdgeInsets.symmetric(horizontal: 5),
               child: TextField(
+                style: ThemeProvider.themeOf(context).data.textTheme.headline2,
                 expands: true,
                 maxLines: null,
                 minLines: null,
@@ -615,15 +745,18 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.grey[400],
+          backgroundColor: ThemeProvider.themeOf(context).data.backgroundColor,
           elevation: 0,
           title: TextField(
               controller: widget.inputSearchController,
+              style: ThemeProvider.themeOf(context).data.textTheme.headline2,
               decoration: InputDecoration(
                 hintText: "Rechercher",
+                hintStyle:
+                    ThemeProvider.themeOf(context).data.textTheme.headline2,
                 prefixIcon: Icon(
                   Icons.search,
-                  color: Colors.black,
+                  color: ThemeProvider.themeOf(context).data.iconTheme.color,
                 ),
               ),
               onChanged: (text) {
@@ -634,14 +767,22 @@ class _SearchPageState extends State<SearchPage> {
         ),
         body: SizedBox.expand(
           child: Container(
-              decoration: BoxDecoration(color: Colors.white),
+              decoration: BoxDecoration(
+                color:
+                    ThemeProvider.themeOf(context).data.scaffoldBackgroundColor,
+              ),
               child: Column(
                 children: [
                   if (widget.searchKeyword != "")
                     FlatButton(
                         onPressed: () {},
                         child: Text(
-                            "Rechercher \"${widget.searchKeyword}\" dans les mails"))
+                          "Rechercher \"${widget.searchKeyword}\" dans les mails",
+                          style: ThemeProvider.themeOf(context)
+                              .data
+                              .textTheme
+                              .headline6,
+                        ))
                 ],
               )),
         ));
