@@ -1,5 +1,3 @@
-import 'package:dynamic_theme/dynamic_theme.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:theme_provider/theme_provider.dart';
@@ -105,7 +103,7 @@ class ThemeApp extends ChangeNotifier {
 
       cardColor: Color(0xFFC4C4C4),
 
-      canvasColor: Color(0xFF2F3136),
+      canvasColor: Color(0xFFFCFCFC),
 
       primaryColor: Color(0xFFDDDDDD),
 
