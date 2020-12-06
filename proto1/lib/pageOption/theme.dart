@@ -2,6 +2,38 @@ import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:theme_provider/theme_provider.dart';
 
+///////////////////////////////////////////////FRONT END//////////////////////////////////////////////////////
+class ThemeRow extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _ThemeRowState();
+}
+
+class _ThemeRowState extends State<ThemeRow> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Padding(
+        padding: EdgeInsets.fromLTRB(35, 0, 0, 0),
+        child: Text(
+          "Theme :",
+          style: TextStyle(
+            color: ThemeProvider.controllerOf(context)
+                .theme
+                .data
+                .textTheme
+                .headline1
+                .color,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+          textAlign: TextAlign.left,
+        ),
+      ),
+      Padding(padding: EdgeInsets.fromLTRB(0, 25, 35, 35), child: BoutonTheme())
+    ]);
+  }
+}
+
 /// Le bouton déroulant pour choisir entre clair et sombre
 class BoutonTheme extends StatefulWidget {
   BoutonTheme({Key key}) : super(key: key);
@@ -11,10 +43,11 @@ class BoutonTheme extends StatefulWidget {
 }
 
 class _BoutonThemeState extends State<StatefulWidget> {
-  String dropdownValue = ThemeApp().getNomEtat();
+  String dropdownValue;
 
   @override
   Widget build(BuildContext context) {
+    dropdownValue = ThemeApp().currentThemeName();
     return DropdownButton<String>(
       value: dropdownValue,
       icon: Icon(Icons.arrow_downward),
@@ -26,12 +59,28 @@ class _BoutonThemeState extends State<StatefulWidget> {
       ),
       onChanged: (String newValue) {
         setState(() {
+          EtatTheme newTheme;
           if (newValue != dropdownValue) {
-            dropdownValue = ThemeApp().changerTheme(context);
+            dropdownValue = newValue;
+            switch (dropdownValue) {
+              case 'Clair':
+                newTheme = EtatTheme.CLAIR;
+                break;
+              case 'Sombre':
+                newTheme = EtatTheme.SOMBRE;
+                break;
+              case 'Custom':
+                newTheme = EtatTheme.CUSTOM;
+                break;
+              default:
+                newTheme = EtatTheme.SOMBRE;
+                break;
+            }
+            dropdownValue = ThemeApp().changerTheme(context, newTheme);
           }
         });
       },
-      items: <String>['Clair', 'Sombre']
+      items: <String>['Clair', 'Sombre', 'Custom']
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
@@ -49,6 +98,8 @@ class _BoutonThemeState extends State<StatefulWidget> {
     );
   }
 }
+
+////////////////////////////////////////BACK END//////////////////////////////////////////////////
 
 class ThemeApp extends ChangeNotifier {
   //Singleton
@@ -73,7 +124,6 @@ class ThemeApp extends ChangeNotifier {
 
     tClair = new ThemeData(
       backgroundColor: Color(0xFFFCFCFC),
-
       textTheme: TextTheme(
           headline1: TextStyle(
             //Titres
@@ -98,19 +148,13 @@ class ThemeApp extends ChangeNotifier {
             fontSize: 16,
             fontWeight: FontWeight.w500,
           )),
-
       scaffoldBackgroundColor: Color(0xFFFCFCFC),
-
       cardColor: Color(0xFFC4C4C4),
-
       canvasColor: Color(0xFFFCFCFC),
-
       primaryColor: Color(0xFFDDDDDD),
-
       iconTheme: IconThemeData(
         color: Color(0xFFC4C4C4),
       ),
-
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Colors.white,
         selectedIconTheme: IconThemeData(
@@ -120,7 +164,6 @@ class ThemeApp extends ChangeNotifier {
           color: Color(0xFFC4C4C4),
         ),
       ),
-
       dialogTheme: DialogTheme(
         backgroundColor: Colors.white,
         titleTextStyle: TextStyle(
@@ -131,7 +174,6 @@ class ThemeApp extends ChangeNotifier {
 
     tSombre = new ThemeData(
       backgroundColor: Color(0xFF2F3136),
-
       textTheme: TextTheme(
           headline1: TextStyle(
             color: Color(0xFFCBD6DA),
@@ -154,64 +196,66 @@ class ThemeApp extends ChangeNotifier {
             fontSize: 16,
             fontWeight: FontWeight.w500,
           )),
-
       scaffoldBackgroundColor: Color(0xFF2F3136),
-
       cardColor: Color(0xFF202225),
-
       canvasColor: Color(0xFF2F3136),
-
       primaryColor: Color(0xFF222222),
-
       iconTheme: IconThemeData(
         color: Color(0xFF747784),
       ),
-
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: Color(0xFF202225),
         selectedIconTheme: IconThemeData(
           color: Color(0xFF3E6DE7),
         ),
-        unselectedIconTheme:
-            IconThemeData(color: Color(0xFF545764)),
+        unselectedIconTheme: IconThemeData(color: Color(0xFF545764)),
       ),
-
       dialogTheme: DialogTheme(
         backgroundColor: Color.fromRGBO(50, 50, 55, 1),
         titleTextStyle: TextStyle(
           color: Color.fromRGBO(203, 214, 218, 1),
         ),
       ),
-
     );
   }
 
-  String changerTheme(BuildContext context) {
-    //Applique le thème actuellement choisi
+  String changerTheme(BuildContext context, EtatTheme newTheme) {
+    if (!ThemeProvider.controllerOf(context).hasTheme(newTheme.id))
+    {
+      ThemeCreatorPopup();
+    }
+    else {
+      //Applique le thème actuellement choisi
+      ThemeProvider.controllerOf(context).setTheme(newTheme.id);
+      etatTheme = newTheme;
+    }
+    return currentThemeName();
+  }
+
+  String currentThemeName() {
     switch (etatTheme) {
       case EtatTheme.CLAIR:
-        ThemeProvider.controllerOf(context).nextTheme();
-        etatTheme = EtatTheme.SOMBRE;
-        return 'Sombre';
-
-      case EtatTheme.SOMBRE:
-        ThemeProvider.controllerOf(context).nextTheme();
-        etatTheme = EtatTheme.CLAIR;
         return 'Clair';
+      case EtatTheme.SOMBRE:
+        return 'Sombre';
+      case EtatTheme.CUSTOM:
+        return 'Custom';
       default:
-        return 'Null';
+        return 'Sombre';
     }
   }
 
-  String getNomEtat() {
-    switch (etatTheme) {
-      case EtatTheme.CLAIR:
-        return "Clair";
-
-      case EtatTheme.SOMBRE:
-        return 'Sombre';
-      default:
-        return 'Null';
+  void initTheme(String savedTheme) {
+    switch(savedTheme) {
+      case 'custom':
+        ThemeApp().etatTheme = EtatTheme.CUSTOM;
+        break;
+      case 'light':
+        ThemeApp().etatTheme = EtatTheme.CLAIR;
+        break;
+      case 'dark':
+        ThemeApp().etatTheme = EtatTheme.SOMBRE;
+        break;
     }
   }
 }
@@ -219,6 +263,17 @@ class ThemeApp extends ChangeNotifier {
 enum EtatTheme {
   CLAIR,
   SOMBRE,
+  CUSTOM,
+}
+
+extension EtatThemeId on EtatTheme {
+  static const names = {
+    EtatTheme.SOMBRE: 'dark',
+    EtatTheme.CLAIR: 'light',
+    EtatTheme.CUSTOM: 'custom',
+  };
+
+  String get id => names[this];
 }
 
 class TheTheme {
@@ -229,4 +284,17 @@ class TheTheme {
   }
 
   TheTheme._internal();
+}
+
+class ThemeCreatorPopup extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _ThemeCreatorPopupState();
+
+}
+
+class _ThemeCreatorPopupState extends State<ThemeCreatorPopup> {
+  @override
+  Widget build(BuildContext context) {
+    return Text("Pas encore implémenté...");
+  }
 }

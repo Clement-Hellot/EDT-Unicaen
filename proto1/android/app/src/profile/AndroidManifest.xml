@@ -2,6 +2,18 @@
     package="com.example.edt_mobile">
     <!-- Flutter needs it to communicate with the running application
          to allow setting breakpoints, to provide hot reload, etc.
+
+
+    <application>
+        <activity android:name="MainActivity">
+            <intent-filter>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+    </application>
+
+
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application android:usesCleartextTraffic="true"/>

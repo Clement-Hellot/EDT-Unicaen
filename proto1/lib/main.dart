@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       loadThemeOnInit: false,
       onInitCallback: (controller, previouslySavedThemeFuture) async {
         String savedTheme = await previouslySavedThemeFuture;
+        ThemeApp().initTheme(savedTheme);
         if (savedTheme != null) {
           controller.setTheme(savedTheme);
         } else {
