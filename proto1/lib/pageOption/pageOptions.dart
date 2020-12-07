@@ -24,7 +24,7 @@ class _PageOptionsState extends State<PageOptions> {
           Diviseur(),         //Done
           ThemeRow(),         //TODO Ajouter un personnalisateur de thème
           NotificationRow(),  //TODO
-          CompteRow(),        //TODO
+          CompteRow(),        //TODO je m'en occupe en ce moment
           AProposRow(),       //Done
         ],
       ),
@@ -33,7 +33,7 @@ class _PageOptionsState extends State<PageOptions> {
 }
 
 
-class EnTeteParametre extends StatelessWidget {
+class EnTeteParametre extends StatelessWidget {   //Haut de la page
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -60,7 +60,7 @@ class EnTeteParametre extends StatelessWidget {
   }
 }
 
-class Diviseur extends StatelessWidget {
+class Diviseur extends StatelessWidget {      //Réutilisable - la barre noire qui sépare l'en-tête et le reste de la page
   @override
   Widget build(BuildContext context) {
     return Row(children: [
@@ -75,7 +75,7 @@ class Diviseur extends StatelessWidget {
   }
 }
 
-class AProposRow extends StatelessWidget {
+class AProposRow extends StatelessWidget {        //Ligne à propos
   @override
   Widget build(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:edt_mobile/pageOption/Compte.dart';
 import 'package:flutter/material.dart';
 import 'package:theme_provider/theme_provider.dart';
 
@@ -45,7 +46,7 @@ class _PageMailsState extends State<PageMails> {
                                   Icons.account_circle,
                                 ),
                                 Text(
-                                  ' 21905584',
+                                  Compte().username,
                                   style: TextStyle(
                                       fontSize: 25,
                                       color: ThemeProvider.themeOf(context)
@@ -619,7 +620,7 @@ class _WriteMailState extends State<WriteMail> {
                 .iconTheme.color,),
             onPressed: () {
               sendMsg(
-                  '21905584@etu.unicaen.fr', new List(), '123465', 'hey you');
+                  Compte().username+'@etu.unicaen.fr', new List(), '123465', 'hey you');
             },
           ),
         ],

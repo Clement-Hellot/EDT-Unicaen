@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:edt_mobile/pageOption/Compte.dart';
 import 'package:imap_client/imap_client.dart';
 import 'package:convert/convert.dart';
 import 'package:flutter/material.dart';
@@ -171,8 +172,8 @@ class Mail {
 class MailClient {
   static MailClient client;
 
-  String username = '21905584';
-  String password = '!Clement76440!';
+  String username = Compte().username;
+  String password = Compte().password;
 
   ImapClient imapClient;
   String imapHost = "imap.unicaen.fr";

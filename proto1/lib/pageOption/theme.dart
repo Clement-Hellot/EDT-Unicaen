@@ -48,7 +48,7 @@ class _BoutonThemeState extends State<StatefulWidget> {
   @override
   Widget build(BuildContext context) {
     dropdownValue = ThemeApp().currentThemeName();
-    return DropdownButton<String>(
+    return DropdownButton<String>(    //Bouton proposant la liste des thèmes existants
       value: dropdownValue,
       icon: Icon(Icons.arrow_downward),
       iconSize: 24,
@@ -59,43 +59,42 @@ class _BoutonThemeState extends State<StatefulWidget> {
       ),
       onChanged: (String newValue) {
         setState(() {
-          EtatTheme newTheme;
-          if (newValue != dropdownValue) {
-            dropdownValue = newValue;
-            switch (dropdownValue) {
-              case 'Clair':
-                newTheme = EtatTheme.CLAIR;
-                break;
-              case 'Sombre':
-                newTheme = EtatTheme.SOMBRE;
-                break;
-              case 'Custom':
-                newTheme = EtatTheme.CUSTOM;
-                break;
-              default:
-                newTheme = EtatTheme.SOMBRE;
-                break;
-            }
-            dropdownValue = ThemeApp().changerTheme(context, newTheme);
-          }
+          _updateTheme(newValue); //Met à jour le thème
         });
       },
-      items: <String>['Clair', 'Sombre', 'Custom']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
+      items: <String>['Clair', 'Sombre', 'Custom'].map<DropdownMenuItem<String>>((String value) { //Liste des thèmes dispos
+        return DropdownMenuItem<String>(  //Un seul élément de la liste du bouton
           value: value,
           child: Text(
             value,
             style: TextStyle(
-                color: ThemeProvider.themeOf(context)
-                    .data
-                    .textTheme
-                    .headline1
-                    .color),
+                color: ThemeProvider.themeOf(context).data.textTheme.headline1.color),
           ),
         );
       }).toList(),
     );
+  }
+
+  _updateTheme(String newValue) { //En fonction de la nouvelle valeur, change le thème
+    EtatTheme newTheme;
+    if (newValue != dropdownValue) {
+      dropdownValue = newValue;
+      switch (dropdownValue) {
+        case 'Clair':
+          newTheme = EtatTheme.CLAIR;
+          break;
+        case 'Sombre':
+          newTheme = EtatTheme.SOMBRE;
+          break;
+        case 'Custom':
+          newTheme = EtatTheme.CUSTOM;
+          break;
+        default:
+          newTheme = EtatTheme.SOMBRE;
+          break;
+      }
+      dropdownValue = ThemeApp().changerTheme(context, newTheme); //Change le thème dans le controleur
+    }
   }
 }
 
@@ -219,7 +218,7 @@ class ThemeApp extends ChangeNotifier {
     );
   }
 
-  String changerTheme(BuildContext context, EtatTheme newTheme) {
+  String changerTheme(BuildContext context, EtatTheme newTheme) {   //Change le thème dans le controleur
     if (!ThemeProvider.controllerOf(context).hasTheme(newTheme.id))
     {
       ThemeCreatorPopup();
@@ -232,6 +231,7 @@ class ThemeApp extends ChangeNotifier {
     return currentThemeName();
   }
 
+  //Retourne le nom du thème actuel
   String currentThemeName() {
     switch (etatTheme) {
       case EtatTheme.CLAIR:
@@ -245,6 +245,7 @@ class ThemeApp extends ChangeNotifier {
     }
   }
 
+  //Initialise le thème au démarage de l'appli
   void initTheme(String savedTheme) {
     switch(savedTheme) {
       case 'custom':
@@ -260,12 +261,14 @@ class ThemeApp extends ChangeNotifier {
   }
 }
 
+///Pas ouf, faire sans
 enum EtatTheme {
   CLAIR,
   SOMBRE,
   CUSTOM,
 }
 
+///Pareil
 extension EtatThemeId on EtatTheme {
   static const names = {
     EtatTheme.SOMBRE: 'dark',
@@ -276,6 +279,8 @@ extension EtatThemeId on EtatTheme {
   String get id => names[this];
 }
 
+//Contient le thème actuel...
+/// Revoir la construction de cette classe et de la classe ThemeApp() parce que pas propre
 class TheTheme {
   static TheTheme _instance = TheTheme._internal(); //Instancié au lancement
 
@@ -289,7 +294,6 @@ class TheTheme {
 class ThemeCreatorPopup extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _ThemeCreatorPopupState();
-
 }
 
 class _ThemeCreatorPopupState extends State<ThemeCreatorPopup> {

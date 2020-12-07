@@ -31,7 +31,7 @@ class _NotificationRowState extends State<NotificationRow> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Row(                                           //Ligne 'Notification' qui s'affiche sur la page option
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
@@ -64,11 +64,7 @@ class _NotificationRowState extends State<NotificationRow> {
   }
 }
 
-
-
-
-
-
+//En dessous : un truc qui est supposé pouvoir gérer les notifications (nan ça marche pas nan, ce serait trop facile sinon)
 
 
 /*
