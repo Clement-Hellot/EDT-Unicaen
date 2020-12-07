@@ -138,11 +138,9 @@ class Compte {
     //Enregistre les identifiants dans les SharedPreferences
     await prefs.setString('username', username);
     await prefs.setString('password', password);
-    print('Compte enregistré');
 
     username = prefs.getString('username');
     password = prefs.getString('password');
-    print(username + ' ' + password);
   }
 
   Compte._internal(); //Initialisation : récupère les identifiants depuis les SharedPreferences
@@ -155,7 +153,7 @@ class Compte {
       print("id : " + username + "\npassword : " + password);
     } on NoSuchMethodError {
       print("Pas de compte enregistré"); //En cas d'exception
-      username = "";
+      username = "Inconnu";
       password = "";
     }
   }
