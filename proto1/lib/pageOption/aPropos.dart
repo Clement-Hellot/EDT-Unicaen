@@ -4,7 +4,6 @@ import 'package:theme_provider/theme_provider.dart';
 
 //////////////////////////////////////////FRONT END/////////////////////////////////////////
 class PopupAPropos extends StatefulWidget {
-  PopupAPropos({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {

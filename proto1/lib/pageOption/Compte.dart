@@ -12,6 +12,8 @@ class PopupCompte extends StatefulWidget {
 }
 
 class _PopupCompteState extends State<PopupCompte> {
+  String pass = "", log = "";
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -22,9 +24,10 @@ class _PopupCompteState extends State<PopupCompte> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Identifiant : '),
+              Text('Identifiant : ',
+        style: ThemeProvider.themeOf(context).data.textTheme.headline1,),
               Container(
-                width: MediaQuery.of(context).size.width/3,
+                width: MediaQuery.of(context).size.width / 3,
                 child: TextField(
                   expands: false,
                   decoration: InputDecoration(
@@ -35,6 +38,7 @@ class _PopupCompteState extends State<PopupCompte> {
                     Compte().username = text;
                     Compte().enregistrerCompte();
                   },
+                  onChanged: (text) => log = text,
                 ),
               )
             ],
@@ -42,9 +46,10 @@ class _PopupCompteState extends State<PopupCompte> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Mot de passe : '),
+              Text('Mot de passe : ',
+          style: ThemeProvider.themeOf(context).data.textTheme.headline1,),
               Container(
-                width: MediaQuery.of(context).size.width/3,
+                width: MediaQuery.of(context).size.width / 3,
                 child: TextField(
                   expands: false,
                   decoration: InputDecoration(
@@ -55,12 +60,30 @@ class _PopupCompteState extends State<PopupCompte> {
                     Compte().password = text;
                     Compte().enregistrerCompte();
                   },
+                  onChanged: (text) => pass = text,
+                ),
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextButton(
+                onPressed: () {
+                  Compte().username = log;
+                  Compte().password = pass;
+                  Compte().enregistrerCompte();
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  "Valider",
+                  style: ThemeProvider.themeOf(context).data.textTheme.headline1,
                 ),
               )
             ],
           )
-        ])
-    );
+        ]));
   }
 }
 
@@ -111,10 +134,10 @@ class _CompteRowState extends State<CompteRow> {
               },
               child: Text(
                 //Affichage du bouton
-                Compte().username==null?"inconnu":Compte().username,
+                Compte().username == null ? "inconnu" : Compte().username,
                 style: ThemeProvider.themeOf(context).data.textTheme.headline1,
               ),
-            ))
+            )),
       ],
     );
   }
@@ -150,13 +173,11 @@ class Compte {
       prefs = await SharedPreferences.getInstance();
       username = prefs.get('username');
       password = prefs.get('password');
-      print("id : " + username + "\npassword : " + password);
     } on NoSuchMethodError {
-      print("Pas de compte enregistré"); //En cas d'exception
       username = "Inconnu";
       password = "";
     }
-    if(username == "") {
+    if (username == "") {
       username = "Inconnu";
     }
   }
