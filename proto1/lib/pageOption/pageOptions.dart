@@ -17,23 +17,27 @@ class _PageOptionsState extends State<PageOptions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ThemeProvider.controllerOf(context).theme.data.scaffoldBackgroundColor,
-      body: Column(
-        children: [
-          EnTeteParametre(),  //Done
-          Diviseur(),         //Done
-          ThemeRow(),         //TODO Ajouter un personnalisateur de thème
-          NotificationRow(),  //TODO
-          CompteRow(),        //TODO je m'en occupe en ce moment
-          AProposRow(),       //Done
+      backgroundColor: ThemeProvider.controllerOf(context)
+          .theme
+          .data
+          .scaffoldBackgroundColor,
+      body: SingleChildScrollView(
+          child: Column(
+            children: [
+              EnTeteParametre(), //Done
+              Diviseur(), //Done
+              ThemeRow(), //TODO Ajouter un personnalisateur de thème
+              NotificationRow(), //TODO
+              CompteRow(), //TODO je m'en occupe en ce moment
+              AProposRow(), //Done
         ],
-      ),
+      )),
     );
   }
 }
 
-
-class EnTeteParametre extends StatelessWidget {   //Haut de la page
+class EnTeteParametre extends StatelessWidget {
+  //Haut de la page
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,7 +56,8 @@ class EnTeteParametre extends StatelessWidget {   //Haut de la page
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w600,
-            color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+            color:
+                ThemeProvider.themeOf(context).data.textTheme.headline1.color,
           ),
         ),
       ),
@@ -60,22 +65,24 @@ class EnTeteParametre extends StatelessWidget {   //Haut de la page
   }
 }
 
-class Diviseur extends StatelessWidget {      //Réutilisable - la barre noire qui sépare l'en-tête et le reste de la page
+class Diviseur extends StatelessWidget {
+  //Réutilisable - la barre noire qui sépare l'en-tête et le reste de la page
   @override
   Widget build(BuildContext context) {
     return Row(children: [
       Expanded(
           child: Divider(
-            thickness: 2,
-            color: Colors.black,
-            indent: 30,
-            endIndent: 30,
-          ))
+        thickness: 2,
+        color: Colors.black,
+        indent: 30,
+        endIndent: 30,
+      ))
     ]);
   }
 }
 
-class AProposRow extends StatelessWidget {        //Ligne à propos
+class AProposRow extends StatelessWidget {
+  //Ligne à propos
   @override
   Widget build(BuildContext context) {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [

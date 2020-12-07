@@ -1,3 +1,4 @@
+import 'package:edt_mobile/pageOption/pageOptions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,73 +18,102 @@ class _PopupCompteState extends State<PopupCompte> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-        content: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Identifiant : ',
-        style: ThemeProvider.themeOf(context).data.textTheme.headline1,),
-              Container(
-                width: MediaQuery.of(context).size.width / 3,
-                child: TextField(
-                  expands: false,
-                  decoration: InputDecoration(
-                    labelText: 'N° Etudiant',
-                  ),
-                  enabled: true,
-                  onSubmitted: (text) {
-                    Compte().username = text;
-                    Compte().enregistrerCompte();
-                  },
-                  onChanged: (text) => log = text,
+          content: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Identifiant : ',
+                      style: ThemeProvider.themeOf(context)
+                          .data
+                          .textTheme
+                          .headline1,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width / 3, //TODO Pas propre
+                      child: TextField(
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+                        ),
+                        expands: false,
+                        decoration: InputDecoration(
+                          hintText: 'N° Etudiant',
+                          hintStyle: TextStyle(
+                            fontSize: 13,
+                            color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+                          )
+                        ),
+                        enabled: true,
+                        onSubmitted: (text) {
+                          Compte().username = text;
+                          Compte().enregistrerCompte();
+                        },
+                        onChanged: (text) => log = text,
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Mot de passe : ',
-          style: ThemeProvider.themeOf(context).data.textTheme.headline1,),
-              Container(
-                width: MediaQuery.of(context).size.width / 3,
-                child: TextField(
-                  expands: false,
-                  decoration: InputDecoration(
-                    labelText: 'Etupass',
-                  ),
-                  enabled: true,
-                  onSubmitted: (text) {
-                    Compte().password = text;
-                    Compte().enregistrerCompte();
-                  },
-                  onChanged: (text) => pass = text,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Mot de passe : ',
+                      style: ThemeProvider.themeOf(context)
+                          .data
+                          .textTheme
+                          .headline1,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width / 3,
+                      child: TextField(
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+                        ),
+                        expands: false,
+                        decoration: InputDecoration(
+                          hintText: 'Etupass',
+                          hintStyle: TextStyle(
+                            fontSize: 13,
+                            color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+                          )
+                        ),
+                        enabled: true,
+                        onSubmitted: (text) {
+                          Compte().password = text;
+                          Compte().enregistrerCompte();
+                        },
+                        onChanged: (text) => pass = text,
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextButton(
-                onPressed: () {
-                  Compte().username = log;
-                  Compte().password = pass;
-                  Compte().enregistrerCompte();
-                  Navigator.of(context).pop();
-                },
-                child: Text(
-                  "Valider",
-                  style: ThemeProvider.themeOf(context).data.textTheme.headline1,
-                ),
-              )
-            ],
-          )
-        ]));
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Compte().username = log;
+                        Compte().password = pass;
+                        Compte().enregistrerCompte();
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        "Valider",
+                        style: ThemeProvider.themeOf(context)
+                            .data
+                            .textTheme
+                            .headline1,
+                      ),
+                    )
+                  ],
+                )
+              ]));
   }
 }
 
@@ -93,6 +123,8 @@ class CompteRow extends StatefulWidget {
 }
 
 class _CompteRowState extends State<CompteRow> {
+  String compteName = Compte().username == null ? "inconnu" : Compte().username;
+
   @override
   void initState() {
     //Initialise l'accès aux SharedPreferences pour récupérer les identifiants d'un compte déjà enregistré
@@ -124,7 +156,10 @@ class _CompteRowState extends State<CompteRow> {
         Padding(
             padding: EdgeInsets.fromLTRB(0, 25, 35, 35),
             child: TextButton(
-              //Bouton indiquant 'déconnecté' ou le numéro étudiant du compte actuellement connecté
+              //Bouton indiquant 'Inconnu' ou le numéro étudiant du compte actuellement connecté
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      ThemeProvider.themeOf(context).data.primaryColor)),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -134,7 +169,7 @@ class _CompteRowState extends State<CompteRow> {
               },
               child: Text(
                 //Affichage du bouton
-                Compte().username == null ? "inconnu" : Compte().username,
+                compteName,
                 style: ThemeProvider.themeOf(context).data.textTheme.headline1,
               ),
             )),
