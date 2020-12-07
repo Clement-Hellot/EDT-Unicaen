@@ -156,5 +156,8 @@ class Compte {
       username = "Inconnu";
       password = "";
     }
+    if(username == "") {
+      username = "Inconnu";
+    }
   }
 }
