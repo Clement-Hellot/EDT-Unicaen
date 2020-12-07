@@ -111,7 +111,7 @@ class _CompteRowState extends State<CompteRow> {
               },
               child: Text(
                 //Affichage du bouton
-                Compte().username,
+                Compte().username==null?"inconnu":Compte().username,
                 style: ThemeProvider.themeOf(context).data.textTheme.headline1,
               ),
             ))
