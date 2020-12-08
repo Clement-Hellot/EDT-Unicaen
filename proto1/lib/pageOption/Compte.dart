@@ -1,4 +1,3 @@
-import 'package:edt_mobile/pageOption/pageOptions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,102 +17,90 @@ class _PopupCompteState extends State<PopupCompte> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-          content: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Identifiant : ',
-                      style: ThemeProvider.themeOf(context)
-                          .data
-                          .textTheme
-                          .headline1,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width / 3, //TODO Pas propre
-                      child: TextField(
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
-                        ),
-                        expands: false,
-                        decoration: InputDecoration(
-                          hintText: 'N° Etudiant',
-                          hintStyle: TextStyle(
-                            fontSize: 13,
-                            color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
-                          )
-                        ),
-                        enabled: true,
-                        onSubmitted: (text) {
-                          Compte().username = text;
-                          Compte().enregistrerCompte();
-                        },
-                        onChanged: (text) => log = text,
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Mot de passe : ',
-                      style: ThemeProvider.themeOf(context)
-                          .data
-                          .textTheme
-                          .headline1,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width / 3,
-                      child: TextField(
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
-                        ),
-                        expands: false,
-                        decoration: InputDecoration(
-                          hintText: 'Etupass',
-                          hintStyle: TextStyle(
-                            fontSize: 13,
-                            color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
-                          )
-                        ),
-                        enabled: true,
-                        onSubmitted: (text) {
-                          Compte().password = text;
-                          Compte().enregistrerCompte();
-                        },
-                        onChanged: (text) => pass = text,
-                      ),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Compte().username = log;
-                        Compte().password = pass;
-                        Compte().enregistrerCompte();
-                        Navigator.of(context).pop();
-                      },
-                      child: Text(
-                        "Valider",
-                        style: ThemeProvider.themeOf(context)
-                            .data
-                            .textTheme
-                            .headline1,
-                      ),
-                    )
-                  ],
-                )
-              ]));
+        content: Column(mainAxisSize: MainAxisSize.min, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Identifiant : ',
+            style: ThemeProvider.themeOf(context).data.textTheme.headline1,
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width / 3, //TODO Pas propre
+            child: TextField(
+              style: TextStyle(
+                fontSize: 13,
+                color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+              ),
+              expands: false,
+              decoration: InputDecoration(
+                  hintText: 'N° Etudiant',
+                  hintStyle: TextStyle(
+                    fontSize: 13,
+                    color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+                  )),
+              enabled: true,
+              onSubmitted: (text) {
+                Compte().username = text;
+                if(pass != "" && log != "") {
+                  Compte().enregistrerCompte();
+                }
+              },
+              onChanged: (text) => log = text,
+            ),
+          )
+        ],
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Mot de passe : ',
+            style: ThemeProvider.themeOf(context).data.textTheme.headline1,
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width / 3,
+            child: TextField(
+              style: TextStyle(
+                fontSize: 13,
+                color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+              ),
+              expands: false,
+              decoration: InputDecoration(
+                  hintText: 'Etupass',
+                  hintStyle: TextStyle(
+                    fontSize: 13,
+                    color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+                  )),
+              enabled: true,
+              onSubmitted: (text) {
+                Compte().password = text;
+                Compte().enregistrerCompte();
+              },
+              onChanged: (text) => pass = text,
+            ),
+          )
+        ],
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextButton(
+            onPressed: () {
+              Compte().username = log;
+              Compte().password = pass;
+              Compte().enregistrerCompte();
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              "Valider",
+              style: ThemeProvider.themeOf(context).data.textTheme.headline1,
+            ),
+          )
+        ],
+      )
+    ]));
   }
 }
 
@@ -148,8 +135,7 @@ class _CompteRowState extends State<CompteRow> {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              color:
-                  ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+              color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
             ),
           ),
         ),
@@ -158,8 +144,7 @@ class _CompteRowState extends State<CompteRow> {
             child: TextButton(
               //Bouton indiquant 'Inconnu' ou le numéro étudiant du compte actuellement connecté
               style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                      ThemeProvider.themeOf(context).data.primaryColor)),
+                  backgroundColor: MaterialStateProperty.all<Color>(ThemeProvider.themeOf(context).data.primaryColor)),
               onPressed: () {
                 showDialog(
                   context: context,
