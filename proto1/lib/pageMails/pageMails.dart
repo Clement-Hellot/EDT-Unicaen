@@ -109,9 +109,7 @@ class _PageMailsState extends State<PageMails> {
                     ],
                   )),
                   appBar: AppBar(
-                    iconTheme: ThemeProvider.themeOf(context)
-                            .data
-                            .iconTheme,
+                    iconTheme: ThemeProvider.themeOf(context).data.iconTheme,
                     centerTitle: true,
                     backgroundColor:
                         ThemeProvider.themeOf(context).data.backgroundColor,
@@ -169,12 +167,16 @@ class _PageMailsState extends State<PageMails> {
                     ],
                   ),
                   floatingActionButton: FloatingActionButton(
-                    backgroundColor: ThemeProvider.themeOf(context).data.bottomNavigationBarTheme.unselectedIconTheme.color,
+                    backgroundColor: ThemeProvider.themeOf(context)
+                        .data
+                        .bottomNavigationBarTheme
+                        .unselectedIconTheme
+                        .color,
                     child: Icon(
                       Icons.create,
-                      color: ThemeProvider.themeOf(context).data.backgroundColor,
+                      color:
+                          ThemeProvider.themeOf(context).data.backgroundColor,
                     ),
-
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -331,7 +333,8 @@ class _Mail extends State<MailContent> {
                     flex: null,
                     child: Icon(
                       Icons.circle,
-                      color: ThemeProvider.themeOf(context).data.iconTheme.color,
+                      color:
+                          ThemeProvider.themeOf(context).data.iconTheme.color,
                       //color: ThemeProvider.themeOf(context).data.bottomNavigationBarTheme.selectedIconTheme.color,
                       size: 10,
                     ),
@@ -423,9 +426,10 @@ class _Mail extends State<MailContent> {
               left: 10,
             ),
             color: Colors.green,
-            child: Icon(Icons.check,color: ThemeProvider.themeOf(context)
-                .data
-                .iconTheme.color,),
+            child: Icon(
+              Icons.check,
+              color: ThemeProvider.themeOf(context).data.iconTheme.color,
+            ),
           ),
           secondaryBackground: Container(
             alignment: Alignment.centerRight,
@@ -433,9 +437,10 @@ class _Mail extends State<MailContent> {
               right: 10,
             ),
             color: Colors.red,
-            child: Icon(Icons.delete,color: ThemeProvider.themeOf(context)
-                .data
-                .iconTheme.color,),
+            child: Icon(
+              Icons.delete,
+              color: ThemeProvider.themeOf(context).data.iconTheme.color,
+            ),
           ),
           onDismissed: (direction) {
             switch (direction) {
@@ -470,7 +475,9 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
         backgroundColor: ThemeProvider.themeOf(context).data.backgroundColor,
         actions: [
           IconButton(
-            icon: Icon(Icons.reply_all,),
+            icon: Icon(
+              Icons.reply_all,
+            ),
             iconSize: 40.0,
             color: ThemeProvider.themeOf(context).data.iconTheme.color,
           ),
@@ -575,17 +582,16 @@ class _ReadMailWidgetState extends State<ReadMailWidget> {
                 )),
             Flexible(
                 child: SingleChildScrollView(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
+              child: Container(
+                decoration: BoxDecoration(
+                    border: Border.all(
                         color: Colors.black,
                         style: BorderStyle.solid,
-                        width: 1
-                      )
-                    ),
-                    child: Text(
-                      widget.mail.getText(),
-                      style: ThemeProvider.themeOf(context).data.textTheme.headline1,
+                        width: 1)),
+                child: Text(
+                  widget.mail.getText(),
+                  style:
+                      ThemeProvider.themeOf(context).data.textTheme.headline1,
                 ),
               ),
             ))
@@ -615,12 +621,13 @@ class _WriteMailState extends State<WriteMail> {
         title: Text("Mail"),
         actions: [
           IconButton(
-            icon: Icon(Icons.send,color: ThemeProvider.themeOf(context)
-                .data
-                .iconTheme.color,),
+            icon: Icon(
+              Icons.send,
+              color: ThemeProvider.themeOf(context).data.iconTheme.color,
+            ),
             onPressed: () {
-              sendMsg(
-                  Compte().username+'@etu.unicaen.fr', new List(), '123465', 'hey you');
+              sendMsg(Compte().username + '@etu.unicaen.fr', new List(),
+                  '123465', 'hey you');
             },
           ),
         ],
@@ -720,7 +727,7 @@ class _WriteMailState extends State<WriteMail> {
             Expanded(
                 child: Container(
               padding: EdgeInsets.symmetric(horizontal: 5),
-                child: TextField(
+              child: TextField(
                 style: ThemeProvider.themeOf(context).data.textTheme.headline2,
                 expands: true,
                 maxLines: null,
@@ -839,14 +846,8 @@ Future<List> getMailbox() async {
       case 'trash':
         name = 'Corbeille';
         break;
-      case 'e-campus':
-        name = "PAS TOUCHER B64";
-        break;
       case 'information':
         name = "PAS TOUCHER UTF8";
-        break;
-      case 'projet':
-        name = "PAS TOUCHER B64";
         break;
     }
     mailbox.add(name);

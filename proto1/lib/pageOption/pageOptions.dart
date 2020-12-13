@@ -17,18 +17,20 @@ class _PageOptionsState extends State<PageOptions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ThemeProvider.controllerOf(context).theme.data.scaffoldBackgroundColor,
-      body: SingleChildScrollView(
-          child: Column(
+      backgroundColor: ThemeProvider.controllerOf(context)
+          .theme
+          .data
+          .scaffoldBackgroundColor,
+      body: Column(
         children: [
           EnTeteParametre(), //Done
           Diviseur(), //Done
-          ThemeRow(), //TODO Ajouter un personnalisateur de thème - après avoir fini le compte et les notifications
+          ThemeRow(), //TODO Ajouter un personnalisateur de thème
           NotificationRow(), //TODO
-          CompteRow(), //Done
+          Flexible(child: CompteRow()), //TODO je m'en occupe en ce moment
           AProposRow(), //Done
         ],
-      )),
+      ),
     );
   }
 }
@@ -53,7 +55,8 @@ class EnTeteParametre extends StatelessWidget {
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.w600,
-            color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+            color:
+                ThemeProvider.themeOf(context).data.textTheme.headline1.color,
           ),
         ),
       ),

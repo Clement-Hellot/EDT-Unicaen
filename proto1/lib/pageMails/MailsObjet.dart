@@ -236,11 +236,36 @@ class MailClient {
     return this.imapClient;
   }
 
+  String base64Format(String txt) {
+    txt = txt.replaceAll("=?UTF-8?B?", "");
+    txt = txt.replaceAll("=?utf-8?B?", "");
+
+    List<String> liste = txt.split(" ");
+    txt = "";
+    liste.forEach((element) {
+      if (element.contains("?=")) {
+        element = element.replaceAll("?=", "");
+        element = element.trim();
+
+        List b64 = base64.decode(element);
+
+        for (int i = 0; i < b64.length; i++) {
+          if (b64[i] == 195) {
+            txt += utf8.decode([b64[i], b64[i + 1]]);
+            i++;
+          } else
+            txt += String.fromCharCode(b64[i]);
+        }
+      } else {
+        txt += element;
+      }
+    });
+    return txt;
+  }
+
   String quoPriToUtf(String txt, String mode) {
     txt = txt.replaceAll("=?UTF-8?Q?", "");
     txt = txt.replaceAll("=?ISO-8859-1?Q?", "");
-    txt = txt.replaceAll("=?UTF-8?B?", "");
-    txt = txt.replaceAll("=?utf-8?B?", "");
     txt = txt.replaceAll("=?utf-8?Q?", "");
 
     while (txt.contains("?=")) {
@@ -256,26 +281,7 @@ class MailClient {
       txt = txt.replaceAll("_", " ");
     }
 
-    if (mode == "B") {
-      List liste = txt.split(" ");
-      List b64;
-      txt = "";
-      liste.forEach((element) {
-        if (element.contains("<")) {
-          element = element.split("<")[0];
-        }
-        element = element.trim();
-        b64 = base64.decode(element);
-
-        for (int i = 0; i < b64.length; i++) {
-          if (b64[i] == 195) {
-            txt += utf8.decode([b64[i], b64[i + 1]]);
-            i++;
-          } else
-            txt += String.fromCharCode(b64[i]);
-        }
-      });
-    } else if (txt != null && mode == 'Q') {
+    if (txt != null && mode == 'Q') {
       int partCount = 0;
       while (txt.contains('=')) {
         int index = txt.indexOf('=');
@@ -384,7 +390,7 @@ class MailClient {
         res.contains("=?ISO-8859-1?Q?")) {
       res = quoPriToUtf(res, 'Q');
     } else if (res.contains("=?UTF-8?B?") || res.contains("=?utf-8?B?")) {
-      res = quoPriToUtf(res, 'B');
+      res = base64Format(res);
     }
 
     return res;

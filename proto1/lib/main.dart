@@ -1,5 +1,4 @@
 import 'package:edt_mobile/pageOption/Compte.dart';
-import 'package:edt_mobile/pageOption/Notification.dart';
 import 'package:edt_mobile/pageOption/theme.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +18,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Compte().recupererCompte();
-    Notifications().notifier();
     return ThemeProvider(
       saveThemesOnChange: true,
       loadThemeOnInit: false,
@@ -29,7 +27,8 @@ class MyApp extends StatelessWidget {
         if (savedTheme != null) {
           controller.setTheme(savedTheme);
         } else {
-          Brightness platformBrightness = SchedulerBinding.instance.window.platformBrightness;
+          Brightness platformBrightness =
+              SchedulerBinding.instance.window.platformBrightness;
           if (platformBrightness == Brightness.dark) {
             controller.setTheme('dark');
           } else {
@@ -39,16 +38,23 @@ class MyApp extends StatelessWidget {
         }
       },
       themes: <AppTheme>[
-        AppTheme(id: 'light', data: ThemeApp().tClair, description: "Un thème clair"),
-        AppTheme(id: 'dark', data: ThemeApp().tSombre, description: "Un thème sombre"),
+        AppTheme(id: 'light',
+            data: ThemeApp().tClair,
+            description: "Un thème clair"),
+        AppTheme(id: 'dark',
+            data: ThemeApp().tSombre,
+            description: "Un thème sombre"),
       ],
       child: ThemeConsumer(
         child: Builder(
-          builder: (themeContext) => MaterialApp(
-            theme: ThemeProvider.themeOf(themeContext).data,
-            title: 'Material App',
-            home: PagePrincipale(),
-          ),
+          builder: (themeContext) =>
+              MaterialApp(
+                theme: ThemeProvider
+                    .themeOf(themeContext)
+                    .data,
+                title: 'Material App',
+                home: PagePrincipale(),
+              ),
         ),
       ),
     );
@@ -56,6 +62,7 @@ class MyApp extends StatelessWidget {
 }
 
 class PagePrincipale extends StatefulWidget {
+
   PagePrincipale({Key key}) : super(key: key);
 
   static CalendrierJours calendrier;
@@ -102,8 +109,10 @@ class _PagePrincipaleState extends State<PagePrincipale> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Center(
         child: PageView(
@@ -169,7 +178,8 @@ class _PagePrincipaleState extends State<PagePrincipale> {
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
           type: BottomNavigationBarType.fixed,
-          backgroundColor: ThemeProvider.themeOf(context).data.bottomNavigationBarTheme.backgroundColor,
+          backgroundColor:
+          ThemeProvider.themeOf(context).data.bottomNavigationBarTheme.backgroundColor,
           iconSize: 30,
         ),
       ),

@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:theme_provider/theme_provider.dart';
 
-class Notifications {
+class Notification {
   bool notification;
 
-  Notifications() {
+  Notification() {
     notification = true;
   }
 
@@ -16,7 +14,6 @@ class Notifications {
   void setNotification(bool val) => notification = val;
 
   void notifier() {
-    _NotificationParams().envoyerNotification();
     if (notification) {
       ///TODO Implémenter les notifications si quelqu'un est motivé
 
@@ -32,19 +29,20 @@ class NotificationRow extends StatefulWidget {
 class _NotificationRowState extends State<NotificationRow> {
   bool notification = true;
 
-  _NotificationParams notifier = _NotificationParams();
-
   @override
   Widget build(BuildContext context) {
-    return Row(
-      //Ligne 'Notification' qui s'affiche sur la page option
+    return Row(                                           //Ligne 'Notification' qui s'affiche sur la page option
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Padding(
           padding: EdgeInsets.fromLTRB(35, 0, 0, 0),
           child: Text('Notification : ',
               style: TextStyle(
-                color: ThemeProvider.themeOf(context).data.textTheme.headline1.color,
+                color: ThemeProvider.themeOf(context)
+                    .data
+                    .textTheme
+                    .headline1
+                    .color,
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
               )),
@@ -55,7 +53,7 @@ class _NotificationRowState extends State<NotificationRow> {
             value: notification,
             onChanged: (value) {
               setState(() {
-                Notifications().notification = value; //Update dans la case notification
+                Notification().notification = value;  //Update dans la case notification
                 notification = value; //Update de l'affichage
               });
             },
@@ -66,61 +64,8 @@ class _NotificationRowState extends State<NotificationRow> {
   }
 }
 
-class _NotificationParams {
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  NotificationAppLaunchDetails notificationAppLaunchDetails;
+//En dessous : un truc qui est supposé pouvoir gérer les notifications (nan ça marche pas nan, ce serait trop facile sinon)
 
-  final BehaviorSubject<ReminderNotification> didReceiveLocalNotificationSubject =
-      BehaviorSubject<ReminderNotification>();
-
-  final BehaviorSubject<String> selectNotificationSubject = BehaviorSubject<String>();
-
-  Future<void> initNotifications(FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
-    var initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
-    var initializationSettingsIOS = IOSInitializationSettings(
-        requestAlertPermission: false,
-        requestBadgePermission: false,
-        requestSoundPermission: false,
-        onDidReceiveLocalNotification: (int id, String title, String body, String payload) async {
-          didReceiveLocalNotificationSubject.add(ReminderNotification(id: id, title: title, body: body, payload: payload));
-        });
-    var initializationSettings =
-        InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String payload) async {
-      if (payload != null) {
-        debugPrint('notification payload: ' + payload);
-      }
-      selectNotificationSubject.add(payload);
-    });
-  }
-
-  void envoyerNotification() async {
-
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-    '0',
-    'Reminder notifications',
-    'Remember about it',
-    icon: 'app_icon',
-    );
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-    var platformChannelSpecifics = NotificationDetails(
-    android: androidPlatformChannelSpecifics, iOS: iOSPlatformChannelSpecifics);
-
-    await flutterLocalNotificationsPlugin.show(0, 'Reminder', 'coucou', platformChannelSpecifics);
-  }
-}
-
-class ReminderNotification {
-  ReminderNotification({@required this.id, @required this.title, @required this.body, @required this.payload});
-
-  final int id;
-  final String title;
-  final String body;
-  final String payload;
-}
-
-//En dessous : un truc qui est supposé pouvoir gérer les notifications (nan ça marche pas nan, ce serait trop facile sinon) *l'import a été retiré*
 
 /*
 
