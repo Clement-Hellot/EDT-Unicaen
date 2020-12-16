@@ -1,6 +1,16 @@
 # edt_mobile
 
-Projet emploi du temps mobile
+Projet de centralisation de l'emploi du temps,mails,salle libre et controles pour l'iut grand ouest normandie.
+"Projet scolaire"
+
+Developpeur:
+  - MORIN PAUL
+  - DELAMARE CLEMENT
+  - HELLOT CLEMENT
+  - CAILLY ROMAIN
+  - BOYREAU ARTHUR
+  - MARTINEAU JULIE
+  - GOUBARD-LANGER PAUL
 
 ## Flutter Help
 
